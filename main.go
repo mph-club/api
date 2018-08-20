@@ -9,9 +9,6 @@ func api() *iris.Application {
 		ctx.ServeFile("./swagger-ui/index.html", false)
 	})
 
-	assetHandler := app.StaticHandler("./swagger-ui", false, false)
-	app.SPA(assetHandler)
-
 	return app
 }
 
@@ -21,7 +18,7 @@ func main() {
 	v1 := _api.Party("api/v1")
 	{
 		v1.Get("/", func(ctx iris.Context) {
-			ctx.Writef("api home")
+			ctx.Writef("api home!!!!")
 		})
 	}
 
