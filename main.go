@@ -2,19 +2,28 @@ package main
 
 import "github.com/kataras/iris"
 
+func api() *iris.Application {
+	app := iris.New()
+
+	app.Get("/mphclub", func(ctx iris.Context) {
+		ctx.ServeFile("./swagger-ui/index.html", false)
+	})
+
+	assetHandler := app.StaticHandler("./swagger-ui", false, false)
+	app.SPA(assetHandler)
+
+	return app
+}
+
 func main() {
-	app := iris.Default()
-	// app.Get("/ping", func(ctx iris.Context) {
-	// 	ctx.JSON(iris.Map{
-	// 		"message": "pong",
-	// 	})
-	// })
+	_api := api()
 
-	app.Party("/v1")
+	v1 := _api.Party("api/v1")
 	{
-
+		v1.Get("/", func(ctx iris.Context) {
+			ctx.Writef("api home")
+		})
 	}
 
-	// listen and serve on http://0.0.0.0:8080.
-	app.Run(iris.Addr(":8080"))
+	_api.Run(iris.Addr(":8080"))
 }
