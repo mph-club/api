@@ -1,0 +1,2085 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is the MPH API definition",
+        "version": "1.0.0",
+        "title": "MPH Club WebServices API"
+    },
+    "basePath": "/services",
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Authentication endpoints"
+        },
+        {
+            "name": "UserAccount",
+            "description": "UserAccount endpoints. Create, Update, get etc..."
+        },
+        {
+            "name": "Vehicle",
+            "description": "Vehicle API. Create, get, etc."
+        },
+        {
+            "name": "UserData",
+            "description": "UserData API. Create, get, update, etc."
+        }, 
+        {
+            "name": "Booking",
+            "description": "Booking API. Create, update, cancel, etc."
+        },
+        {
+            "name": "UserSession",
+            "description": "Session API. Create, update, delete, etc."
+        },
+        {
+            "name": "Admin",
+            "description": "Admin User functionality"
+        }
+    ],
+    "schemes": [
+        "http"
+    ],
+    "responses": {
+        "400": {
+            "description": "Validation failed.",
+            "schema": {
+                "$ref": "#/definitions/ApiError"
+            }
+        },
+        "401": {
+            "description": "User is not authenticated or does not have permission to perform this action.",
+            "schema": {
+                "$ref": "#/definitions/ApiError"
+            }
+        },
+        "404": {
+            "description": "Resource not found.",
+            "schema": {
+                "$ref": "#/definitions/ApiError"
+            }
+        },
+        "default": {
+            "description": "unexpected error",
+            "schema": {
+                "$ref": "#/definitions/ApiError"
+            }
+        }
+    },
+    "paths": {
+        "/authenticate": {
+            "post": {
+                "summary": "Authenticate a user (login)",
+                "operationId": "authenticate",
+                "tags": [
+                    "UserAccount"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "UserCredentials",
+                        "description": "The username and password",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserCredentials"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Authentication successful"
+                    },
+                    "400": {
+                        "description": "Missing username or password",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication failed"
+                    },
+                    "412": {
+                        "description": "User has temporary credentials"
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/useraccount": {
+            "post": {
+                "summary": "Add a new UserAccount via AWS, needs validation code to confirm account via validate api",
+                "operationId": "addUserAccount",
+                "tags": [
+                    "UserAccount"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "userAccount",
+                        "description": "The user account to add",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/AwsSignUp"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "The created UserAccount",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/UserAccount"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The UserAccount failed validation or was missing required fields",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get the current (authenticated) user",
+                "operationId": "getSelf",
+                "tags": [
+                    "UserAccount"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The UserAccount",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/UserData"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "An error ocurred",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    }
+                }
+            }
+        },
+         "/useraccount/validate": {
+            "post": {
+                "summary": "Validate an AWS user account with received code via sms.",
+                "operationId": "validateUserAccount",
+                "tags": [
+                    "UserAccount"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "accountVerify",
+                        "description": "The user account to verify",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/VerifyAccount"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account Verified"
+                    },
+                    "400": {
+                        "description": "The UserAccount failed validation or was missing required fields",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/useraccount/forgotpassword": {
+            "post": {
+                "summary": "Trigger forgot password flow for a user. No authentication required.",
+                "operationId": "forgotPassword",
+                "tags": [
+                    "UserAccount"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "MphForgotPasswordRequest",
+                        "description": "The userId along with notification information",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/MphForgotPasswordRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful"
+                    },
+                    "400": {
+                        "description": "Validation of request failed",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/useraccount/admin/setpassword": {
+            "put": {
+                "summary": "Replace a temporary password with a regular password. No authentication required",
+                "operationId": "setPassword",
+                "tags": [
+                    "UserAccount",
+                    "Admin"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "SetPasswordRequest",
+                        "description": "The username along with temporary and new passwords",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/SetPasswordRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful"
+                    },
+                    "400": {
+                        "description": "Validation of request failed",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    }
+                }
+            }
+        },   
+        "/useraccount/admin": {
+            "post": {
+                "summary": "Add a new user account via admin workflow, returns temp password",
+                "operationId": "adminAddUserAccount",
+                "tags": [
+                    "UserAccount",
+                    "Admin"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "awsSignup",
+                        "description": "The user account to add",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/AwsSignUp"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "The admin created a UserAccount",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TempUserAccount"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The UserAccount failed validation or was missing required fields",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/useraccount/admin/{id}": {
+            "get": {
+                "summary": "Get a User account",
+                "operationId": "adminGetUserAccount",
+                "tags": [
+                    "UserAccount",
+                    "Admin"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The user account id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The local UserAccount",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/UserAccount"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "An error ocurred",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/usersession": {
+            "delete": {
+                "summary": "Delete session of current user. Effectively a logoff",
+                "operationId": "deleteCurrentSession",
+                "tags": [
+                    "UserSession"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Authentication successful"
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/usersession/create/{username}": {
+            "post": {
+                "summary": "Create and return a new user session for a given username",
+                "operationId": "createSession",
+                "tags": [
+                    "UserSession"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "description": "The username of a user",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User existed and session created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/UserSession"
+                        }
+                    },
+                    "401": {
+                        "description": "User does not exist, cannot authenticate"
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/usersession/{jwToken}": {
+            "get": {
+                "summary": " Validate and access a session",
+                "operationId": "getSession",
+                "tags": [
+                    "UserSession",
+                    "Admin"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "jwToken",
+                        "description": "The JSON Web Token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Authentication successful",
+                        "schema": {
+                            "$ref": "#/definitions/UserSession"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid JSON Web Token"
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": " Update a session",
+                "operationId": "updateSession",
+                "tags": [
+                    "UserSession"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "jwToken",
+                        "description": "The JSON Web Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "userSession",
+                        "description": "The session object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserSession"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Session is updated"
+                    },
+                    "401": {
+                        "description": "JSON Web Token is not valid"
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a session",
+                "operationId": "deleteSession",
+                "tags": [
+                    "UserSession"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "jwToken",
+                        "description": "The JSON Web Token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Session deleted"
+                    },
+                    "401": {
+                        "description": "JSON Web Token not valid",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    }
+                }
+            }         
+        },
+        "/admin/customusersession/{jwToken}": {
+            "post": {
+                "summary": "Create a blank, non user associated, session.",
+                "operationId": "adminCreateCustomSession",
+                "tags": [
+                    "UserSession",
+                    "Admin"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "jwToken",
+                        "description": "The JSON Web Token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Session created",
+                        "schema": {
+                            "$ref": "#/definitions/UserSession"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/vehicle": {
+            "post": {
+                "tags": [
+                    "Vehicle"
+                ],
+                "summary": "Add a vehicle",
+                "operationId": "addVehicle",
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "vehicle",
+                        "in": "body",
+                        "description": "Vehicle to add",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Vehicle"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/vehicle/{id}": {
+            "get": {
+                "tags": [
+                    "Vehicle"
+                ],
+                "summary": "Retrieve a vehicle by id",
+                "operationId": "getVehicle",
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The Vehicle id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/Vehicle"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Vehicle"
+                ],
+                "summary": "update a specific vehicle",
+                "operationId": "updateVehicle",
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The Vehicle id",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "vehicle",
+                        "in": "body",
+                        "description": "Vehicle to update",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Vehicle"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Vehicle"
+                ],
+                "summary": "delist vehicle",
+                "operationId": "deleteVehicle",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The vehicle id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/vehicle/getAll/{radius}&{longitude}&{latitude}": {
+            "get": {
+                "tags": [
+                    "Vehicle"
+                ],
+                "summary": "Retrieve a list of vehicles within radius",
+                "operationId": "getAllVehiclesByDistance",
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "radius",
+                        "in": "path",
+                        "description": "The radius to search",
+                        "required": true,
+                        "type": "string"
+                    }, {
+                        "name": "longitude",
+                        "in": "path",
+                        "description": "The Longitude of the Vehicle",
+                        "required": true,
+                        "type": "string"
+                    }, {
+                        "name": "latitude",
+                        "in": "path",
+                        "description": "The latitude of the Vehicle",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type" :"string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/vehicle/getList": {
+            "get": {
+                "tags": [
+                    "Vehicle"
+                ],
+                "summary": "Retrieve a list of vehicles within radius",
+                "operationId": "getListVehiclesByIds",
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "listOfIds",
+                        "in": "body",
+                        "description": "The radius to search",
+                        "required": true,
+                        "schema":{
+                          "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Vehicle"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/booking/submit": {
+            "post": {
+                "tags": [
+                    "Booking"
+                ],
+                "summary": "Submit a booking request",
+                "operationId": "submitBooking",
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "booking",
+                        "in": "body",
+                        "description": "booking to submit",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Booking"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/booking/{id}": {
+            "get": {
+                "tags": [
+                    "Booking"
+                ],
+                "summary": "Get a booking by Id",
+                "operationId": "getBooking",
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The Booking id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/userdata": {
+            "post": {
+                "tags": [
+                    "UserData"
+                ],
+                "summary": "Create user data",
+                "operationId": "createUserData",
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "userData",
+                        "in": "body",
+                        "description": "UserData to add",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/user/{id}": {
+            "get": {
+                "tags": [
+                    "UserData"
+                ],
+                "summary": "Get the user data of a specific user account",
+                "operationId": "getUserData",
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The internal app userId",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/UserData"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "UserData"
+                ],
+                "summary": "update User Data",
+                "operationId": "updateUserData",
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The User id",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "userData",
+                        "in": "body",
+                        "description": "User to update",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "UserData"
+                ],
+                "summary": "deactivate a user and all items associated",
+                "operationId": "deleteUser",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The Users id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/useraccount/findbyusername": {
+            "get": {
+                "tags": [
+                    "UserAccount"
+                ],
+                "summary": "Find a user account specified by person user name",
+                "description": "Returns a userAccount matching the value parameter",
+                "operationId": "findByUserName",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "userName",
+                        "in": "query",
+                        "description": "User name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/UserAccount"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "User is not authenticated or does not have permission to perform this action.",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/email/send": {
+            "post": {
+                "summary": "[Internal Operation Only] Send an email to a recipient.",
+                "operationId": "adminSendEmail",
+                "tags": [
+                    "email"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "EmailSendRequest",
+                        "description": "The email send request",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/EmailSendRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The email send response"
+                    },
+                    "400": {
+                        "description": "The EmailSendRequest failed validation or did not satisfy the email sending requirements",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/email/sendtemplated": {
+            "post": {
+                "summary": "[Internal Operation Only] Send an email to a recipient. The email is templated, so a template name must be used.",
+                "operationId": "adminSendTemplatedEmail",
+                "tags": [
+                    "email",
+                    "Admin"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "TemplatedEmailSendRequest",
+                        "description": "The email send request",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TemplatedEmailSendRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The email send response"
+                    },
+                    "400": {
+                        "description": "The TemplatedEmailSendRequest failed validation or did not satisfy the email sending requirements",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+
+    "definitions": {
+        "ApiError": {
+            "type": "object",
+            "properties": {
+                "txID": {
+                    "type": "string"
+                },
+                "errors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ApiErrorDetail"
+                    }
+                }
+            }
+        },
+        "ApiErrorDetail": {
+            "type": "object",
+            "properties": {
+                "errorCode": {
+                    "type": "string"
+                },
+                "endUserMessage": {
+                    "type": "string"
+                },
+                "errorProperties": {
+                    "type": "object"
+                }
+            }
+        },
+        "CustomEventLog": {
+            "type": "object",
+            "properties": {
+                "eventTime": {
+                    "description": "The time of the event",
+                    "type": "string"
+                },
+                "timeZoneId": {
+                    "description": "The ID of the time zone for the data source (where the message was created)",
+                    "type": "string"
+                },
+                "mphServiceVersion": {
+                    "description": "The version of the JSON used to talk to the MPH service",
+                    "type": "string"
+                },
+                "eventId": {
+                    "description": "The unique ID of the event. If empty/null a UUID will be auto-generated. If an event with the same ID is already present this is treated as an update",
+                    "type": "string"
+                },
+                "eventType": {
+                    "description": "The type of event, for example 'OutboundMessage'",
+                    "type": "string"
+                },
+                "eventContent": {
+                    "type": "object"
+                }
+            },
+            "required": [
+                "eventType",
+                "eventContent"
+            ]
+        },
+        "Address": {
+            "type": "object",
+            "description": "Address Object",
+            "required": [
+                "city"  
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "addressLine1": {
+                    "type": "string"
+                },
+                "addressLine2": {
+                    "type": "string"
+                },
+                "city": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "string"
+                },
+                "province": {
+                    "type": "string"
+                },
+                "postalCode": {
+                    "type": "string"
+                },
+                "country": {
+                    "type": "string"
+                },
+                "longitude": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "string"
+                },
+                "placeName": {
+                    "type": "string"
+                },
+                "fullAddress": {
+                    "type": "string"
+                },
+                "addressType": {
+                    "type": "string"
+                },
+                "createdBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "createdTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "updatedTime": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "DriverLicense": {
+            "type": "object",
+            "description": "Driver License Object",
+            "required": [
+                "city"  
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "address": {
+                    "$ref": "#/definitions/Address"
+                },
+                "name": {
+                    "$ref": "#/definitions/Name"
+                },
+                "issueDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "expirationDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "dob": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "dlNumber": {
+                    "type": "string"
+                },
+                "photoFront": {
+                    "$ref": "#/definitions/Picture"
+                },
+                "photoBack": {
+                    "$ref": "#/definitions/Picture"
+                },
+                "photoWithUser": {
+                    "$ref": "#/definitions/Picture"
+                },
+                "dlType": {
+                    "type": "string"
+                },
+                "endorsement": {
+                    "type": "string"
+                },
+                "createdBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "createdTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "updatedTime": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "Name": {
+            "type": "object",
+            "description": "Name Object",
+            "required": [
+                "firstName",
+                "lastName"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "middleName": {
+                    "type": "string"
+                },
+                "nickName": {
+                    "type": "string"
+                },
+                "alternateName": {
+                    "type": "string"
+                },
+                "createdBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "createdTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "updatedTime": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "VehicleRegistration": {
+            "type": "object",
+            "description": "Vehicle registration Object",
+            "required": [
+                "plate",
+                "vin",
+                "color",
+                "address",
+                "registeredOwner",
+                "issuingState",
+                "effectiveDate"
+
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "plate": {
+                    "type": "string"
+                },
+                "decal": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "vin": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "address": {
+                    "$ref": "#/definitions/Address"
+                },
+                "registeredOwner": {
+                    "$ref": "#/definitions/Name"
+                },
+                "issuingState": {
+                    "type": "string"
+                },
+                "effectiveDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "expirationDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "createdBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "createdTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "updatedTime": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "Vehicle": {
+            "type": "object",
+            "description": "Vehicle Object",
+            "required": [
+                "make",
+                "vin",
+                "model",
+                "year"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "make": {
+                    "type": "string"
+                },
+                "model": {
+                    "type": "string"
+                },
+                "year": {
+                    "type": "string"
+                },
+                "trim": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "doors": {
+                    "type": "string"
+                },
+                "seats": {
+                    "type": "string"
+                },
+                "vin": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "dayMin": {
+                    "type": "integer"
+                },
+                "dayMax": {
+                    "type": "integer"
+                },
+                "vehicleType": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "photos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Picture"
+                    }
+                },
+                "vehicleRegistration": {
+                    "$ref": "#/definitions/VehicleRegistration"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "createdBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "createdTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "updatedTime": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "Insurance": {
+            "type": "object",
+            "description": "Insurance Object",
+            "required": [
+                "insurerName",
+                "insuredName",
+                "coveredVehicles",
+                "policyNumber",
+                "effectiveDate",
+                "vin",
+                "idCardPhoto"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "insurerName": {
+                    "type": "string"
+                },
+                "insurerAddress": {
+                    "$ref": "#/definitions/Address"
+                },
+                "insuredName": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Name"
+                    }
+                },
+                "coveredVehicles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Vehicle"
+                    }
+                },
+                "status": {
+                    "type": "string"
+                },
+                "policyType": {
+                    "type": "string",
+                    "enum": [
+                        "PERSONAL",
+                        "COMMERCIAL",
+                        "GAP",
+                        "UNKNOWN"
+                    ]
+                },
+                "policyNumber": {
+                    "type": "string"
+                },
+                "additionalID": {
+                    "type": "string"
+                },
+                "effectiveDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "endDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "vin": {
+                    "type": "string"
+                },
+                "idCardPhoto": {                    
+                    "$ref": "#/definitions/Picture"
+                },
+                "createdBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "createdTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "updatedTime": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "UserData": {
+            "type": "object",
+            "description": "User Data Object",
+            "required": [
+                "userAccount"  
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "userAccount": {
+                    "$ref": "#/definitions/UserAccount"
+                },
+                "name": {
+                    "$ref": "#/definitions/Name"
+                },
+                "address": {
+                    "$ref": "#/definitions/Address"
+                },
+                "driverLicense": {
+                    "$ref": "#/definitions/DriverLicense"
+                },
+                "insurances": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Insurance"
+                    }
+                },
+                "vehiclesOwned": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Vehicle"
+                    }
+                },
+                "vehiclesRented": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Vehicle"
+                    }
+                },
+                "expired": {
+                    "type": "boolean"
+                },
+                "validated": {
+                    "type": "boolean"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "createdBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "createdTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "updatedTime": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "StatusHistory": {
+            "type": "object",
+            "properties": {
+                "newStatus": {
+                    "type": "string"
+                },
+                "oldStatus": {
+                    "type": "string"
+                },
+                "time": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "user": {
+                    "$ref": "#/definitions/UserAccountRef"
+                }
+            }
+        },
+
+        "UserAccountRef": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "awsId": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "UserSession": {
+            "type": "object",
+            "properties": {
+                "jwToken": {
+                    "type": "string"
+                },
+                "expiration": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "variables": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "object"
+                    }
+                },
+                "userAccount": {
+                    "$ref": "#/definitions/UserAccount"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "customSession": {
+                    "type": "boolean"
+                },
+                "tenantId": {
+                    "type": "string"
+                },
+                "createdBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "createdTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "updatedTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "Privilege": {
+            "type": "object",
+            "properties": {
+                "applicationId": {
+                    "type": "string"
+                },
+                "privilege": {
+                    "type": "string"
+                }
+            }
+        },
+        "UserAccount": {
+            "type": "object",
+            "properties": {
+                "tenantId": {
+                    "type": "string"
+                },
+                "createdBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "createdTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "updatedTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "statusHistory": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/StatusHistory"
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "awsId": {
+                    "type": "string"
+                },
+                "lnId": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "privileges": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Privilege"
+                    }
+                },
+                "startDate": {
+                    "type": "string",
+                    "format": "date"
+                },
+                "endDate": {
+                    "type": "string",
+                    "format": "date"
+                }
+            }
+        },
+        "VerifyAccount": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "string"
+                }
+            }
+        },
+        "TempUserAccount": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "tenantId": {
+                    "type": "string"
+                },
+                "createdBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "createdTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "updatedTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "statusHistory": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/StatusHistory"
+                    }
+                },
+                "awsId": {
+                    "type": "string"
+                },
+                "lnId": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "privileges": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Privilege"
+                    }
+                },
+                "timeToLive": {
+                    "type": "integer"
+                },
+                "startDate": {
+                    "type": "string",
+                    "format": "date"
+                },
+                "endDate": {
+                    "type": "string",
+                    "format": "date"
+                },
+                "relatedPersons": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "UserCredentials": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "format": "password"
+                }
+            }
+        },
+        "MphForgotPasswordRequest": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string"
+                },
+                "notificationInfo": {
+                    "$ref": "#/definitions/NotificationInfo"
+                }
+            }
+        },
+        "SetPasswordRequest": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string"
+                },
+                "tempPassword": {
+                    "type": "string",
+                    "format": "password"
+                },
+                "newPassword": {
+                    "type": "string",
+                    "format": "password"
+                }
+            }
+        },
+        "NotificationInfo": {
+            "type": "object",
+            "properties": {
+                "emailAddress": {
+                    "type": "string"
+                },
+                "fullName": {
+                    "type": "string"
+                },
+                "phoneNumber": {
+                    "type": "string"
+                }
+            }
+        },
+        "EmailSendRequest": {
+            "type": "object",
+            "properties": {
+                "toEmailAddress": {
+                    "type": "string"
+                },
+                "fromEmailAddress": {
+                    "type": "string"
+                },
+                "subject": {
+                    "type": "string"
+                },
+                "body": {
+                    "type": "string"
+                }
+            }
+        },
+        "TemplatedEmailSendRequest": {
+            "type": "object",
+            "properties": {
+                "emailAddress": {
+                    "type": "string"
+                },
+                "languageLocale": {
+                    "type": "string"
+                },
+                "templateId": {
+                    "type": "string",
+                    "description": "The templateId identifies which template"
+                },
+                "fields": {
+                    "type": "object",
+                    "description": "Provide a key<string>-value<string> map of elements to distill into the email template"
+                }
+            }
+        },
+        "Booking": {
+            "type": "object",
+            "description": "Booking Object containing details of a regeistered booking",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "confirmationNumber": {
+                    "type": "string"
+                },
+                "vehicle": {
+                    "$ref": "#/definitions/Vehicle"
+                }
+            }
+        },
+        "AwsSignUp": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "format": "password"
+                },
+                "phoneNumber": {
+                    "type": "string"
+                },
+                "familyName": {
+                    "type": "string"
+                },
+                "givenName": {
+                    "type": "string"
+                },
+                "deviceId": {
+                    "type": "string"
+                },
+                "privileges": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Privilege"
+                    }
+                },
+                "createdBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "createdTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "updatedTime": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "Picture": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "photo": {
+                    "type": "string",
+                    "format": "binary"
+                },
+                "createdBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "createdTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedBy": {
+                    "$ref": "#/definitions/UserAccountRef"
+                },
+                "updatedTime": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        }
+    }
+}
