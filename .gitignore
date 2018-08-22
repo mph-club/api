@@ -1,6 +1,3 @@
-.vscode
-.DS_Store
-
 # Ignore all
 *
 
@@ -9,3 +6,7 @@
 
 # Unignore all dirs
 !*/
+
+.vscode
+.DS_Store
+bin/
