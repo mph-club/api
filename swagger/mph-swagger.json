@@ -22,7 +22,7 @@
         {
             "name": "UserData",
             "description": "UserData API. Create, get, update, etc."
-        }, 
+        },
         {
             "name": "Booking",
             "description": "Booking API. Create, update, cancel, etc."
@@ -331,7 +331,7 @@
                     }
                 }
             }
-        },   
+        },
         "/useraccount/admin": {
             "post": {
                 "summary": "Add a new user account via admin workflow, returns temp password",
@@ -616,7 +616,7 @@
                         }
                     }
                 }
-            }         
+            }
         },
         "/admin/customusersession/{jwToken}": {
             "post": {
@@ -1213,7 +1213,7 @@
             "type": "object",
             "description": "Address Object",
             "required": [
-                "city"  
+                "city"
             ],
             "properties": {
                 "id": {
@@ -1275,7 +1275,7 @@
             "type": "object",
             "description": "Driver License Object",
             "required": [
-                "city"  
+                "city"
             ],
             "properties": {
                 "id": {
@@ -1286,6 +1286,9 @@
                 },
                 "name": {
                     "$ref": "#/definitions/Name"
+                },
+                "city": {
+                    "type": "string"
                 },
                 "issueDate": {
                     "type": "string",
@@ -1592,7 +1595,7 @@
                 "vin": {
                     "type": "string"
                 },
-                "idCardPhoto": {                    
+                "idCardPhoto": {
                     "$ref": "#/definitions/Picture"
                 },
                 "createdBy": {
@@ -1615,7 +1618,7 @@
             "type": "object",
             "description": "User Data Object",
             "required": [
-                "userAccount"  
+                "userAccount"
             ],
             "properties": {
                 "id": {
