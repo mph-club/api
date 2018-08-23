@@ -12,12 +12,11 @@ services:
     #volumes:
       #- ~/.mphclub/mph/postgres/data:/var/lib/postgresql/data
       # - mph-postgres-volume:/var/lib/postgresql/data
-#
   api:
     container_name: ct-mph-api
     build: go-app
     ports:
-      - "8086:8080"
+      - "8080:8080"
     depends_on:
       - postgres
 
