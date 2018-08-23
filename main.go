@@ -16,6 +16,10 @@ func main() {
 		v1.Get("/", func(ctx iris.Context) {
 			ctx.Writef("api home!!!!")
 		})
+
+		v1.Get("/service", func(ctx iris.Context) {
+			ctx.Writef("api service!!!!")
+		})
 	}
 
 	_api.Run(iris.Addr(":8080"))

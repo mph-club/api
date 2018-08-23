@@ -10,7 +10,7 @@ services:
       environment:
         GO_WORK_DIR: "${GO_PROJECT_DIR}"
     postgres:
-      container_name: ct-mph-postgres
+      container_name: ct-mph-postgres-dev
       build: "./docker/postgres"
       ports:
         - "5432:5432"
