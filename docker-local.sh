@@ -10,7 +10,7 @@ cd docker
 
 echo "Building MPH Parent"
 cd ..
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-w -s" -o ~/Projects/mphclub-golang-api/bin/mphclub-golang-api
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-w -s" -o ./bin/mphclub-golang-api
 cd docker
 
 # Copy the golang binary into the docker folder
