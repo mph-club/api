@@ -5,6 +5,6 @@
 
 set -e
 
-#eval `aws ecr get-login --region us-east-1 --no-include-email`
+eval `aws ecr get-login --region us-east-1 --no-include-email`
 docker-compose rm -s -f
 docker-compose up -d --build --force-recreate
