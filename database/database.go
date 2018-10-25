@@ -8,8 +8,6 @@ import (
 	"time"
 
 	"github.com/go-pg/pg"
-
-	pb "mphclub-server/api-generated"
 )
 
 func handleConnectError(connectError error) {
@@ -50,7 +48,7 @@ func connectToDB() *pg.DB {
 func CreateSchema() {
 	db := connectToDB()
 
-	for _, model := range []interface{}{&pb.Vehicle{}} {
+	for _, model := range []interface{}{} { //models go in second brace
 		err := db.CreateTable(model, nil)
 		defer db.Close()
 
@@ -58,18 +56,4 @@ func CreateSchema() {
 			seedDB()
 		}
 	}
-}
-
-func GetVehicleList(page int, vehicleType string) []*pb.Vehicle {
-	var vehicles []*pb.Vehicle
-	var pageInt int
-	pageInt = page
-	db := connectToDB()
-
-	err := db.Model(&vehicles).Where("vehicle_type = ?", vehicleType).Limit(pageInt).Select()
-	if err != nil {
-		log.Printf("error: %v", err)
-	}
-
-	return vehicles
 }

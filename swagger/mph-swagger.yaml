@@ -3,7 +3,7 @@ info:
   description: This is the MPH API definition
   version: 1.0.0
   title: MPH Club
-basePath: /v1
+basePath: /api/v1
 tags:
   - name: UserAccount
     description: 'UserAccount endpoints. Create, Update, get etc...'
