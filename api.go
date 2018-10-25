@@ -17,10 +17,10 @@ func main() {
 			ctx.Writef("api service!!!!")
 		})
 
-		_api.Get("/swagger", func(ctx iris.Context) {
+		v1.Get("/swagger", func(ctx iris.Context) {
 			ctx.ServeFile("./swagger/index.html", false)
 		})
 	}
-
+	
 	_api.Run(iris.Addr(":8080"))
 }

@@ -8,7 +8,7 @@ push-latest:
 		@docker push 077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:latest
 
 docker-build-api:
-	@docker build -t mphclub_api -f ./Dockerfile .
+	@docker build -t mphclub_api -f ./docker/go-app-develop/Dockerfile .
 	@docker tag mphclub_api:latest 077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:latest
 	@docker push 077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:latest
 

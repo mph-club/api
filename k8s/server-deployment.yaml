@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deployment
+spec:
+  selector:
+    matchLabels:
+      component: server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: server
+    spec:
+      containers:
+        - name: mphclub-api
+          image: 077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: AWS_REGION
+              value: us-east-1
+            - name: COGNITO_USER_POOL_ID
+              value: us-east-1_RKsJA9wua
+            - name: PGUSER
+              value: mphclub
+            - name: PGHOST
+              value: postgres-cluster-ip-service
+            - name: PGPORT
+              value: '5432'
+            - name: PGDATABASE
+              value: mphclub
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: PGPASSWORD
+      imagePullSecrets:
+        - name: us-east-1-ecr-registry
