@@ -1,3 +1,0 @@
-CREATE SCHEMA mph;
---CREATE USER mphclub WITH PASSWORD 'mphclub123'
- ALTER SCHEMA mph OWNER TO mphclub;
