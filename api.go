@@ -7,10 +7,6 @@ import (
 func main() {
 	_api := iris.New()
 
-	_api.Get("/mphclub", func(ctx iris.Context) {
-		ctx.ServeFile("./swagger/redoc-static.html", false)
-	})
-
 	v1 := _api.Party("api/v1")
 	{
 		v1.Get("/", func(ctx iris.Context) {
@@ -19,6 +15,10 @@ func main() {
 
 		v1.Get("/service", func(ctx iris.Context) {
 			ctx.Writef("api service!!!!")
+		})
+
+		_api.Get("/swagger", func(ctx iris.Context) {
+			ctx.ServeFile("./swagger/index.html", false)
 		})
 	}
 

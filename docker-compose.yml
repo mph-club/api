@@ -6,14 +6,14 @@ services:
         context: .
         dockerfile: ./docker/go-app-develop/Dockerfile
       ports:
-        - "8080:8080"
+        - 8080:8080
       environment:
         GO_WORK_DIR: "${GO_PROJECT_DIR}"
     postgres:
       container_name: ct-mph-postgres-dev
       build: "./docker/postgres"
       ports:
-        - "5432:5432"
+        - 5432:5432
       environment:
         - POSTGRES_DB=mphclub
         - POSTGRES_USER=mphclub
