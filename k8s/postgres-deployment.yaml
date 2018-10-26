@@ -25,10 +25,7 @@ spec:
             - name: POSTGRES_DB
               value: mphclub
             - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: pgpassword
-                  key: PGPASSWORD
+              value: mphclub123
           ports:
             - containerPort: 5432
           volumeMounts:
@@ -36,4 +33,4 @@ spec:
               mountPath: /var/lib/postgresql/data
               subPath: postgres
       imagePullSecrets:
-        - name: us-east-1-ecr-registry
+        - name: awsecr-cred
