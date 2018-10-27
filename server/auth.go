@@ -21,7 +21,6 @@ import (
 var sub string
 
 func checkToken(tokenString string) (bool, string) {
-	loadEnv()
 	region := os.Getenv("AWS_REGION")
 	userPoolID := os.Getenv("COGNITO_USER_POOL_ID")
 
