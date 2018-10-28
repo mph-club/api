@@ -19,6 +19,8 @@ func CreateAndListen() {
 		v1.Get("/swagger", func(ctx iris.Context) {
 			ctx.ServeFile("./swagger/index.html", false)
 		})
+
+		v1.Post("/listCar", postListing)
 	}
 
 	_api.Run(iris.Addr(":8080"))
