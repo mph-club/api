@@ -1,6 +1,8 @@
 package database
 
 import (
+	"fmt"
+
 	"github.com/go-pg/pg"
 )
 
@@ -11,4 +13,5 @@ func seedDB() {
 }
 
 func seedVehicles(db *pg.DB) {
+	fmt.Println("seeded")
 }
