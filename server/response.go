@@ -1,14 +1,11 @@
 package server
 
-import (
-	"github.com/kataras/iris"
-)
-
-func makeResponse(success bool, ctx iris.Context) map[string]interface{} {
+func makeResponse(success bool, responseMap map[string]interface{}) map[string]interface{} {
 	pass := "success"
 	fail := "fail"
 
 	var message string
+	mapToIterate := map[string]interface{}{}
 
 	if success {
 		message = pass
@@ -16,7 +13,11 @@ func makeResponse(success bool, ctx iris.Context) map[string]interface{} {
 		message = fail
 	}
 
-	return map[string]interface{}{
-		"message": message,
+	for k, v := range responseMap {
+		mapToIterate[k] = v
 	}
+
+	mapToIterate["message"] = message
+
+	return mapToIterate
 }

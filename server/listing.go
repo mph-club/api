@@ -7,7 +7,7 @@ import (
 )
 
 func postListing(ctx iris.Context) {
-	log.Println(ctx.FormValues())
 	log.Println(ctx.FormValue("userData"))
-	ctx.JSON(makeResponse(true, ctx))
+
+	ctx.JSON(makeResponse(true, iris.Map{"userData": ctx.FormValue("userData")}))
 }

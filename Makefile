@@ -18,7 +18,3 @@ docker-build-api:
 swagger-html:
 	@cd ./swagger && \
 	redoc-cli bundle mph-swagger.yaml
-
-test-curl:
-	@echo "post test\n"
-	@curl localhost:8080/api/v1/listCar -d '{ "userData":"imgay" }'

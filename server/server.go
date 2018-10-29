@@ -20,7 +20,7 @@ func CreateAndListen() {
 			ctx.ServeFile("./swagger/index.html", false)
 		})
 
-		v1.Post("/listCar", postListing)
+		v1.Post("/listCar", cognitoAuth, postListing)
 	}
 
 	_api.Run(iris.Addr(":8080"))
