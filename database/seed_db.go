@@ -20,11 +20,11 @@ func seedVehicles(db *pg.DB) {
 	err := db.Model(&vehicles).Select()
 	if err != nil {
 		log.Println("something went wrong: ", err)
+		return
 	}
 	fmt.Println(vehicles)
 
 	if len(vehicles) == 0 {
-
 		someVehicle := &models.Vehicle{
 			Color:       "yellow",
 			DayMax:      10,

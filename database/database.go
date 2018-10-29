@@ -55,7 +55,7 @@ func CreateSchema() {
 		defer db.Close()
 
 		if err != nil {
-			seedDB()
+			log.Println(err)
 		}
 	}
 }
