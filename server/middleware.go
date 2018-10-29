@@ -14,6 +14,6 @@ func cognitoAuth(ctx iris.Context) {
 	if isAuth {
 		ctx.Next()
 	} else {
-		ctx.JSON(makeResponse(false, iris.Map{"error": err}))
+		ctx.JSON(makeResponse(false, iris.Map{"error": iris.Map{"server_error": "Unauthorized", "error_message": err}}))
 	}
 }

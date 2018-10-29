@@ -1,3 +1,5 @@
+CURRENT_HEAD = $(git rev-parse HEAD)
+
 run/server:
 	@go run api.go
 
@@ -15,6 +17,9 @@ docker-build-api:
 	@docker push 077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:latest
 	@docker push 077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:${CURRENT_HEAD}
 	@kubectl set image deployments/server-deployment mphclub-api=077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:${CURRENT_HEAD}
+
+current_head:
+	echo ${CURRENT_HEAD}
 
 swagger-html:
 	@cd ./swagger && \
