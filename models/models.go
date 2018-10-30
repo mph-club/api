@@ -39,7 +39,8 @@ type VehicleSignupStage struct {
 }
 
 type UserInfo struct {
-	Sub          string    `json:"sub"`
+	tableName    struct{}  `sql:"user_info"`
+	Sub          string    `json:"sub" sql:",pk,unique"`
 	Email        string    `json:"email"`
 	Phone        string    `json:"phone"`
 	ListedCars   []Vehicle `json:"listed_cars"`
