@@ -70,13 +70,6 @@ func validateToken(tokenStr, region, userPoolID string, jwk map[string]JWKKey) (
 	sub = csub.(string)
 	log.Println("sub: ", sub)
 
-	cemail, ok := claims["username"]
-	if !ok {
-		return token, fmt.Errorf("token does not contain username")
-	}
-
-	log.Println("username: ", cemail.(string))
-
 	iss, ok := claims["iss"]
 	if !ok {
 		return token, fmt.Errorf("token does not contain issuer")

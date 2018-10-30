@@ -18,6 +18,7 @@ func createUser(ctx iris.Context) {
 	var u models.UserInfo
 
 	if err := ctx.ReadJSON(&u); err != nil {
+		log.Println(err)
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(makeResponse(false, iris.Map{"error": err.Error()}))
 		return
