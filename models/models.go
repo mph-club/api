@@ -39,9 +39,9 @@ type VehicleSignupStage struct {
 }
 
 type UserInfo struct {
-	Sub          string    `json:"user_sub"`
-	Email        string    `json:"user_email"`
-	Phone        string    `json:"user_phone"`
+	Sub          string    `json:"sub"`
+	Email        string    `json:"email"`
+	Phone        string    `json:"phone"`
 	ListedCars   []Vehicle `json:"listed_cars"`
 	UnlistedCars []Vehicle `json:"unlisted_cars"`
 }

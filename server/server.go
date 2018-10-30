@@ -20,6 +20,7 @@ func CreateAndListen() {
 			ctx.ServeFile("./swagger/index.html", false)
 		})
 
+		v1.Post("/createUser", cognitoAuth, createUser)
 		v1.Post("/listCar", cognitoAuth, postListing)
 	}
 
