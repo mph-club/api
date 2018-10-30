@@ -8,6 +8,8 @@ func CreateAndListen() {
 
 	v1 := _api.Party("api/v1")
 	{
+		v1.Use(requestLogger())
+
 		v1.Get("/", func(ctx iris.Context) {
 			ctx.Writef("api home!!!!")
 		})
@@ -21,7 +23,7 @@ func CreateAndListen() {
 		})
 
 		v1.Post("/createUser", cognitoAuth, createUser)
-		v1.Post("/listCar", cognitoAuth, postListing)
+		v1.Post("/listCar", cognitoAuth, createListing)
 	}
 
 	_api.Run(iris.Addr(":8080"))

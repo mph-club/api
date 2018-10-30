@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	"mphclub-rest-server/database"
+	"mphclub-grpc-server/database"
 	"mphclub-rest-server/server"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -11,6 +11,7 @@ import (
 )
 
 func main() {
+	//initiateAuthorization()
 	database.CreateSchema()
 
 	server.CreateAndListen()

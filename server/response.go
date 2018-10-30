@@ -1,6 +1,6 @@
 package server
 
-func makeResponse(success bool, responseMap map[string]interface{}) map[string]interface{} {
+func generateJSONResponse(success bool, responseMap map[string]interface{}) map[string]interface{} {
 	pass := "success"
 	fail := "fail"
 
