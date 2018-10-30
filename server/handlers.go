@@ -17,6 +17,10 @@ func postListing(ctx iris.Context) {
 func createUser(ctx iris.Context) {
 	var u models.UserInfo
 
+	log.Println(ctx.FormValues())
+	log.Println(ctx.FormValue("email"))
+	log.Println(ctx.FormValue("phone"))
+
 	if err := ctx.ReadJSON(&u); err != nil {
 		log.Println(err)
 		ctx.StatusCode(iris.StatusBadRequest)
