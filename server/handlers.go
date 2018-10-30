@@ -4,6 +4,7 @@ import (
 	"log"
 	"mphclub-rest-server/database"
 	"mphclub-rest-server/models"
+	"strings"
 
 	"github.com/kataras/iris"
 )
@@ -39,8 +40,17 @@ func createUser(ctx iris.Context) {
 
 	err := database.CreateUser(u)
 	if err != nil {
+		pkExists := "ERROR #23505"
+		var errorString string
+
+		if strings.Contains(err.Error(), pkExists) {
+			errorString = "user sub already exists in database"
+		} else {
+			errorString = err.Error()
+		}
+
 		ctx.StatusCode(iris.StatusBadRequest)
-		ctx.JSON(generateJSONResponse(false, iris.Map{"database_error": err.Error()}))
+		ctx.JSON(generateJSONResponse(false, iris.Map{"database_error": errorString}))
 		return
 	}
 
