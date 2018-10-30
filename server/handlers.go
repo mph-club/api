@@ -40,7 +40,7 @@ func createUser(ctx iris.Context) {
 	err := database.CreateUser(u)
 	if err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
-		ctx.JSON(generateJSONResponse(false, iris.Map{"database_error": err}))
+		ctx.JSON(generateJSONResponse(false, iris.Map{"database_error": err.Error()}))
 		return
 	}
 
