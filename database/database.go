@@ -50,7 +50,7 @@ func connectToDB() *pg.DB {
 func CreateSchema() {
 	db := connectToDB()
 
-	for _, model := range []interface{}{&models.Vehicle{}} { //models go in second brace
+	for _, model := range []interface{}{&models.Vehicle{}, &models.UserInfo{}} { //models go in second brace
 		err := db.CreateTable(model, nil)
 		defer db.Close()
 
