@@ -3,6 +3,7 @@ package server
 import (
 	"log"
 
+	db "mphclub-rest-server/database"
 	"mphclub-rest-server/models"
 
 	"github.com/kataras/iris"
@@ -23,7 +24,11 @@ func createUser(ctx iris.Context) {
 		return
 	}
 
-	log.Println(u)
+	err := db.CreateUser(u)
+	if err != nil {
+		ctx.JSON(makeResponse(false, iris.Map{"database_error": err}))
+	}
+
 	ctx.StatusCode(iris.StatusOK)
 	ctx.JSON(makeResponse(true, iris.Map{"result": "user was successfully created"}))
 
