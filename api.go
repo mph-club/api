@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	"mphclub-grpc-server/database"
+	"mphclub-rest-server/database"
 	"mphclub-rest-server/server"
 
 	"github.com/aws/aws-sdk-go/aws"

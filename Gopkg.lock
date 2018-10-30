@@ -385,6 +385,7 @@
     "github.com/go-pg/pg",
     "github.com/joho/godotenv",
     "github.com/kataras/iris",
+    "github.com/kataras/iris/middleware/logger",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
