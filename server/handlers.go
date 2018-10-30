@@ -17,14 +17,13 @@ func createListing(ctx iris.Context) {
 		ctx.JSON(generateJSONResponse(false, iris.Map{"error": err.Error()}))
 		return
 	}
-	err := database.CreateListing(v)
-	if err != nil {
+
+	if err := database.CreateListing(v); err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(generateJSONResponse(false, iris.Map{"database_error": err.Error()}))
 		return
 	}
 
-	log.Println(v)
 	ctx.StatusCode(iris.StatusOK)
 	ctx.JSON(generateJSONResponse(true, iris.Map{"result": "vehicle was successfully inserted"}))
 }
@@ -38,8 +37,7 @@ func createUser(ctx iris.Context) {
 		return
 	}
 
-	err := database.CreateUser(u)
-	if err != nil {
+	if err := database.CreateUser(u); err != nil {
 		pkExists := "ERROR #23505"
 		var errorString string
 

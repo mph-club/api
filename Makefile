@@ -8,7 +8,6 @@ new-binary:
 
 #Use this after code push only
 docker-build-api:
-	@dep ensure
 	#only have to login (the below command) once per 12 hours
 	#@eval `aws ecr get-login --region us-east-1 --no-include-email`
 	@docker build -t mphclub_api -f ./docker/go-app-develop/Dockerfile .

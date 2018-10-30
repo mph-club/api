@@ -3,6 +3,7 @@ package database
 import (
 	"log"
 	"mphclub-rest-server/models"
+	"time"
 
 	"github.com/rs/xid"
 )
@@ -24,13 +25,16 @@ func CreateListing(v models.Vehicle) error {
 	db := connectToDB()
 
 	v.ID = xid.New().String()
+	v.CreatedTime = time.Now()
+
+	log.Println(v)
 
 	err := db.Insert(&v)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
-
+	log.Println(v)
 	log.Println("vehicle created")
 	return nil
 }

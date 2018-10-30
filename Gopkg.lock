@@ -279,6 +279,14 @@
   version = "1.0.1"
 
 [[projects]]
+  digest = "1:2e76a73cb51f42d63a2a1a85b3dc5731fd4faf6821b434bd0ef2c099186031d6"
+  name = "github.com/rs/xid"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "15d26544def341f036c5f8dca987a4cbe575032c"
+  version = "v1.2.1"
+
+[[projects]]
   branch = "master"
   digest = "1:0cdbe7b717bdc81f143bbdd516c3639828c5e1cd158e4140ca100d657fc26550"
   name = "github.com/ryanuber/columnize"
@@ -386,6 +394,7 @@
     "github.com/joho/godotenv",
     "github.com/kataras/iris",
     "github.com/kataras/iris/middleware/logger",
+    "github.com/rs/xid",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
