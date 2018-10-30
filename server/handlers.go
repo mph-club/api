@@ -17,17 +17,14 @@ func postListing(ctx iris.Context) {
 func createUser(ctx iris.Context) {
 	var u models.UserInfo
 
-	log.Println(ctx.FormValues())
-	log.Println(ctx.FormValue("email"))
-	log.Println(ctx.FormValue("phone"))
-
 	if err := ctx.ReadJSON(&u); err != nil {
-		log.Println(err)
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(makeResponse(false, iris.Map{"error": err.Error()}))
 		return
 	}
 
-	ctx.Writef("Received: %#+v\n", u)
+	log.Println(u)
+	ctx.StatusCode(iris.StatusOK)
+	ctx.JSON(makeResponse(true, iris.Map{"result": "user was successfully created"}))
 
 }
