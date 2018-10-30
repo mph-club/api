@@ -18,7 +18,9 @@ func createListing(ctx iris.Context) {
 	}
 	err := database.CreateListing(v)
 	if err != nil {
+		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(generateJSONResponse(false, iris.Map{"database_error": err}))
+		return
 	}
 
 	log.Println(v)
@@ -37,9 +39,12 @@ func createUser(ctx iris.Context) {
 
 	err := database.CreateUser(u)
 	if err != nil {
+		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(generateJSONResponse(false, iris.Map{"database_error": err}))
+		return
 	}
 
+	log.Println(u)
 	ctx.StatusCode(iris.StatusOK)
 	ctx.JSON(generateJSONResponse(true, iris.Map{"result": "user was successfully created"}))
 }
