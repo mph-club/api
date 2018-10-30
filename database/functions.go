@@ -5,7 +5,7 @@ import (
 	"mphclub-rest-server/models"
 )
 
-func createUser(u models.UserInfo) error {
+func CreateUser(u models.UserInfo) error {
 	db := connectToDB()
 
 	err := db.Insert(&u)
