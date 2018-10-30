@@ -3,6 +3,8 @@ package database
 import (
 	"log"
 	"mphclub-rest-server/models"
+
+	"github.com/rs/xid"
 )
 
 func CreateUser(u models.UserInfo) error {
@@ -20,6 +22,8 @@ func CreateUser(u models.UserInfo) error {
 
 func CreateListing(v models.Vehicle) error {
 	db := connectToDB()
+
+	v.ID = xid.New().String()
 
 	err := db.Insert(&v)
 	if err != nil {
