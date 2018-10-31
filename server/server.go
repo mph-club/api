@@ -24,6 +24,7 @@ func CreateAndListen() {
 
 		v1.Post("/createUser", cognitoAuth, createUser)
 		v1.Post("/listCar", cognitoAuth, createListing)
+		v1.Get("/getCars", getCars)
 	}
 
 	_api.Run(iris.Addr(":8080"))

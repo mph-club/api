@@ -38,3 +38,17 @@ func CreateListing(v models.Vehicle) error {
 	log.Println("vehicle created")
 	return nil
 }
+
+func GetCars() ([]models.Vehicle, error) {
+	var vehicleList []models.Vehicle
+
+	db := connectToDB()
+
+	err := db.Model(&vehicleList).Select()
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	return vehicleList, nil
+}

@@ -56,3 +56,16 @@ func createUser(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
 	ctx.JSON(generateJSONResponse(true, iris.Map{"result": "user was successfully created"}))
 }
+
+func getCars(ctx iris.Context) {
+	list, err := database.GetCars()
+
+	if err != nil {
+		ctx.StatusCode(iris.StatusBadRequest)
+		ctx.JSON(generateJSONResponse(false, iris.Map{"database_error": err.Error()}))
+		return
+	}
+
+	ctx.StatusCode(iris.StatusOK)
+	ctx.JSON(generateJSONResponse(true, iris.Map{"vehicles": list}))
+}
