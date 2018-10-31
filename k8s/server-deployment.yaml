@@ -22,12 +22,12 @@ spec:
               value: us-east-1
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
-                secretFrom:
+                secretKeyRef:
                   name: aws-secrets
                   key: aws_access_key
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
-                secretFrom:
+                secretKeyRef:
                   name: aws-secrets
                   key: aws_secret_key
             - name: COGNITO_USER_POOL_ID
