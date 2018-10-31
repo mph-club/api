@@ -4,8 +4,12 @@ import (
 	"log"
 	"mphclub-rest-server/database"
 	"mphclub-rest-server/models"
+	"os"
 	"strings"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/kataras/iris"
 )
 
@@ -68,4 +72,33 @@ func getCars(ctx iris.Context) {
 
 	ctx.StatusCode(iris.StatusOK)
 	ctx.JSON(generateJSONResponse(true, iris.Map{"vehicles": list}))
+}
+
+func uploadToS3(ctx iris.Context) {
+	// The session the S3 Uploader will use
+	sess := session.Must(session.NewSession())
+
+	// Create an uploader with the session and default options
+	uploader := s3manager.NewUploader(sess)
+
+	filename := "some file name"
+
+	f, err := os.Open(filename)
+	if err != nil {
+		ctx.StatusCode(iris.StatusBadRequest)
+		ctx.JSON(generateJSONResponse(false, iris.Map{"os_error": err.Error()}))
+	}
+
+	// Upload the file to S3.
+	result, err := uploader.Upload(&s3manager.UploadInput{
+		Bucket: aws.String(os.Getenv("AWS_BUCKET")),
+		Key:    aws.String(filename),
+		Body:   f,
+	})
+	if err != nil {
+		ctx.StatusCode(iris.StatusBadRequest)
+		ctx.JSON(generateJSONResponse(false, iris.Map{"aws_error": err.Error()}))
+	}
+
+	log.Printf("file uploaded to, %s\n", result.Location)
 }

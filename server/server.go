@@ -22,9 +22,12 @@ func CreateAndListen() {
 			ctx.ServeFile("./swagger/index.html", false)
 		})
 
+		//  PUBLIC
+		v1.Get("/getCars", getCars)
+		//  PRIVATE
 		v1.Post("/createUser", cognitoAuth, createUser)
 		v1.Post("/listCar", cognitoAuth, createListing)
-		v1.Get("/getCars", getCars)
+		v1.Post("/uploadPhoto", cognitoAuth, uploadToS3)
 	}
 
 	_api.Run(iris.Addr(":8080"))

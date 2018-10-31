@@ -26,6 +26,7 @@ type Vehicle struct {
 	UpdatedTime  time.Time `json:"updated_time"`
 	User         string    `json:"user_sub"`
 	IsPublished  bool      `json:"is_published"`
+	IsApproved   bool      `json:"is_approved"`
 	Address      string    `json:"address"`
 	City         string    `json:"city"`
 	State        string    `json:"state"`
@@ -35,7 +36,8 @@ type Vehicle struct {
 type VehicleSignupStage struct {
 	Stage     int    `json:"stage"`
 	User      string `json:"user_sub"`
-	VehicleID string `json:"vehicle_id" pg:",fk:id"`
+	VehicleID string `json:"vehicle_id" pg:",fk:vehicle_id"`
+	Completed bool   `json:"completed"`
 }
 
 type UserInfo struct {
