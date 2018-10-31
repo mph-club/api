@@ -81,21 +81,30 @@ func uploadToS3(ctx iris.Context) {
 	// Create an uploader with the session and default options
 	uploader := s3manager.NewUploader(sess)
 
-	log.Println(ctx.Request())
+	log.Println(ctx.FormFile("photo"))
 
-	filename := "some file name"
+	file, info, err := ctx.FormFile("uploadfile")
 
-	f, err := os.Open(filename)
 	if err != nil {
-		ctx.StatusCode(iris.StatusBadRequest)
-		ctx.JSON(generateJSONResponse(false, iris.Map{"os_error": err.Error()}))
+		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.JSON(generateJSONResponse(false, iris.Map{"server_error": err.Error()}))
+		return
 	}
+
+	defer file.Close()
+	filename := info.Filename
+	//
+	// f, err := os.Open(filename)
+	// if err != nil {
+	// 	ctx.StatusCode(iris.StatusBadRequest)
+	// 	ctx.JSON(generateJSONResponse(false, iris.Map{"os_error": err.Error()}))
+	// }
 
 	// Upload the file to S3.
 	result, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String(os.Getenv("AWS_BUCKET")),
 		Key:    aws.String(filename),
-		Body:   f,
+		Body:   file,
 	})
 	if err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
