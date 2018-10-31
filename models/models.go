@@ -24,7 +24,7 @@ type Vehicle struct {
 	CreatedTime  time.Time `json:"created_time"`
 	UpdatedBy    string    `json:"updated_by"`
 	UpdatedTime  time.Time `json:"updated_time"`
-	User         UserInfo  `json:"user_info"`
+	User         string    `json:"user_sub"`
 	IsPublished  bool      `json:"is_published"`
 	Address      string    `json:"address"`
 	City         string    `json:"city"`
@@ -33,16 +33,16 @@ type Vehicle struct {
 }
 
 type VehicleSignupStage struct {
-	Stage       int      `json:"stage"`
-	User        UserInfo `json:"user_info"`
-	VehicleInfo Vehicle  `json:"vehicle_info"`
+	Stage     int    `json:"stage"`
+	User      string `json:"user_sub"`
+	VehicleID string `json:"vehicle_id" pg:",fk:id"`
 }
 
 type UserInfo struct {
-	tableName    struct{}  `sql:"user_info"`
-	Sub          string    `json:"sub" sql:",pk,unique"`
-	Email        string    `json:"email"`
-	Phone        string    `json:"phone"`
-	ListedCars   []Vehicle `json:"listed_cars"`
-	UnlistedCars []Vehicle `json:"unlisted_cars"`
+	tableName    struct{} `sql:"user_info"`
+	Sub          string   `json:"sub" sql:",pk,unique"`
+	Email        string   `json:"email"`
+	Phone        string   `json:"phone"`
+	ListedCars   []string `json:"listed_cars"`
+	UnlistedCars []string `json:"unlisted_cars"`
 }
