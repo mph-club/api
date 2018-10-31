@@ -81,15 +81,15 @@ func uploadToS3(ctx iris.Context) {
 	// Create an uploader with the session and default options
 	uploader := s3manager.NewUploader(sess)
 
-	log.Println(ctx.FormFile("photo"))
-
-	file, info, err := ctx.FormFile("uploadfile")
+	file, info, err := ctx.FormFile("photo")
 
 	if err != nil {
 		ctx.StatusCode(iris.StatusInternalServerError)
 		ctx.JSON(generateJSONResponse(false, iris.Map{"server_error": err.Error()}))
 		return
 	}
+
+	log.Println(info)
 
 	defer file.Close()
 	filename := info.Filename
