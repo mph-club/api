@@ -75,10 +75,15 @@ func getCars(ctx iris.Context) {
 }
 
 func uploadToS3(ctx iris.Context) {
-	// The session the S3 Uploader will use
-	sess := session.Must(session.NewSession())
+	sess, err := session.NewSession(&aws.Config{
+		Region: aws.String(os.Getenv("AWS_REGION")),
+	})
+	if err != nil {
+		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.JSON(generateJSONResponse(false, iris.Map{"aws_auth_err": err.Error()}))
+		return
+	}
 
-	// Create an uploader with the session and default options
 	uploader := s3manager.NewUploader(sess)
 
 	file, info, err := ctx.FormFile("photo")
@@ -89,17 +94,10 @@ func uploadToS3(ctx iris.Context) {
 		return
 	}
 
-	//log.Println(info)
-
 	defer file.Close()
 	filename := info.Filename
 
-	// f, err := os.Ope
-	// if err != nil {
-	// 	ctx.StatusCode(iris.StatusBadRequest)
-	// 	ctx.JSON(generateJSONResponse(false, iris.Map{"os_error": err.Error()}))
-	// 	return
-	// }
+	log.Println(filename)
 
 	// Upload the file to S3.
 	result, err := uploader.Upload(&s3manager.UploadInput{
