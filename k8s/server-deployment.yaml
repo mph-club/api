@@ -20,6 +20,16 @@ spec:
           env:
             - name: AWS_REGION
               value: us-east-1
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretFrom:
+                  name: aws-secrets
+                  key: aws_access_key
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretFrom:
+                  name: aws-secrets
+                  key: aws_secret_key
             - name: COGNITO_USER_POOL_ID
               value: us-east-1_RKsJA9wua
             - name: PGUSER
