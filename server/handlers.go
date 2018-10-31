@@ -81,6 +81,8 @@ func uploadToS3(ctx iris.Context) {
 	// Create an uploader with the session and default options
 	uploader := s3manager.NewUploader(sess)
 
+	log.Println(ctx.Request())
+
 	filename := "some file name"
 
 	f, err := os.Open(filename)
