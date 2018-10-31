@@ -16,7 +16,7 @@ type Vehicle struct {
 	DayMax       int       `json:"day_max"`
 	DayMin       int       `json:"day_min"`
 	VehicleType  string    `json:"vehicle_type"`
-	Photos       []string  `json:"photos"`
+	Photos       []string  `json:"photos" sql:",array"`
 	Miles        int       `json:"miles"`
 	LicensePlate string    `json:"license_plate"`
 	Status       string    `json:"status"`
@@ -43,6 +43,6 @@ type UserInfo struct {
 	Sub          string   `json:"sub" sql:",pk,unique"`
 	Email        string   `json:"email"`
 	Phone        string   `json:"phone"`
-	ListedCars   []string `json:"listed_cars"`
-	UnlistedCars []string `json:"unlisted_cars"`
+	ListedCars   []string `json:"listed_cars" sql:",array"`
+	UnlistedCars []string `json:"unlisted_cars" sql:",array"`
 }
