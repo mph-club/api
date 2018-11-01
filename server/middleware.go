@@ -10,10 +10,11 @@ func cognitoAuth(ctx iris.Context) {
 
 	if isAuth {
 		ctx.Values().Set("sub", sub)
+		updateUser(ctx)
 		ctx.Next()
 	} else {
 		ctx.StatusCode(iris.StatusUnauthorized)
-		ctx.JSON(generateJSONResponse(false, iris.Map{"error": iris.Map{"server_error": "Unauthorized", "error_message": err}}))
+		ctx.JSON(generateJSONResponse(false, iris.Map{"server_error": "Unauthorized", "error_message": err}))
 	}
 }
 

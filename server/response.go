@@ -9,12 +9,10 @@ func generateJSONResponse(success bool, responseMap map[string]interface{}) map[
 
 	if success {
 		message = pass
+		mapToIterate["data"] = responseMap
 	} else {
 		message = fail
-	}
-
-	for k, v := range responseMap {
-		mapToIterate[k] = v
+		mapToIterate["error"] = responseMap
 	}
 
 	mapToIterate["message"] = message

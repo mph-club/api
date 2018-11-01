@@ -2,11 +2,9 @@ package server
 
 import (
 	"fmt"
-	"log"
 	"mphclub-rest-server/database"
 	"mphclub-rest-server/models"
 	"os"
-	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -38,8 +36,9 @@ func upsertListing(ctx iris.Context) {
 	ctx.JSON(generateJSONResponse(true, iris.Map{"result": resultString, "id": carID}))
 }
 
-func createUser(ctx iris.Context) {
+func updateUser(ctx iris.Context) {
 	var u models.UserInfo
+	u.Sub = ctx.Values().Get("sub").(string)
 
 	if err := ctx.ReadJSON(&u); err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
@@ -47,24 +46,15 @@ func createUser(ctx iris.Context) {
 		return
 	}
 
-	if err := database.CreateUser(u); err != nil {
-		pkExists := "ERROR #23505"
-		var errorString string
-
-		if strings.Contains(err.Error(), pkExists) {
-			errorString = "user sub already exists in database"
-		} else {
-			errorString = err.Error()
-		}
-
+	if err := database.UpsertUser(u); err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
-		ctx.JSON(generateJSONResponse(false, iris.Map{"database_error": errorString}))
+		ctx.JSON(generateJSONResponse(false, iris.Map{"error": err.Error()}))
 		return
 	}
 
-	log.Println(u)
+	resultString := fmt.Sprintf("user was successfully updated")
 	ctx.StatusCode(iris.StatusOK)
-	ctx.JSON(generateJSONResponse(true, iris.Map{"result": "user was successfully created"}))
+	ctx.JSON(generateJSONResponse(true, iris.Map{"result": resultString}))
 }
 
 func getCars(ctx iris.Context) {

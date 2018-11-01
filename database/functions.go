@@ -8,22 +8,36 @@ import (
 	"github.com/rs/xid"
 )
 
-func CreateUser(u models.UserInfo) error {
+func UpsertUser(u models.UserInfo) error {
 	db := connectToDB()
 
-	err := db.Insert(&u)
-	if err != nil {
-		log.Println(err)
+	user := models.UserInfo{
+		Sub: u.Sub,
+	}
+
+	if err := db.Select(&user); err != nil {
+		log.Println(err.Error())
+		log.Println("user does not exist, create")
+	} else {
+		log.Println("user does exist, update")
+
+		u = u.Merge(user)
+
+		if dbErr := db.Update(&u); dbErr != nil {
+			return dbErr
+		}
 		return err
 	}
 
-	log.Println("user created")
+	if err := db.Insert(&user); err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func EditPhotoURLArrayOnVehicle(vehicleID, photoURL string) error {
 	db := connectToDB()
-
 	vehicleToAttach := &models.Vehicle{ID: vehicleID}
 
 	err := db.Select(vehicleToAttach)
@@ -33,7 +47,6 @@ func EditPhotoURLArrayOnVehicle(vehicleID, photoURL string) error {
 	}
 
 	vehicleToAttach.Photos = append(vehicleToAttach.Photos, photoURL)
-
 	_, err = db.Model(vehicleToAttach).Column("photos").WherePK().Update()
 	if err != nil {
 		log.Println(err)

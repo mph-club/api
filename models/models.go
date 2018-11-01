@@ -20,7 +20,6 @@ type Vehicle struct {
 	Miles        int       `json:"miles"`
 	LicensePlate string    `json:"license_plate"`
 	Status       string    `json:"status"`
-	CreatedBy    string    `json:"created_by"`
 	CreatedTime  time.Time `json:"created_time"`
 	UpdatedBy    string    `json:"updated_by"`
 	UpdatedTime  time.Time `json:"updated_time"`
@@ -115,4 +114,21 @@ type UserInfo struct {
 	Phone        string   `json:"phone"`
 	ListedCars   []string `json:"listed_cars" sql:",array"`
 	UnlistedCars []string `json:"unlisted_cars" sql:",array"`
+}
+
+func (target *UserInfo) Merge(source UserInfo) UserInfo {
+	if target.Email != "" {
+		source.Email = target.Email
+	}
+	if target.Phone != "" {
+		source.Phone = target.Phone
+	}
+	if len(target.ListedCars) > 0 {
+		source.ListedCars = target.ListedCars
+	}
+	if len(target.UnlistedCars) > 0 {
+		source.UnlistedCars = target.UnlistedCars
+	}
+
+	return source
 }
