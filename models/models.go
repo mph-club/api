@@ -43,7 +43,7 @@ func (target *Vehicle) Merge(source Vehicle) Vehicle {
 	if target.Color != "" {
 		source.Color = target.Color
 	}
-	if !isZeroOfUnderlyingType(target.Coordinates) {
+	if len(target.Coordinates) > 0 {
 		source.Coordinates = target.Coordinates
 	}
 	if target.CreatedBy != "" {
