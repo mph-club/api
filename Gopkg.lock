@@ -10,6 +10,14 @@
   version = "v0.3.1"
 
 [[projects]]
+  digest = "1:2dc91e248a48ea5e8153d503764d8514ee347daffbe06cc617388d77fc24985b"
+  name = "github.com/InVisionApp/conjungo"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "cf08399f4b9568f1d39c5401023cc084abcde71d"
+  version = "v1.0.0"
+
+[[projects]]
   branch = "master"
   digest = "1:164a36ea7dd8adbbe439458aeb3f55aeb1e18461be220ebab4937cec96fb1a6a"
   name = "github.com/Joker/jade"
@@ -24,6 +32,14 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "b9777dc9f9cc3f3e426a01d218ddd6d52153f907"
+
+[[projects]]
+  digest = "1:69b1cc331fca23d702bd72f860c6a647afd0aa9fcbc1d0659b1365e26546dd70"
+  name = "github.com/Sirupsen/logrus"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "bcd833dfe83d3cebad139e4a29ed79cb2318bf95"
+  version = "v1.2.0"
 
 [[projects]]
   digest = "1:138a9e457fb88e9cf66e69eb7838255fcf3f454077e6280863fa06eadd8c2e6e"
@@ -262,6 +278,14 @@
   version = "v1.1"
 
 [[projects]]
+  digest = "1:0a69a1c0db3591fcefb47f115b224592c8dfa4368b7ba9fae509d5e16cdc95c8"
+  name = "github.com/konsorten/go-windows-terminal-sequences"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "5c8c8bd35d3832f5d134ae1e1e375b69a4d25242"
+  version = "v1.0.1"
+
+[[projects]]
   branch = "master"
   digest = "1:1fc201f179a7d45f944655de3cdbfb0a8a226fd525569454e31ca87f9e4bb677"
   name = "github.com/microcosm-cc/bluemonday"
@@ -311,12 +335,13 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:9607502b7199053c9294999ed9dce98d9c04e05d1b6610d3e979036f1dcad493"
+  digest = "1:6eaccbec02f056d1b07e7d75e4b65deefef66dbe3aea2dad36a7d4b1a9f116e1"
   name = "golang.org/x/crypto"
   packages = [
     "acme",
     "acme/autocert",
     "pbkdf2",
+    "ssh/terminal",
   ]
   pruneopts = "UT"
   revision = "85e1b3f9139abd58575d728a509643924e3b2ebf"
@@ -336,9 +361,12 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:008fb9f84ae9bf7994228b9c78810d44162071ec13caf28291677897dca819ee"
+  digest = "1:6c93c46c00889c28f5a105e7cb5ba56672fd4a2351375fa819acb44e66d427df"
   name = "golang.org/x/sys"
-  packages = ["unix"]
+  packages = [
+    "unix",
+    "windows",
+  ]
   pruneopts = "UT"
   revision = "d989b31c87461dc8ab2f1cac6792814e27fadea9"
 
@@ -393,6 +421,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/InVisionApp/conjungo",
     "github.com/aws/aws-sdk-go/aws",
     "github.com/aws/aws-sdk-go/aws/credentials",
     "github.com/aws/aws-sdk-go/aws/session",

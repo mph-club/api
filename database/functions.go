@@ -5,6 +5,7 @@ import (
 	"mphclub-rest-server/models"
 	"time"
 
+	"github.com/InVisionApp/conjungo"
 	"github.com/rs/xid"
 )
 
@@ -24,22 +25,28 @@ func CreateUser(u models.UserInfo) error {
 func UpsertListing(v models.Vehicle) (string, string, error) {
 	db := connectToDB()
 
-	car := &models.Vehicle{
+	car := models.Vehicle{
 		ID: v.ID,
 	}
 
-	if err := db.Select(car); err != nil {
+	if err := db.Select(&car); err != nil {
 		log.Println(err.Error())
 		log.Println("car does not exist, create")
 	} else {
 		log.Println("car does exist, update")
 		v.UpdatedTime = time.Now()
 
+		mergeErr := conjungo.Merge(&v, &car, nil)
+		if mergeErr != nil {
+			log.Println(mergeErr)
+		}
+
 		if dbErr := db.Update(&v); dbErr != nil {
 			return "", "", dbErr
 		}
 		return v.ID, "updated", nil
 	}
+
 	v.ID = xid.New().String()
 	v.CreatedTime = time.Now()
 
