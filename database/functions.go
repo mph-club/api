@@ -29,6 +29,7 @@ func UpsertListing(v models.Vehicle) (string, string, error) {
 		log.Println("car does not exist, create")
 	} else {
 		log.Println("car does exist, update")
+		log.Println(v)
 		car.UpdatedTime = time.Now()
 
 		if dbErr := db.Update(car); dbErr != nil {
