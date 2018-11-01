@@ -21,6 +21,28 @@ func CreateUser(u models.UserInfo) error {
 	return nil
 }
 
+func EditPhotoURLArrayOnVehicle(vehicleID, photoURL string) error {
+	db := connectToDB()
+
+	vehicleToAttach := &models.Vehicle{ID: vehicleID}
+
+	err := db.Select(vehicleToAttach)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	vehicleToAttach.Photos = append(vehicleToAttach.Photos, photoURL)
+
+	_, err = db.Model(vehicleToAttach).Column("photos").WherePK().Update()
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
+}
+
 func UpsertListing(v models.Vehicle) (string, string, error) {
 	db := connectToDB()
 

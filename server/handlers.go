@@ -120,7 +120,14 @@ func uploadToS3(ctx iris.Context) {
 		return
 	}
 
-	log.Printf("file uploaded to, %s\n", result.Location)
+	err = database.EditPhotoURLArrayOnVehicle(vehicleID, result.Location)
+	if err != nil {
+		ctx.StatusCode(iris.StatusBadRequest)
+		ctx.JSON(generateJSONResponse(false, iris.Map{"db_error": err.Error()}))
+		return
+	}
+
+	resultString := fmt.Sprintf("photo was successfully uploaded to the bucket and attached to %s", vehicleID)
 	ctx.StatusCode(iris.StatusOK)
-	ctx.JSON(generateJSONResponse(true, iris.Map{"result": "photo was successfully uploaded to the bucket"}))
+	ctx.JSON(generateJSONResponse(true, iris.Map{"result": resultString}))
 }
