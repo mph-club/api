@@ -8,10 +8,10 @@ import (
 	"github.com/rs/xid"
 )
 
-func UpsertUser(u models.UserInfo) error {
+func UpsertUser(u models.User) error {
 	db := connectToDB()
 
-	user := models.UserInfo{
+	user := models.User{
 		Sub: u.Sub,
 	}
 

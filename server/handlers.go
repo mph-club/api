@@ -37,7 +37,7 @@ func upsertListing(ctx iris.Context) {
 }
 
 func updateUser(ctx iris.Context) {
-	var u models.UserInfo
+	var u models.User
 	u.Sub = ctx.Values().Get("sub").(string)
 
 	if err := ctx.ReadJSON(&u); err != nil {

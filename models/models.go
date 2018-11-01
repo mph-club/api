@@ -107,8 +107,7 @@ type VehicleSignupStage struct {
 	Completed bool   `json:"completed"`
 }
 
-type UserInfo struct {
-	tableName    struct{} `sql:"user_info"`
+type User struct {
 	Sub          string   `json:"sub" sql:",pk,unique"`
 	Email        string   `json:"email"`
 	Phone        string   `json:"phone"`
@@ -116,7 +115,7 @@ type UserInfo struct {
 	UnlistedCars []string `json:"unlisted_cars" sql:",array"`
 }
 
-func (target *UserInfo) Merge(source UserInfo) UserInfo {
+func (target *User) Merge(source User) User {
 	if target.Email != "" {
 		source.Email = target.Email
 	}

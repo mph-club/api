@@ -52,7 +52,7 @@ func CreateSchema() {
 
 	for _, model := range []interface{}{
 		&models.Vehicle{},
-		&models.UserInfo{},
+		&models.User{},
 		&models.VehicleSignupStage{},
 		//models go here
 	} {
