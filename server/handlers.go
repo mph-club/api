@@ -93,6 +93,8 @@ func uploadToS3(ctx iris.Context) {
 
 	uploader := s3manager.NewUploader(sess)
 
+	vehicleID := ctx.FormValue("vehicle")
+
 	file, info, err := ctx.FormFile("photo")
 
 	if err != nil {
@@ -106,7 +108,7 @@ func uploadToS3(ctx iris.Context) {
 
 	result, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket:      aws.String(os.Getenv("AWS_BUCKET")),
-		Key:         aws.String(filename),
+		Key:         aws.String(vehicleID + "/" + filename),
 		Body:        file,
 		ContentType: aws.String("image/jpeg"),
 		ACL:         aws.String("public-read"),
