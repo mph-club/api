@@ -36,9 +36,9 @@ func UpsertListing(v models.Vehicle) (string, string, error) {
 		log.Println("car does exist, update")
 		v.UpdatedTime = time.Now()
 
-		mergeErr := conjungo.Merge(&v, &car, nil)
+		mergeErr := conjungo.Merge(&v, car, nil)
 		if mergeErr != nil {
-			log.Println(mergeErr)
+			return "", "", mergeErr
 		}
 
 		if dbErr := db.Update(&v); dbErr != nil {
