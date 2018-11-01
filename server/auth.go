@@ -20,7 +20,7 @@ import (
 
 var sub string
 
-func checkToken(tokenString string) (bool, string) {
+func checkToken(tokenString string) (bool, string, string) {
 	region := os.Getenv("AWS_REGION")
 	userPoolID := os.Getenv("COGNITO_USER_POOL_ID")
 
@@ -32,10 +32,10 @@ func checkToken(tokenString string) (bool, string) {
 	if err != nil || !token.Valid {
 		errMsg := err.Error()
 		log.Println(err)
-		return false, errMsg
+		return false, "", errMsg
 	}
 
-	return true, ""
+	return true, sub, ""
 }
 
 func validateToken(tokenStr, region, userPoolID string, jwk map[string]JWKKey) (*jwt.Token, error) {
@@ -68,7 +68,6 @@ func validateToken(tokenStr, region, userPoolID string, jwk map[string]JWKKey) (
 		return token, fmt.Errorf("token does not contain sub")
 	}
 	sub = csub.(string)
-	log.Println("sub: ", sub)
 
 	iss, ok := claims["iss"]
 	if !ok {

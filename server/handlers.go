@@ -18,6 +18,8 @@ import (
 func upsertListing(ctx iris.Context) {
 	var v models.Vehicle
 
+	v.User = ctx.Values().Get("sub").(string)
+
 	if err := ctx.ReadJSON(&v); err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(generateJSONResponse(false, iris.Map{"error": err.Error()}))

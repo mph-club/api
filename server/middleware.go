@@ -6,9 +6,10 @@ import (
 )
 
 func cognitoAuth(ctx iris.Context) {
-	isAuth, err := checkToken(ctx.Request().Header.Get("Authorization"))
+	isAuth, sub, err := checkToken(ctx.Request().Header.Get("Authorization"))
 
 	if isAuth {
+		ctx.Values().Set("sub", sub)
 		ctx.Next()
 	} else {
 		ctx.StatusCode(iris.StatusUnauthorized)
