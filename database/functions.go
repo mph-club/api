@@ -5,7 +5,6 @@ import (
 	"mphclub-rest-server/models"
 	"time"
 
-	"github.com/InVisionApp/conjungo"
 	"github.com/rs/xid"
 )
 
@@ -34,15 +33,11 @@ func UpsertListing(v models.Vehicle) (string, string, error) {
 		log.Println("car does not exist, create")
 	} else {
 		log.Println("car does exist, update")
+
+		log.Println(v.Merge(car))
+		v = v.Merge(car)
+
 		v.UpdatedTime = time.Now()
-
-		opts := conjungo.NewOptions()
-		opts.Overwrite = true
-		mergeErr := conjungo.Merge(&v, car, opts)
-		if mergeErr != nil {
-			return "", "", mergeErr
-		}
-
 		log.Println(&v)
 
 		if dbErr := db.Update(&v); dbErr != nil {
