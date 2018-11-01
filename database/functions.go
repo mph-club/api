@@ -30,6 +30,7 @@ func UpsertListing(v models.Vehicle) error {
 		log.Println("car does not exist, create")
 	} else {
 		log.Println("car does exist, update")
+		return nil
 	}
 
 	v.ID = xid.New().String()
