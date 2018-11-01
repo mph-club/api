@@ -2,8 +2,6 @@ package main
 
 import (
 	"log"
-	"mphclub-rest-server/database"
-	"mphclub-rest-server/server"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -11,10 +9,10 @@ import (
 )
 
 func main() {
-	//initiateAuthorization()
-	database.CreateSchema()
+	initiateAuthorization()
+	//database.CreateSchema()
 
-	server.CreateAndListen()
+	//server.CreateAndListen()
 }
 
 func initiateAuthorization() *string {

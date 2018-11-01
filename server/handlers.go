@@ -99,14 +99,14 @@ func uploadToS3(ctx iris.Context) {
 	defer file.Close()
 	filename := info.Filename
 
-	log.Println(filename)
-
-	// Upload the file to S3.
 	result, err := uploader.Upload(&s3manager.UploadInput{
-		Bucket: aws.String(os.Getenv("AWS_BUCKET")),
-		Key:    aws.String(filename),
-		Body:   file,
+		Bucket:      aws.String(os.Getenv("AWS_BUCKET")),
+		Key:         aws.String(filename),
+		Body:        file,
+		ContentType: aws.String("image/jpeg"),
+		ACL:         aws.String("public-read"),
 	})
+
 	if err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(generateJSONResponse(false, iris.Map{"aws_error": err.Error()}))

@@ -31,7 +31,7 @@ spec:
                   name: aws-secrets
                   key: aws_secret_key
             - name: COGNITO_USER_POOL_ID
-              value: us-east-1_aJVqbEZra
+              value: us-east-1_RKsJA9wua
             - name: PGUSER
               value: mphclub
             - name: PGHOST
@@ -43,6 +43,6 @@ spec:
             - name: PGPASSWORD
               value: mphclub123
             - name: AWS_BUCKET
-              value: mphclub-photos
+              value: mphclub
       imagePullSecrets:
         - name: awsecr-cred
