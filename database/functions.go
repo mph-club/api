@@ -24,29 +24,32 @@ func CreateUser(u models.UserInfo) error {
 func UpsertListing(v models.Vehicle) (string, string, error) {
 	db := connectToDB()
 
-	car := &v
+	car := &models.Vehicle{
+		ID: v.ID,
+	}
+
 	if err := db.Select(car); err != nil {
+		log.Println(err.Error())
 		log.Println("car does not exist, create")
 	} else {
 		log.Println("car does exist, update")
-		log.Println(v)
-		car.UpdatedTime = time.Now()
+		v.UpdatedTime = time.Now()
 
-		if dbErr := db.Update(car); dbErr != nil {
+		if dbErr := db.Update(&v); dbErr != nil {
 			return "", "", dbErr
 		}
-		return car.ID, "updated", nil
+		return v.ID, "updated", nil
 	}
-	car.ID = xid.New().String()
-	car.CreatedTime = time.Now()
+	v.ID = xid.New().String()
+	v.CreatedTime = time.Now()
 
-	if err := db.Insert(car); err != nil {
+	if err := db.Insert(&v); err != nil {
 		log.Println(err)
 		return "", "", err
 	}
 
 	log.Println("vehicle created")
-	return car.ID, "created", nil
+	return v.ID, "created", nil
 }
 
 func GetCars() ([]models.Vehicle, error) {
