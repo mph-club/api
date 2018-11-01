@@ -41,6 +41,8 @@ func UpsertListing(v models.Vehicle) (string, string, error) {
 			return "", "", mergeErr
 		}
 
+		log.Println(&v)
+
 		if dbErr := db.Update(&v); dbErr != nil {
 			return "", "", dbErr
 		}
