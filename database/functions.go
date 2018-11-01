@@ -21,15 +21,23 @@ func CreateUser(u models.UserInfo) error {
 	return nil
 }
 
-func CreateListing(v models.Vehicle) error {
+func UpsertListing(v models.Vehicle) error {
 	db := connectToDB()
+
+	carParam := &v
+	err := db.Select(carParam)
+	if err != nil {
+		log.Println("car does not exist, create")
+	} else {
+		log.Println("car does exist, update")
+	}
 
 	v.ID = xid.New().String()
 	v.CreatedTime = time.Now()
 
 	log.Println(v)
 
-	err := db.Insert(&v)
+	err = db.Insert(&v)
 	if err != nil {
 		log.Println(err)
 		return err

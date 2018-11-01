@@ -14,7 +14,7 @@ import (
 	"github.com/kataras/iris"
 )
 
-func createListing(ctx iris.Context) {
+func upsertListing(ctx iris.Context) {
 	var v models.Vehicle
 
 	if err := ctx.ReadJSON(&v); err != nil {
@@ -23,7 +23,7 @@ func createListing(ctx iris.Context) {
 		return
 	}
 
-	if err := database.CreateListing(v); err != nil {
+	if err := database.UpsertListing(v); err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(generateJSONResponse(false, iris.Map{"database_error": err.Error()}))
 		return
@@ -114,4 +114,6 @@ func uploadToS3(ctx iris.Context) {
 	}
 
 	log.Printf("file uploaded to, %s\n", result.Location)
+	ctx.StatusCode(iris.StatusOK)
+	ctx.JSON(generateJSONResponse(true, iris.Map{"result": "photo was successfully uploaded to the bucket"}))
 }
