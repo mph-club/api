@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"log"
 	"mphclub-rest-server/database"
 	"mphclub-rest-server/models"
@@ -23,14 +24,16 @@ func upsertListing(ctx iris.Context) {
 		return
 	}
 
-	if err := database.UpsertListing(v); err != nil {
+	carID, result, err := database.UpsertListing(v)
+	if err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(generateJSONResponse(false, iris.Map{"database_error": err.Error()}))
 		return
 	}
 
+	resultString := fmt.Sprintf("vehicle was successfully %s", result)
 	ctx.StatusCode(iris.StatusOK)
-	ctx.JSON(generateJSONResponse(true, iris.Map{"result": "vehicle was successfully inserted"}))
+	ctx.JSON(generateJSONResponse(true, iris.Map{"result": resultString, "id": carID}))
 }
 
 func createUser(ctx iris.Context) {
