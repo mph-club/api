@@ -46,12 +46,6 @@ func (target *Vehicle) Merge(source Vehicle) Vehicle {
 	if len(target.Coordinates) > 0 {
 		source.Coordinates = target.Coordinates
 	}
-	if target.CreatedBy != "" {
-		source.CreatedBy = target.CreatedBy
-	}
-	if !isZeroOfUnderlyingType(target.CreatedTime) {
-		source.CreatedTime = target.CreatedTime
-	}
 	if target.DayMax != 0 {
 		source.DayMax = target.DayMax
 	}
@@ -99,6 +93,9 @@ func (target *Vehicle) Merge(source Vehicle) Vehicle {
 	}
 	if target.Year != 0 {
 		source.Year = target.Year
+	}
+	if target.User != "" {
+		source.User = target.User
 	}
 
 	return source
