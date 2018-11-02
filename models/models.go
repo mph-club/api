@@ -29,7 +29,7 @@ type Vehicle struct {
 	City         string    `json:"city"`
 	State        string    `json:"state"`
 	Coordinates  []float64 `json:"coordinates" sql:",array"`
-	Notes        []string  `json:"notes" sql:",array"`
+	Notes        []*Note   `json:"notes"`
 	ViewIndex    int       `json:"view_index"`
 }
 
@@ -73,9 +73,6 @@ func (target *Vehicle) Merge(source Vehicle) Vehicle {
 	if target.Model != "" {
 		source.Model = target.Model
 	}
-	if len(target.Notes) > 0 {
-		source.Notes = target.Notes
-	}
 	if target.Seats != 0 {
 		source.Seats = target.Seats
 	}
@@ -107,12 +104,21 @@ func (target *Vehicle) Merge(source Vehicle) Vehicle {
 	return source
 }
 
+type Note struct {
+	Comment     string `json:"comment"`
+	CreatedBy   string `json:"created_by"`
+	CreatedTime string `json:"created_time"`
+	ID          int    `json:"id" sql:",pk"`
+	NoteID      string `json:"note_id"`
+}
+
 type User struct {
 	Sub          string   `json:"sub" sql:",pk,unique"`
 	Email        string   `json:"email"`
 	Phone        string   `json:"phone"`
 	ListedCars   []string `json:"listed_cars" sql:",array"`
 	UnlistedCars []string `json:"unlisted_cars" sql:",array"`
+	Notes        []*Note  `json:"notes"`
 }
 
 func (target *User) Merge(source User) User {
