@@ -48,7 +48,7 @@ func validateToken(tokenStr, region, userPoolID string, jwk map[string]JWKKey) (
 		if kid, ok := token.Header["kid"]; ok {
 			if kidStr, ok := kid.(string); ok {
 				key := jwk[kidStr]
-
+				log.Println("error could be here")
 				rsaPublicKey := convertKey(key.E, key.N)
 				return rsaPublicKey, nil
 			}
