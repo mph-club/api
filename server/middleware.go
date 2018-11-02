@@ -1,9 +1,6 @@
 package server
 
 import (
-	"mphclub-rest-server/database"
-	"mphclub-rest-server/models"
-
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/middleware/logger"
 )
@@ -13,7 +10,6 @@ func cognitoAuth(ctx iris.Context) {
 
 	if isAuth {
 		ctx.Values().Set("sub", sub)
-		database.UpsertUser(models.User{Sub: sub})
 		ctx.Next()
 	} else {
 		ctx.StatusCode(iris.StatusUnauthorized)

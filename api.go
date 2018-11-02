@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	//initiateAuthorization()
+	// initiateAuthorization()
 	database.CreateSchema()
 
 	server.CreateAndListen()
@@ -25,11 +25,11 @@ func initiateAuthorization() *string {
 	svc := cognitoidentityprovider.New(sess)
 
 	initAuth, err := svc.InitiateAuth(&cognitoidentityprovider.InitiateAuthInput{
-		ClientId: aws.String("2895spmk9o6vuqctbedc0v9f38"),
+		ClientId: aws.String("61lmh73b4k5fdogsbhebmmld33"),
 		AuthFlow: aws.String("USER_PASSWORD_AUTH"),
 		AuthParameters: map[string]*string{
 			"USERNAME": aws.String("oscar@mphclub.com"),
-			"PASSWORD": aws.String("Hunter2!!"),
+			"PASSWORD": aws.String("@Test123"),
 		},
 	})
 
