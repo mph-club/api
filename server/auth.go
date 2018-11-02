@@ -48,7 +48,7 @@ func validateToken(tokenStr, region, userPoolID string, jwk map[string]JWKKey) (
 		if kid, ok := token.Header["kid"]; ok {
 			if kidStr, ok := kid.(string); ok {
 				key := jwk[kidStr]
-				log.Println("error could be here")
+
 				rsaPublicKey := convertKey(key.E, key.N)
 				return rsaPublicKey, nil
 			}
@@ -58,9 +58,9 @@ func validateToken(tokenStr, region, userPoolID string, jwk map[string]JWKKey) (
 	})
 
 	if err != nil {
+		log.Println("error could be here, problem with kid")
 		return token, err
 	}
-
 	claims := token.Claims.(jwt.MapClaims)
 
 	csub, ok := claims["sub"]
@@ -78,6 +78,7 @@ func validateToken(tokenStr, region, userPoolID string, jwk map[string]JWKKey) (
 	if strings.Contains(issStr, "cognito-idp") {
 		err = validateAWSJwtClaims(claims, region, userPoolID)
 		if err != nil {
+			log.Println("error could be here, problem with validate jwt")
 			return token, err
 		}
 	}
