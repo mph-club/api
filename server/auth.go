@@ -25,7 +25,7 @@ func checkToken(tokenString string) (bool, string, string) {
 	userPoolID := os.Getenv("COGNITO_USER_POOL_ID")
 
 	jwkURL := fmt.Sprintf("https://cognito-idp.%v.amazonaws.com/%v/.well-known/jwks.json", region, userPoolID)
-
+	log.Println(jwkURL)
 	jwk := getJWK(jwkURL)
 	token, err := validateToken(tokenString, region, userPoolID, jwk)
 
@@ -48,8 +48,8 @@ func validateToken(tokenStr, region, userPoolID string, jwk map[string]JWKKey) (
 		if kid, ok := token.Header["kid"]; ok {
 			if kidStr, ok := kid.(string); ok {
 				key := jwk[kidStr]
-
 				rsaPublicKey := convertKey(key.E, key.N)
+				log.Println("panic happens here")
 				return rsaPublicKey, nil
 			}
 		}
@@ -59,6 +59,7 @@ func validateToken(tokenStr, region, userPoolID string, jwk map[string]JWKKey) (
 
 	if err != nil {
 		log.Println("error could be here, problem with kid")
+		log.Println(err.Error())
 		return token, err
 	}
 	claims := token.Claims.(jwt.MapClaims)
