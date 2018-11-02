@@ -83,6 +83,7 @@ func UpsertListing(v models.Vehicle) (string, string, error) {
 
 	v.ID = xid.New().String()
 	v.CreatedTime = time.Now()
+	v.Status = "PENDING"
 
 	if err := db.Insert(&v); err != nil {
 		log.Println(err)

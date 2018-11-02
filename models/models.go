@@ -19,17 +19,18 @@ type Vehicle struct {
 	Photos       []string  `json:"photos" sql:",array"`
 	Miles        int       `json:"miles"`
 	LicensePlate string    `json:"license_plate"`
-	Status       string    `json:"status"`
+	Status       string    `json:"status" sql:"type:status"`
 	CreatedTime  time.Time `json:"created_time"`
 	UpdatedBy    string    `json:"updated_by"`
 	UpdatedTime  time.Time `json:"updated_time"`
 	User         string    `json:"user_sub"`
 	IsPublished  bool      `json:"is_published"`
-	IsApproved   bool      `json:"is_approved"`
 	Address      string    `json:"address"`
 	City         string    `json:"city"`
 	State        string    `json:"state"`
 	Coordinates  []float64 `json:"coordinates" sql:",array"`
+	Notes        []string  `json:"notes" sql:",array"`
+	ViewIndex    int       `json:"view_index"`
 }
 
 func (target *Vehicle) Merge(source Vehicle) Vehicle {
@@ -72,6 +73,9 @@ func (target *Vehicle) Merge(source Vehicle) Vehicle {
 	if target.Model != "" {
 		source.Model = target.Model
 	}
+	if len(target.Notes) > 0 {
+		source.Notes = target.Notes
+	}
 	if target.Seats != 0 {
 		source.Seats = target.Seats
 	}
@@ -87,6 +91,9 @@ func (target *Vehicle) Merge(source Vehicle) Vehicle {
 	if target.VehicleType != "" {
 		source.VehicleType = target.VehicleType
 	}
+	if target.ViewIndex != 0 {
+		source.VehicleType = target.VehicleType
+	}
 	if target.Vin != "" {
 		source.Vin = target.Vin
 	}
@@ -98,13 +105,6 @@ func (target *Vehicle) Merge(source Vehicle) Vehicle {
 	}
 
 	return source
-}
-
-type VehicleSignupStage struct {
-	Stage     int    `json:"stage"`
-	User      string `json:"user_sub"`
-	VehicleID string `json:"vehicle_id" pg:",fk:vehicle_id"`
-	Completed bool   `json:"completed"`
 }
 
 type User struct {

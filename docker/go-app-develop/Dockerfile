@@ -6,8 +6,6 @@ RUN curl -L -s https://github.com/golang/dep/releases/download/v0.5.0/dep-linux-
 RUN chmod +x $GOPATH/bin/dep
 RUN dep ensure
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-w -s" -o ./bin/mphclub-rest-server
-RUN echo "$PWD"
-RUN cd bin && ls
 
 FROM scratch
 # Copy our static executable
