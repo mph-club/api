@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"mphclub-rest-server/database"
 	"mphclub-rest-server/models"
 	"os"
@@ -29,6 +30,16 @@ func upsertListing(ctx iris.Context) {
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(generateJSONResponse(false, iris.Map{"database_error": err.Error()}))
 		return
+	}
+
+	user := models.User{
+		Sub:          v.User,
+		UnlistedCars: []string{carID},
+	}
+
+	if err = database.UpsertUser(user); err != nil {
+		log.Println(err)
+		log.Println("couldnt update user")
 	}
 
 	resultString := fmt.Sprintf("vehicle was successfully %s", result)

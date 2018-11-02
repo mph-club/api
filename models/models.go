@@ -123,10 +123,10 @@ func (target *User) Merge(source User) User {
 		source.Phone = target.Phone
 	}
 	if len(target.ListedCars) > 0 {
-		source.ListedCars = target.ListedCars
+		source.ListedCars = append(source.ListedCars, target.ListedCars...)
 	}
 	if len(target.UnlistedCars) > 0 {
-		source.UnlistedCars = target.UnlistedCars
+		source.UnlistedCars = append(source.UnlistedCars, target.UnlistedCars...)
 	}
 
 	return source
