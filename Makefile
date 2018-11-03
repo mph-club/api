@@ -4,7 +4,7 @@ run/server:
 	@go run api.go
 
 new-binary:
-	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-w -s" -o docker/go-app-prod/mphclub-server
+	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-w -s" -o ./bin/mphclub-server
 
 #Use this after code push only
 docker-build-api:
