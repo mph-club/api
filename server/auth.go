@@ -148,7 +148,6 @@ func validateExpired(claims jwt.MapClaims) error {
 func convertKey(rawE, rawN string) *rsa.PublicKey {
 	decodedE, err := base64.RawURLEncoding.DecodeString(rawE)
 	if err != nil {
-		log.Println("error decoding string rawE")
 		panic(err)
 	}
 	if len(decodedE) < 4 {
@@ -162,7 +161,6 @@ func convertKey(rawE, rawN string) *rsa.PublicKey {
 	}
 	decodedN, err := base64.RawURLEncoding.DecodeString(rawN)
 	if err != nil {
-		log.Println("error decoding string rawN")
 		panic(err)
 	}
 	pubKey.N.SetBytes(decodedN)
