@@ -3,11 +3,17 @@ kind: Ingress
 metadata:
   name: ingress-service
   annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
     - http:
         paths:
-          - backend:
+          - path: /app/
+            backend:
               serviceName: server-cluster-ip-service
               servicePort: 8080
+          - path: /cs-portal/
+            backend:
+              serviceName: cs-portal-cluster-ip-service
+              servicePort: 8081

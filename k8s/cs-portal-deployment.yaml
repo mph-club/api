@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cs-portal-deployment
+spec:
+  selector:
+    matchLabels:
+      component: cs-portal
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: cs-portal
+    spec:
+      containers:
+        - name: cs-portal
+          image: 077003688714.dkr.ecr.us-east-1.amazonaws.com/cs_portal:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: AWS_REGION
+              value: us-east-1
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secrets
+                  key: aws_access_key
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secrets
+                  key: aws_secret_key
+            - name: COGNITO_USER_POOL_ID
+              value: us-east-1_jbcfgU922
+            - name: PGUSER
+              value: mphclub
+            - name: PGHOST
+              value: postgres-cluster-ip-service
+            - name: PGPORT
+              value: '5432'
+            - name: PGDATABASE
+              value: mphclub
+            - name: PGPASSWORD
+              value: mphclub123
+            - name: AWS_BUCKET
+              value: mphclub
+      imagePullSecrets:
+        - name: awsecr-cred
