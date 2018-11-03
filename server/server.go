@@ -14,7 +14,7 @@ func CreateAndListen() {
 	{
 		v1.Use(requestLogger())
 
-		v1.Get("/", func(ctx iris.Context) {
+		v1.Get("/home", func(ctx iris.Context) {
 			ctx.Writef("api home!!!!")
 		})
 
