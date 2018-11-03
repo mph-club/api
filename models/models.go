@@ -33,6 +33,7 @@ type Vehicle struct {
 	ViewIndex    int       `json:"view_index"`
 	Place        string    `json:"place"`
 	ZipCode      string    `json:"zip_code"`
+	Transmission string    `json:"transmission" sql:"type:transmission"`
 }
 
 func (target *Vehicle) Merge(source Vehicle) Vehicle {
