@@ -167,14 +167,6 @@
   revision = "0b12d6b5"
 
 [[projects]]
-  digest = "1:ecd9aa82687cf31d1585d4ac61d0ba180e42e8a6182b85bd785fcca8dfeefc1b"
-  name = "github.com/joho/godotenv"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "23d116af351c84513e1946b527c88823e476be13"
-  version = "v1.3.0"
-
-[[projects]]
   branch = "master"
   digest = "1:f43d8653241b95073a5f6cc927bc5971db77031f65e8b9ceca3dbef25272e282"
   name = "github.com/json-iterator/go"
@@ -400,7 +392,6 @@
     "github.com/aws/aws-sdk-go/service/s3/s3manager",
     "github.com/dgrijalva/jwt-go",
     "github.com/go-pg/pg",
-    "github.com/joho/godotenv",
     "github.com/kataras/iris",
     "github.com/kataras/iris/middleware/logger",
     "github.com/rs/xid",

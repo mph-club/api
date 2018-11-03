@@ -55,7 +55,6 @@ func validateToken(tokenStr, region, userPoolID string, jwk map[string]JWKKey) (
 	})
 
 	if err != nil {
-		log.Println("error could be here, problem with kid")
 		log.Println(err.Error())
 		return token, err
 	}
@@ -76,7 +75,6 @@ func validateToken(tokenStr, region, userPoolID string, jwk map[string]JWKKey) (
 	if strings.Contains(issStr, "cognito-idp") {
 		err = validateAWSJwtClaims(claims, region, userPoolID)
 		if err != nil {
-			log.Println("error could be here, problem with validate jwt")
 			return token, err
 		}
 	}
@@ -150,6 +148,7 @@ func validateExpired(claims jwt.MapClaims) error {
 func convertKey(rawE, rawN string) *rsa.PublicKey {
 	decodedE, err := base64.RawURLEncoding.DecodeString(rawE)
 	if err != nil {
+		log.Println("error decoding string rawE")
 		panic(err)
 	}
 	if len(decodedE) < 4 {
@@ -163,6 +162,7 @@ func convertKey(rawE, rawN string) *rsa.PublicKey {
 	}
 	decodedN, err := base64.RawURLEncoding.DecodeString(rawN)
 	if err != nil {
+		log.Println("error decoding string rawN")
 		panic(err)
 	}
 	pubKey.N.SetBytes(decodedN)
