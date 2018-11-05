@@ -112,8 +112,8 @@ func GetMyCars(u models.User) ([]*models.Vehicle, error) {
 	db := connectToDB()
 
 	err := db.Model(&u).
-		Column("users.*", "Cars").
-		Relation("Cars", nil).
+		Column("users.*", "cars").
+		Relation("cars", nil).
 		Select()
 
 	if err != nil {
