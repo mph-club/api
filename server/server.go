@@ -31,6 +31,7 @@ func CreateAndListen() {
 		//  PRIVATE
 		v1.Post("/updateUser", cognitoAuth, updateUser)
 		v1.Post("/listCar", cognitoAuth, upsertListing)
+		v1.Post("/getMyCars", cognitoAuth, getMyCars)
 		v1.Post("/uploadPhoto", cognitoAuth, uploadToS3)
 	}
 
