@@ -122,12 +122,11 @@ type Note struct {
 }
 
 type User struct {
-	Sub          string   `json:"sub" sql:",pk,unique"`
-	Email        string   `json:"email"`
-	Phone        string   `json:"phone"`
-	ListedCars   []string `json:"listed_cars" sql:",array"`
-	UnlistedCars []string `json:"unlisted_cars" sql:",array"`
-	Notes        []*Note  `json:"notes"`
+	Sub   string     `json:"sub" sql:",pk,unique"`
+	Email string     `json:"email"`
+	Phone string     `json:"phone"`
+	Cars  []*Vehicle `json:"cars"`
+	Notes []*Note    `json:"notes"`
 }
 
 func (target *User) Merge(source User) User {
@@ -136,12 +135,6 @@ func (target *User) Merge(source User) User {
 	}
 	if target.Phone != "" {
 		source.Phone = target.Phone
-	}
-	if len(target.ListedCars) > 0 {
-		source.ListedCars = append(source.ListedCars, target.ListedCars...)
-	}
-	if len(target.UnlistedCars) > 0 {
-		source.UnlistedCars = append(source.UnlistedCars, target.UnlistedCars...)
 	}
 
 	return source

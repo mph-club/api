@@ -68,6 +68,28 @@ func updateUser(ctx iris.Context) {
 	ctx.JSON(generateJSONResponse(true, iris.Map{"result": resultString}))
 }
 
+func getMyCars(ctx iris.Context) {
+	var u models.User
+	u.Sub = ctx.Values().Get("sub").(string)
+
+	if err := ctx.ReadJSON(&u); err != nil {
+		ctx.StatusCode(iris.StatusBadRequest)
+		ctx.JSON(generateJSONResponse(false, iris.Map{"error": err.Error()}))
+		return
+	}
+
+	list, err := database.GetMyCars(u)
+
+	if err != nil {
+		ctx.StatusCode(iris.StatusBadRequest)
+		ctx.JSON(generateJSONResponse(false, iris.Map{"database_error": err.Error()}))
+		return
+	}
+
+	ctx.StatusCode(iris.StatusOK)
+	ctx.JSON(generateJSONResponse(true, iris.Map{"vehicles": list}))
+}
+
 func getCars(ctx iris.Context) {
 	list, err := database.GetCars()
 

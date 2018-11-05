@@ -107,3 +107,19 @@ func GetCars() ([]models.Vehicle, error) {
 
 	return vehicleList, nil
 }
+
+func GetMyCars(u models.User) ([]*models.Vehicle, error) {
+	db := connectToDB()
+
+	err := db.Model(&u).
+		Column("user.*", "Cars").
+		Relation("Cars", nil).
+		Select()
+
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	return u.Cars, nil
+}
