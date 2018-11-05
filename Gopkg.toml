@@ -24,23 +24,6 @@
 #   go-tests = true
 #   unused-packages = true
 
-
-[[constraint]]
-  name = "github.com/go-openapi/errors"
-  version = "0.17.2"
-
-[[constraint]]
-  name = "github.com/go-openapi/strfmt"
-  version = "0.17.2"
-
-[[constraint]]
-  name = "github.com/go-openapi/swag"
-  version = "0.17.2"
-
-[[constraint]]
-  name = "github.com/go-openapi/validate"
-  version = "0.17.2"
-
 [[constraint]]
   name = "github.com/go-pg/pg"
   version = "6.15.1"
