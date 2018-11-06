@@ -112,20 +112,20 @@ func GetCars() ([]models.Vehicle, error) {
 func GetMyCars(u *models.User) ([]models.Vehicle, error) {
 	db := connectToDB()
 
-	myCars := make([]models.User, 0)
+	listOfCars := make([]models.User, 0)
 
-	query := db.Model(&u).
+	query := db.Model(&listOfCars).
 		Column("user.*", "Vehicles").
 		Relation("Vehicles", func(q *orm.Query) (*orm.Query, error) {
 			return q, nil
 		})
 
-	err := query.Select(&myCars)
+	err := query.Select(&listOfCars)
 
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 
-	return myCars[0].Vehicles, nil
+	return listOfCars[0].Vehicles, nil
 }
