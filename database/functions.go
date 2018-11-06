@@ -108,12 +108,13 @@ func GetCars() ([]models.Vehicle, error) {
 	return vehicleList, nil
 }
 
-func GetMyCars(u *models.User) ([]*models.Vehicle, error) {
+func GetMyCars(sub string) ([]models.Vehicle, error) {
+	var v []models.Vehicle
+
 	db := connectToDB()
 
-	err := db.Model(u).
-		Column("cars").
-		Relation("Cars", nil).
+	err := db.Model(&v).
+		Where("user_sub = ?", sub).
 		Select()
 
 	if err != nil {
@@ -121,5 +122,5 @@ func GetMyCars(u *models.User) ([]*models.Vehicle, error) {
 		return nil, err
 	}
 
-	return u.Cars, nil
+	return v, nil
 }
