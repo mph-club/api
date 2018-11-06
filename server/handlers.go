@@ -61,7 +61,7 @@ func getMyCars(ctx iris.Context) {
 	var u models.User
 	u.Sub = ctx.Values().Get("sub").(string)
 
-	list, err := database.GetMyCars(u.Sub)
+	list, err := database.GetMyCars(&u)
 
 	if err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
