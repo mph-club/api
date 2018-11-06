@@ -23,7 +23,7 @@ type Vehicle struct {
 	CreatedTime  time.Time `json:"created_time"`
 	UpdatedBy    string    `json:"updated_by"`
 	UpdatedTime  time.Time `json:"updated_time"`
-	UserSub      string    `json:"user"`
+	UserID       string    `json:"user"`
 	IsPublished  bool      `json:"is_published"`
 	Address      string    `json:"address"`
 	City         string    `json:"city"`
@@ -103,8 +103,8 @@ func (target *Vehicle) Merge(source Vehicle) Vehicle {
 	if target.Year != 0 {
 		source.Year = target.Year
 	}
-	if target.UserSub != "" {
-		source.UserSub = target.UserSub
+	if target.UserID != "" {
+		source.UserID = target.UserID
 	}
 	if target.ZipCode != "" {
 		source.ZipCode = target.ZipCode
@@ -122,7 +122,7 @@ type Note struct {
 }
 
 type User struct {
-	Sub      string     `json:"sub" sql:",pk,unique"`
+	ID       string     `json:"id" sql:",unique"`
 	Email    string     `json:"email"`
 	Phone    string     `json:"phone"`
 	Vehicles []*Vehicle `json:"vehicles" sql:"-"`
