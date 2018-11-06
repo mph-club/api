@@ -127,7 +127,7 @@ func GetMyCars(u *models.User) ([]*models.Vehicle, error) {
 		Relation("Vehicles", func(q *orm.Query) (*orm.Query, error) {
 			return nil, nil
 		}).
-		First()
+		Select()
 
 	if err != nil {
 		log.Println(err)
