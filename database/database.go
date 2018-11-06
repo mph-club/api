@@ -44,15 +44,6 @@ func connectToDB() *pg.DB {
 		return connectToDB()
 	}
 
-	db.OnQueryProcessed(func(event *pg.QueryProcessedEvent) {
-		query, err := event.FormattedQuery()
-		if err != nil {
-			panic(err)
-		}
-
-		log.Printf("%s %s", time.Since(event.StartTime), query)
-	})
-
 	return db
 }
 
