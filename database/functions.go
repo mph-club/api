@@ -123,8 +123,8 @@ func GetMyCars(u *models.User) ([]*models.Vehicle, error) {
 	})
 
 	err := db.Model(u).
-		Column("user.*", "vehicles").
-		Relation("vehicles", func(q *orm.Query) (*orm.Query, error) {
+		Column("user.*", "Vehicles").
+		Relation("Vehicles", func(q *orm.Query) (*orm.Query, error) {
 			return nil, nil
 		}).
 		First()
