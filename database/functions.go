@@ -5,6 +5,7 @@ import (
 	"mphclub-rest-server/models"
 	"time"
 
+	"github.com/go-pg/pg/orm"
 	"github.com/rs/xid"
 )
 
@@ -108,18 +109,23 @@ func GetCars() ([]models.Vehicle, error) {
 	return vehicleList, nil
 }
 
-func GetMyCars(u *models.User) ([]*models.Vehicle, error) {
+func GetMyCars(u *models.User) ([]models.User, error) {
 	db := connectToDB()
 
-	err := db.Model(u).
+	listOfCars := make([]models.User, 0)
+
+	query := db.Model(&listOfCars).
 		Column("user.*", "Vehicles").
-		Relation("Vehicles", nil).
-		Select()
+		Relation("Vehicles", func(q *orm.Query) (*orm.Query, error) {
+			return q, nil
+		})
+
+	err := query.Select(&listOfCars)
 
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 
-	return u.Vehicles, nil
+	return listOfCars, nil
 }
