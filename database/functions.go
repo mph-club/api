@@ -12,7 +12,7 @@ func UpsertUser(u models.User) error {
 	db := connectToDB()
 
 	user := models.User{
-		Sub: u.Sub,
+		ID: u.ID,
 	}
 
 	if err := db.Select(&user); err != nil {

@@ -16,7 +16,7 @@ import (
 func upsertListing(ctx iris.Context) {
 	var v models.Vehicle
 
-	v.UserSub = ctx.Values().Get("sub").(string)
+	v.UserID = ctx.Values().Get("sub").(string)
 
 	if err := ctx.ReadJSON(&v); err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
@@ -38,7 +38,7 @@ func upsertListing(ctx iris.Context) {
 
 func updateUser(ctx iris.Context) {
 	var u models.User
-	u.Sub = ctx.Values().Get("sub").(string)
+	u.ID = ctx.Values().Get("sub").(string)
 
 	if err := ctx.ReadJSON(&u); err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
@@ -59,7 +59,7 @@ func updateUser(ctx iris.Context) {
 
 func getMyCars(ctx iris.Context) {
 	var u models.User
-	u.Sub = ctx.Values().Get("sub").(string)
+	u.ID = ctx.Values().Get("sub").(string)
 
 	list, err := database.GetMyCars(&u)
 
