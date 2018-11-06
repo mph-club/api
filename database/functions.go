@@ -5,6 +5,7 @@ import (
 	"mphclub-rest-server/models"
 	"time"
 
+	"github.com/go-pg/pg/orm"
 	"github.com/rs/xid"
 )
 
@@ -113,7 +114,9 @@ func GetMyCars(u *models.User) ([]*models.Vehicle, error) {
 
 	err := db.Model(u).
 		Column("users.*", "vehicles").
-		Relation("Vehicles", nil).
+		Relation("Vehicles", func(q *orm.Query) (*orm.Query, error) {
+			return nil, nil
+		}).
 		First()
 
 	if err != nil {
