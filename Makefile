@@ -1,7 +1,10 @@
 export CURRENT_HEAD = $$(git rev-parse HEAD)
 
-run/server:
+run-server:
 	@go run api.go
+
+run-client:
+	@cd client && go run client.go
 
 new-binary:
 	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-w -s" -o ./bin/mphclub-server

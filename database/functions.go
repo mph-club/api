@@ -113,7 +113,6 @@ func GetMyCars(u *models.User) ([]*models.Vehicle, error) {
 
 	err := db.Model(u).
 		Column("users.*", "vehicles").
-		Relation("vehicles", nil).
 		Select()
 
 	if err != nil {
