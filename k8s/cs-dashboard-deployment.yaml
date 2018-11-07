@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cs-dashboard-deployment
+spec:
+  selector:
+    matchLabels:
+      component: cs-dashboard
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: cs-dashboard
+    spec:
+      containers:
+        - name: cs-dashboard
+          image: 077003688714.dkr.ecr.us-east-1.amazonaws.com/cs_dashboard:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: AWS_REGION
+              value: us-east-1
+            - name: COGNITO_USER_POOL_ID
+              value: us-east-1_jbcfgU922
+      imagePullSecrets:
+        - name: awsecr-cred

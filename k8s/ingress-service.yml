@@ -17,3 +17,7 @@ spec:
             backend:
               serviceName: cs-portal-cluster-ip-service
               servicePort: 8081
+          - path: /cs-dashboard/
+            backend:
+              serviceName: cs-dashboard-cluster-ip-service
+              servicePort: 3000
