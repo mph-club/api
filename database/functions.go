@@ -117,7 +117,7 @@ func GetMyCars(u *models.User) ([]models.Vehicle, error) {
 	err := db.Model(&users).
 		Column("user.*", "Vehicles").
 		Relation("Vehicles", func(q *orm.Query) (*orm.Query, error) {
-			return q, nil
+			return q.Order("created_time DESC"), nil
 		}).
 		Where("id = ?", u.ID).
 		Select()
