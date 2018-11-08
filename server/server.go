@@ -1,8 +1,6 @@
 package server
 
 import (
-	"log"
-
 	"github.com/kataras/iris"
 )
 
@@ -40,6 +38,5 @@ func CreateAndListen() {
 		v1.Post("/uploadPhoto", cognitoAuth, uploadToS3)
 	}
 
-	log.Println("server is running on port 8080")
 	_api.Run(iris.Addr(":8080"))
 }
