@@ -70,18 +70,15 @@ func UpsertListing(v models.Vehicle) (string, string, error) {
 	} else {
 		log.Println("car does exist, update")
 
-		log.Println(v.Merge(car))
 		v = v.Merge(car)
-
 		v.UpdatedTime = time.Now()
-		log.Println(&v)
 
 		if dbErr := db.Update(&v); dbErr != nil {
 			return "", "", dbErr
 		}
 		return v.ID, "updated", nil
 	}
-
+	v.ViewIndex = -1
 	v.ID = xid.New().String()
 	v.CreatedTime = time.Now()
 	v.Status = "PENDING"
