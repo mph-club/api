@@ -29,7 +29,7 @@ type Vehicle struct {
 	City         string    `json:"city"`
 	State        string    `json:"state"`
 	Coordinates  []float64 `json:"coordinates" sql:",array"`
-	Notes        []*Note   `json:"notes" sql:"-"`
+	Notes        []Note    `json:"notes" sql:",fk"`
 	ViewIndex    int       `json:"view_index"`
 	Place        string    `json:"place"`
 	ZipCode      string    `json:"zip_code"`
