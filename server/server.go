@@ -1,42 +1,40 @@
 package server
 
 import (
-	"github.com/kataras/iris"
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 )
 
 // CreateAndListen exposes the listen and creation of the api
 func CreateAndListen() {
-	_api := iris.New()
+	_api := echo.New()
 
-	v1 := _api.Party("api/v1")
-	{
-		v1.Use(requestLogger())
+	v1 := _api.Group("api/v1")
+	v1.Use(middleware.Logger())
 
-		//  **** PUBLIC ****
+	//  **** PUBLIC ****
 
-		v1.Get("/getCars", getCars)
+	v1.GET("/getCars", getCars)
 
-		v1.Get("/home", func(ctx iris.Context) {
-			ctx.Writef("api home!!!!")
-		})
+	v1.GET("/home", func(ctx echo.Context) error {
+		return ctx.String(200, "api home!!!!")
+	})
 
-		v1.Get("/service", func(ctx iris.Context) {
-			ctx.Writef("api service!!!!")
-		})
+	v1.GET("/service", func(ctx echo.Context) error {
+		return ctx.String(200, "api service!!!!")
+	})
 
-		v1.Get("/swagger", func(ctx iris.Context) {
-			ctx.ServeFile("./swagger/index.html", false)
-		})
-		//  **** PRIVATE ****
+	v1.Static("/swagger", "swagger")
 
-		// GET
-		v1.Get("/getMyCars", cognitoAuth, getMyCars)
+	//  **** PRIVATE ****
 
-		// POST
-		v1.Post("/updateUser", cognitoAuth, updateUser)
-		v1.Post("/listCar", cognitoAuth, upsertListing)
-		v1.Post("/uploadPhoto", cognitoAuth, uploadToS3)
-	}
+	// GET
+	v1.GET("/getMyCars", getMyCars, cognitoAuth)
 
-	_api.Run(iris.Addr(":8080"))
+	// POST
+	v1.POST("/updateUser", updateUser, cognitoAuth)
+	v1.POST("/listCar", upsertListing, cognitoAuth)
+	v1.POST("/uploadPhoto", uploadToS3, cognitoAuth)
+
+	_api.Start(":8080")
 }

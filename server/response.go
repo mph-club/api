@@ -1,21 +1,28 @@
 package server
 
-func generateJSONResponse(success bool, responseMap map[string]interface{}) map[string]interface{} {
+type successResponse struct {
+	Data    map[string]interface{} `json:"data"`
+	Message string                 `json:"message"`
+}
+
+type errorResponse struct {
+	Error   map[string]interface{} `json:"error"`
+	Message string                 `json:"message"`
+}
+
+func generateJSONResponse(success bool, statusCode int, responseMap map[string]interface{}) (int, interface{}) {
 	pass := "success"
 	fail := "fail"
 
-	var message string
-	mapToIterate := map[string]interface{}{}
-
 	if success {
-		message = pass
-		mapToIterate["data"] = responseMap
+		return statusCode, &successResponse{
+			Data:    responseMap,
+			Message: pass,
+		}
 	} else {
-		message = fail
-		mapToIterate["error"] = responseMap
+		return statusCode, &errorResponse{
+			Error:   responseMap,
+			Message: fail,
+		}
 	}
-
-	mapToIterate["message"] = message
-
-	return mapToIterate
 }
