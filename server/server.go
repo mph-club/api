@@ -24,8 +24,10 @@ func CreateAndListen() {
 		return ctx.String(200, "api service!!!!")
 	})
 
-	v1.Static("/swagger", "swagger")
+	// fs := http.FileServer(http.Dir("./swagger"))
+	// v1.GET("/swagger/*", echo.WrapHandler(http.StripPrefix("/swagger/", fs)))
 
+	v1.Use(middleware.Static("./swagger"))
 	//  **** PRIVATE ****
 
 	// GET

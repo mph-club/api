@@ -19,10 +19,11 @@ func generateJSONResponse(success bool, statusCode int, responseMap map[string]i
 			Data:    responseMap,
 			Message: pass,
 		}
-	} else {
-		return statusCode, &errorResponse{
-			Error:   responseMap,
-			Message: fail,
-		}
 	}
+
+	return statusCode, &errorResponse{
+		Error:   responseMap,
+		Message: fail,
+	}
+
 }

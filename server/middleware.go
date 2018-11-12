@@ -15,9 +15,9 @@ func cognitoAuth(next echo.HandlerFunc) echo.HandlerFunc {
 		if isAuth {
 			ctx.Set("sub", sub)
 			return next(ctx)
-		} else {
-			return ctx.JSON(generateJSONResponse(false, http.StatusUnauthorized, map[string]interface{}{"server_error": "Unauthorized", "error_message": err}))
 		}
+		return ctx.JSON(generateJSONResponse(false, http.StatusUnauthorized, map[string]interface{}{"server_error": "Unauthorized", "error_message": err}))
+
 	}
 }
 
