@@ -19,7 +19,7 @@ docker-build-api:
 	@docker push 077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:latest
 	@docker push 077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:${CURRENT_HEAD}
 	#only have to apply if the configs change
-	@kubectl apply -f k8s
+	#@kubectl apply -f k8s
 	@kubectl set image deployments/server-deployment mphclub-api=077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:${CURRENT_HEAD}
 
 export-current:
