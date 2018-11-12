@@ -2,3 +2,5 @@
 /client
 /k8s
 Makefile
+.gitignore
+.DS_Store
