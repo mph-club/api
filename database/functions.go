@@ -54,6 +54,7 @@ func EditPhotoURLArrayOnVehicle(vehicleID, photoURL string) error {
 
 	vehicleToAttach.Photos = append(vehicleToAttach.Photos, photoURL)
 	vehicleToAttach.UpdatedTime = time.Now()
+
 	_, err = db.Model(vehicleToAttach).Column("photos", "updated_time").WherePK().Update()
 	if err != nil {
 		log.Println(err)
@@ -135,4 +136,35 @@ func GetMyCars(u *models.User) ([]models.Vehicle, error) {
 	}
 
 	return users[0].Vehicles, nil
+}
+
+func ExploreFive(t string, isPremium bool) ([]models.Vehicle, error) {
+	var vehicleList []models.Vehicle
+
+	db := connectToDB()
+	if isPremium {
+		err := db.
+			Model(&vehicleList).
+			Where("vehicle_type = ?", t).
+			Where("premium = ?", true).
+			Limit(5).
+			Select()
+
+		if err != nil {
+			log.Println(err)
+			return nil, err
+		}
+	}
+
+	err := db.
+		Model(&vehicleList).
+		Where("vehicle_type = ?", t).
+		Select()
+
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	return vehicleList, nil
 }
