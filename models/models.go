@@ -29,7 +29,7 @@ type Vehicle struct {
 	City         string        `json:"city"`
 	State        string        `json:"state"`
 	Coordinates  []float64     `json:"coordinates" sql:",array"`
-	Notes        []VehicleNote `json:"notes" sql:",fk"`
+	VehicleNotes []VehicleNote `json:"notes" sql:",fk"`
 	ViewIndex    int           `json:"view_index"`
 	Place        string        `json:"place"`
 	ZipCode      string        `json:"zip_code"`
@@ -134,11 +134,11 @@ type UserNote struct {
 }
 
 type User struct {
-	ID       string     `json:"id" sql:",unique"`
-	Email    string     `json:"email"`
-	Phone    string     `json:"phone"`
-	Vehicles []Vehicle  `json:"vehicles" sql:",fk"`
-	Notes    []UserNote `json:"notes" sql:",fk"`
+	ID        string     `json:"id" sql:",unique"`
+	Email     string     `json:"email"`
+	Phone     string     `json:"phone"`
+	Vehicles  []Vehicle  `json:"vehicles" sql:",fk"`
+	UserNotes []UserNote `json:"notes" sql:",fk"`
 }
 
 func (target *User) Merge(source User) User {

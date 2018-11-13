@@ -113,6 +113,8 @@ func GetMyCars(u *models.User) ([]models.Vehicle, error) {
 
 	var users []models.User
 
+	log.Println(u.ID)
+
 	err := db.Model(&users).
 		Column("user.*", "Vehicles").
 		Relation("Vehicles", func(q *orm.Query) (*orm.Query, error) {
@@ -125,6 +127,8 @@ func GetMyCars(u *models.User) ([]models.Vehicle, error) {
 		log.Println(err)
 		return nil, err
 	}
+
+	log.Println(users)
 
 	return users[0].Vehicles, nil
 }
