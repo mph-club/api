@@ -3,37 +3,37 @@ package models
 import "time"
 
 type Vehicle struct {
-	ID           string    `json:"id"`
-	Make         string    `json:"make"`
-	Model        string    `json:"model"`
-	Year         int       `json:"year"`
-	Trim         string    `json:"trim"`
-	Color        string    `json:"color"`
-	Doors        int       `json:"doors"`
-	Seats        int       `json:"seats"`
-	Vin          string    `json:"vin"`
-	Description  string    `json:"description"`
-	DayMax       int       `json:"day_max"`
-	DayMin       int       `json:"day_min"`
-	VehicleType  string    `json:"vehicle_type"`
-	Photos       []string  `json:"photos" sql:",array"`
-	Miles        int       `json:"miles"`
-	LicensePlate string    `json:"license_plate"`
-	Status       string    `json:"status" sql:"type:status"`
-	CreatedTime  time.Time `json:"created_time"`
-	UpdatedBy    string    `json:"updated_by"`
-	UpdatedTime  time.Time `json:"updated_time"`
-	UserID       string    `json:"user" sql:",fk"`
-	IsPublished  bool      `json:"is_published"`
-	Address      string    `json:"address"`
-	City         string    `json:"city"`
-	State        string    `json:"state"`
-	Coordinates  []float64 `json:"coordinates" sql:",array"`
-	Notes        []Note    `json:"notes" sql:",fk"`
-	ViewIndex    int       `json:"view_index"`
-	Place        string    `json:"place"`
-	ZipCode      string    `json:"zip_code"`
-	Transmission string    `json:"transmission" sql:"type:transmission"`
+	ID           string        `json:"id"`
+	Make         string        `json:"make"`
+	Model        string        `json:"model"`
+	Year         int           `json:"year"`
+	Trim         string        `json:"trim"`
+	Color        string        `json:"color"`
+	Doors        int           `json:"doors"`
+	Seats        int           `json:"seats"`
+	Vin          string        `json:"vin"`
+	Description  string        `json:"description"`
+	DayMax       int           `json:"day_max"`
+	DayMin       int           `json:"day_min"`
+	VehicleType  string        `json:"vehicle_type"`
+	Photos       []string      `json:"photos" sql:",array"`
+	Miles        int           `json:"miles"`
+	LicensePlate string        `json:"license_plate"`
+	Status       string        `json:"status" sql:"type:status"`
+	CreatedTime  time.Time     `json:"created_time"`
+	UpdatedBy    string        `json:"updated_by"`
+	UpdatedTime  time.Time     `json:"updated_time"`
+	UserID       string        `json:"user" sql:",fk"`
+	IsPublished  bool          `json:"is_published"`
+	Address      string        `json:"address"`
+	City         string        `json:"city"`
+	State        string        `json:"state"`
+	Coordinates  []float64     `json:"coordinates" sql:",array"`
+	Notes        []VehicleNote `json:"notes" sql:",fk"`
+	ViewIndex    int           `json:"view_index"`
+	Place        string        `json:"place"`
+	ZipCode      string        `json:"zip_code"`
+	Transmission string        `json:"transmission" sql:"type:transmission"`
 }
 
 func (target *Vehicle) Merge(source Vehicle) Vehicle {
@@ -113,21 +113,32 @@ func (target *Vehicle) Merge(source Vehicle) Vehicle {
 	return source
 }
 
-type Note struct {
-	Comment     string `json:"comment"`
-	CreatedBy   string `json:"created_by"`
-	CreatedTime string `json:"created_time"`
-	ID          int    `json:"id" sql:",pk"`
-	UserID      string `json:"user_id" sql:",fk"`
-	VehicleID   string `json:"vehicle_id" sql:",fk"`
+type VehicleNote struct {
+	Comment     string    `json:"comment"`
+	CreatedBy   string    `json:"created_by"`
+	CreatedTime time.Time `json:"created_time"`
+	ID          int       `json:"id" sql:",pk"`
+	UpdatedBy   string    `json:"updated_by"`
+	UpdatedTime time.Time `json:"updated_time"`
+	VehicleID   string    `json:"vehicle_id" sql:",fk"`
+}
+
+type UserNote struct {
+	Comment     string    `json:"comment"`
+	CreatedBy   string    `json:"created_by"`
+	CreatedTime time.Time `json:"created_time"`
+	ID          int       `json:"id" sql:",pk"`
+	UpdatedBy   string    `json:"updated_by"`
+	UpdatedTime time.Time `json:"updated_time"`
+	UserID      string    `json:"user_id" sql:",fk"`
 }
 
 type User struct {
-	ID       string    `json:"id" sql:",unique"`
-	Email    string    `json:"email"`
-	Phone    string    `json:"phone"`
-	Vehicles []Vehicle `json:"vehicles" sql:",fk"`
-	Notes    []Note    `json:"notes" sql:",fk"`
+	ID       string     `json:"id" sql:",unique"`
+	Email    string     `json:"email"`
+	Phone    string     `json:"phone"`
+	Vehicles []Vehicle  `json:"vehicles" sql:",fk"`
+	Notes    []UserNote `json:"notes" sql:",fk"`
 }
 
 func (target *User) Merge(source User) User {

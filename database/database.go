@@ -53,7 +53,8 @@ func CreateSchema() {
 	for _, model := range []interface{}{
 		&models.Vehicle{},
 		&models.User{},
-		&models.Note{},
+		&models.UserNote{},
+		&models.VehicleNote{},
 		//models go here
 	} {
 		err := db.CreateTable(model, nil)
