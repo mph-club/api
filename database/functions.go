@@ -1,6 +1,7 @@
 package database
 
 import (
+	"errors"
 	"log"
 	"mphclub-rest-server/models"
 	"time"
@@ -41,7 +42,9 @@ func UpsertUser(u models.User) error {
 
 func EditPhotoURLArrayOnVehicle(vehicleID, photoURL string) error {
 	db := connectToDB()
-	vehicleToAttach := &models.Vehicle{ID: vehicleID}
+	vehicleToAttach := &models.Vehicle{
+		ID: vehicleID,
+	}
 
 	err := db.Select(vehicleToAttach)
 	if err != nil {
@@ -50,7 +53,8 @@ func EditPhotoURLArrayOnVehicle(vehicleID, photoURL string) error {
 	}
 
 	vehicleToAttach.Photos = append(vehicleToAttach.Photos, photoURL)
-	_, err = db.Model(vehicleToAttach).Column("photos").WherePK().Update()
+	vehicleToAttach.UpdatedTime = time.Now()
+	_, err = db.Model(vehicleToAttach).Column("photos", "updated_time").WherePK().Update()
 	if err != nil {
 		log.Println(err)
 		return err
@@ -113,8 +117,6 @@ func GetMyCars(u *models.User) ([]models.Vehicle, error) {
 
 	var users []models.User
 
-	log.Println(u.ID)
-
 	err := db.Model(&users).
 		Column("user.*", "Vehicles").
 		Relation("Vehicles", func(q *orm.Query) (*orm.Query, error) {
@@ -128,7 +130,9 @@ func GetMyCars(u *models.User) ([]models.Vehicle, error) {
 		return nil, err
 	}
 
-	log.Println(users)
+	if len(users[0].Vehicles) == 0 {
+		return nil, errors.New("This user has no cars")
+	}
 
 	return users[0].Vehicles, nil
 }
