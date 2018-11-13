@@ -16,11 +16,11 @@ func UpsertUser(u models.User) error {
 		ID: u.ID,
 	}
 
-	log.Println(user)
-
 	if err := db.Select(&user); err != nil {
 		log.Println(err.Error())
 		log.Println("user does not exist, create")
+
+		user = user.Merge(u)
 	} else {
 		log.Println("user does exist, update")
 
