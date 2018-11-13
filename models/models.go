@@ -118,7 +118,8 @@ type Note struct {
 	CreatedBy   string `json:"created_by"`
 	CreatedTime string `json:"created_time"`
 	ID          int    `json:"id" sql:",pk"`
-	NoteID      string `json:"note_id"`
+	UserID      string `json:"user_id" sql:",fk"`
+	VehicleID   string `json:"vehicle_id" sql:",fk"`
 }
 
 type User struct {
