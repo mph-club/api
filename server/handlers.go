@@ -73,10 +73,7 @@ func getCars(ctx echo.Context) error {
 }
 
 func exploreCars(ctx echo.Context) error {
-	queryParams := ctx.Request().URL.Query()
-	carType := ctx.QueryParam("type")
-
-	list, err := database.GetExplore(carType, queryParams)
+	list, err := database.GetExplore()
 
 	if err != nil {
 		return ctx.JSON(generateJSONResponse(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))

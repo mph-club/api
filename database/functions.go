@@ -4,7 +4,6 @@ import (
 	"errors"
 	"log"
 	"mphclub-rest-server/models"
-	"net/url"
 	"time"
 
 	"github.com/go-pg/pg/orm"
@@ -139,35 +138,48 @@ func GetMyCars(u *models.User) ([]models.Vehicle, error) {
 	return users[0].Vehicles, nil
 }
 
-func GetExplore(carType string, queryParams url.Values) ([]models.Vehicle, error) {
-	var vehicleList []models.Vehicle
+func GetExplore() ([][]models.Vehicle, error) {
+	var explore3 [][]models.Vehicle
+	var vehicle models.Vehicle
+	var carTypes []string
 
 	db := connectToDB()
 
-	if carType != "" {
-		err := db.
-			Model(&vehicleList).
-			Where("vehicle_type = ?", carType).
-			Apply(orm.Pagination(queryParams)).
-			Select()
-
-		if err != nil {
-			log.Println(err)
-			return nil, err
-		}
-
-		return vehicleList, nil
-	}
-
-	err := db.
-		Model(&vehicleList).
-		Apply(orm.Pagination(queryParams)).
-		Select()
-
-	if err != nil {
-		log.Println(err)
+	if err := db.
+		Model(&vehicle).
+		ColumnExpr("DISTINCT vehicle.vehicle_type").
+		Where("vehicle_type IS NOT NULL").
+		Select(&carTypes); err != nil {
 		return nil, err
 	}
 
-	return vehicleList, nil
+	for _, carType := range carTypes {
+		var list []models.Vehicle
+		var err error
+
+		list, err = getTypeVehicleArray(carType)
+		if err != nil {
+			return nil, err
+		}
+
+		explore3 = append(explore3, list)
+	}
+
+	return explore3, nil
+}
+
+func getTypeVehicleArray(carType string) ([]models.Vehicle, error) {
+	var list []models.Vehicle
+
+	db := connectToDB()
+
+	if err := db.
+		Model(&list).
+		Where("vehicle_type = ?", carType).
+		Limit(3).
+		Select(); err != nil {
+		return nil, err
+	}
+
+	return list, nil
 }
