@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"mphclub-rest-server/models"
+	"net/url"
 	"time"
 
 	"github.com/go-pg/pg/orm"
@@ -138,27 +139,29 @@ func GetMyCars(u *models.User) ([]models.Vehicle, error) {
 	return users[0].Vehicles, nil
 }
 
-func ExploreFive(t string, isPremium bool) ([]models.Vehicle, error) {
+func GetExplore(carType string, queryParams url.Values) ([]models.Vehicle, error) {
 	var vehicleList []models.Vehicle
 
 	db := connectToDB()
-	if isPremium {
+
+	if carType != "" {
 		err := db.
 			Model(&vehicleList).
-			Where("vehicle_type = ?", t).
-			Where("premium = ?", true).
-			Limit(5).
+			Where("vehicle_type = ?", carType).
+			Apply(orm.Pagination(queryParams)).
 			Select()
 
 		if err != nil {
 			log.Println(err)
 			return nil, err
 		}
+
+		return vehicleList, nil
 	}
 
 	err := db.
 		Model(&vehicleList).
-		Where("vehicle_type = ?", t).
+		Apply(orm.Pagination(queryParams)).
 		Select()
 
 	if err != nil {

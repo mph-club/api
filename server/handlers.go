@@ -72,6 +72,19 @@ func getCars(ctx echo.Context) error {
 	return ctx.JSON(generateJSONResponse(true, http.StatusOK, map[string]interface{}{"vehicles": list}))
 }
 
+func exploreCars(ctx echo.Context) error {
+	queryParams := ctx.Request().URL.Query()
+	carType := ctx.QueryParam("type")
+
+	list, err := database.GetExplore(carType, queryParams)
+
+	if err != nil {
+		return ctx.JSON(generateJSONResponse(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
+	}
+
+	return ctx.JSON(generateJSONResponse(true, http.StatusOK, map[string]interface{}{"explore": list}))
+}
+
 func uploadToS3(ctx echo.Context) error {
 	sess, err := session.NewSession(&aws.Config{
 		Region:      aws.String(os.Getenv("AWS_REGION")),

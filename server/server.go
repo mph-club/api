@@ -24,6 +24,8 @@ func CreateAndListen() {
 		return ctx.String(200, "api service!!!!")
 	})
 
+	v1.GET("/explore", exploreCars)
+
 	v1.Use(middleware.Static("/swagger"))
 	//  **** PRIVATE ****
 
