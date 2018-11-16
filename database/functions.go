@@ -1,7 +1,6 @@
 package database
 
 import (
-	"errors"
 	"log"
 	"mphclub-rest-server/models"
 	"time"
@@ -132,7 +131,7 @@ func GetMyCars(u *models.User) ([]models.Vehicle, error) {
 	}
 
 	if len(users[0].Vehicles) == 0 {
-		return nil, errors.New("This user has no cars")
+		return []models.Vehicle{}, nil
 	}
 
 	return users[0].Vehicles, nil

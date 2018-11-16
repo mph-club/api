@@ -64,4 +64,6 @@ func CreateSchema() {
 			log.Println(err)
 		}
 	}
+
+	checkForSeed(db)
 }

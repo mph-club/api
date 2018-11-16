@@ -2,6 +2,48 @@ package models
 
 import "time"
 
+type DriverLicense struct {
+	Address      string    `json:"address"`
+	City         string    `json:"city"`
+	DLNumber     string    `json:"dl_number"`
+	DOBTimeStamp time.Time `json:"dobTime"`
+	FirstName    string    `json:"first_name"`
+	Height       string    `json:"height"`
+	ID           int       `json:"id"`
+	LastName     string    `json:"last_name"`
+	MiddleName   string    `json:"middle_name"`
+	State        string    `json:"state"`
+}
+
+type User struct {
+	ID        string     `json:"id" sql:",unique"`
+	Email     string     `json:"email"`
+	Phone     string     `json:"phone"`
+	Vehicles  []Vehicle  `json:"vehicles" sql:",fk"`
+	UserNotes []UserNote `json:"notes" sql:",fk"`
+}
+
+func (target *User) Merge(source User) User {
+	if target.Email != "" {
+		source.Email = target.Email
+	}
+	if target.Phone != "" {
+		source.Phone = target.Phone
+	}
+
+	return source
+}
+
+type UserNote struct {
+	Comment     string    `json:"comment"`
+	CreatedBy   string    `json:"created_by"`
+	CreatedTime time.Time `json:"created_time"`
+	ID          int       `json:"id" sql:",pk"`
+	UpdatedBy   string    `json:"updated_by"`
+	UpdatedTime time.Time `json:"updated_time"`
+	UserID      string    `json:"user_id" sql:",fk"`
+}
+
 type Vehicle struct {
 	Address      string        `json:"address"`
 	City         string        `json:"city"`
@@ -122,33 +164,4 @@ type VehicleNote struct {
 	UpdatedBy   string    `json:"updated_by"`
 	UpdatedTime time.Time `json:"updated_time"`
 	VehicleID   string    `json:"vehicle_id" sql:",fk"`
-}
-
-type UserNote struct {
-	Comment     string    `json:"comment"`
-	CreatedBy   string    `json:"created_by"`
-	CreatedTime time.Time `json:"created_time"`
-	ID          int       `json:"id" sql:",pk"`
-	UpdatedBy   string    `json:"updated_by"`
-	UpdatedTime time.Time `json:"updated_time"`
-	UserID      string    `json:"user_id" sql:",fk"`
-}
-
-type User struct {
-	ID        string     `json:"id" sql:",unique"`
-	Email     string     `json:"email"`
-	Phone     string     `json:"phone"`
-	Vehicles  []Vehicle  `json:"vehicles" sql:",fk"`
-	UserNotes []UserNote `json:"notes" sql:",fk"`
-}
-
-func (target *User) Merge(source User) User {
-	if target.Email != "" {
-		source.Email = target.Email
-	}
-	if target.Phone != "" {
-		source.Phone = target.Phone
-	}
-
-	return source
 }
