@@ -5,6 +5,7 @@ import (
 	"mphclub-rest-server/models"
 
 	"github.com/go-pg/pg"
+	"github.com/rs/xid"
 )
 
 func seedDB() {
@@ -48,6 +49,7 @@ var CarList = []models.Vehicle{{
 	Miles:        1000,
 	LicensePlate: "DQQ R63",
 	Transmission: "AUTO",
+	ID:           xid.New().String(),
 }, {
 	Make:         "Lamborghini",
 	Model:        "Aventador",
@@ -61,6 +63,7 @@ var CarList = []models.Vehicle{{
 	Miles:        1000,
 	LicensePlate: "DQQ T73",
 	Transmission: "AUTO",
+	ID:           xid.New().String(),
 },
 	{
 		Make:         "Lamborghini",
@@ -75,6 +78,7 @@ var CarList = []models.Vehicle{{
 		Miles:        1000,
 		LicensePlate: "",
 		Transmission: "AUTO",
+		ID:           xid.New().String(),
 	},
 	{
 		Make:         "Lamborghini",
@@ -89,6 +93,7 @@ var CarList = []models.Vehicle{{
 		Miles:        1000,
 		LicensePlate: "ECM G46",
 		Transmission: "AUTO",
+		ID:           xid.New().String(),
 	},
 	{
 		Make:         "Lamborghini",
@@ -103,6 +108,7 @@ var CarList = []models.Vehicle{{
 		Miles:        1000,
 		LicensePlate: "KEBY31",
 		Transmission: "AUTO",
+		ID:           xid.New().String(),
 	},
 	{
 		Make:         "Ferrari",
@@ -117,6 +123,7 @@ var CarList = []models.Vehicle{{
 		Miles:        1000,
 		LicensePlate: "DSD F25",
 		Transmission: "AUTO",
+		ID:           xid.New().String(),
 	},
 	{
 		Make:         "Ferrari",
@@ -131,6 +138,7 @@ var CarList = []models.Vehicle{{
 		Miles:        1000,
 		LicensePlate: "",
 		Transmission: "AUTO",
+		ID:           xid.New().String(),
 	},
 	{
 		Make:         "Ferrari",
@@ -145,6 +153,7 @@ var CarList = []models.Vehicle{{
 		Miles:        1000,
 		LicensePlate: "CDZ 574",
 		Transmission: "AUTO",
+		ID:           xid.New().String(),
 	},
 	{
 		Make:         "Ferrari",
@@ -159,6 +168,7 @@ var CarList = []models.Vehicle{{
 		Miles:        1000,
 		LicensePlate: "DQQ W25",
 		Transmission: "AUTO",
+		ID:           xid.New().String(),
 	},
 	{
 		Make:         "Audi",
@@ -173,6 +183,7 @@ var CarList = []models.Vehicle{{
 		Miles:        1000,
 		LicensePlate: "",
 		Transmission: "AUTO",
+		ID:           xid.New().String(),
 	},
 	{
 		Make:         "BMW",
@@ -187,6 +198,7 @@ var CarList = []models.Vehicle{{
 		Miles:        1000,
 		LicensePlate: "EQJ S46",
 		Transmission: "AUTO",
+		ID:           xid.New().String(),
 	},
 	{
 		Make:         "Bentley",
@@ -201,6 +213,7 @@ var CarList = []models.Vehicle{{
 		Miles:        1000,
 		LicensePlate: "",
 		Transmission: "AUTO",
+		ID:           xid.New().String(),
 	},
 	{
 		Make:         "Rolls Royce",
@@ -215,6 +228,7 @@ var CarList = []models.Vehicle{{
 		Miles:        1000,
 		LicensePlate: "",
 		Transmission: "AUTO",
+		ID:           xid.New().String(),
 	},
 	{
 		Make:         "Rolls Royce",
@@ -229,6 +243,7 @@ var CarList = []models.Vehicle{{
 		Miles:        1000,
 		LicensePlate: "CMH Y38",
 		Transmission: "AUTO",
+		ID:           xid.New().String(),
 	},
 	{
 		Make:         "Rolls Royce",
@@ -243,6 +258,7 @@ var CarList = []models.Vehicle{{
 		Miles:        1000,
 		LicensePlate: "",
 		Transmission: "AUTO",
+		ID:           xid.New().String(),
 	},
 	{
 		Make:         "Rolls Royce",
@@ -257,6 +273,7 @@ var CarList = []models.Vehicle{{
 		Miles:        1000,
 		LicensePlate: "",
 		Transmission: "AUTO",
+		ID:           xid.New().String(),
 	},
 	{
 		Make:         "Rolls Royce",
@@ -271,6 +288,7 @@ var CarList = []models.Vehicle{{
 		Miles:        1000,
 		LicensePlate: "",
 		Transmission: "AUTO",
+		ID:           xid.New().String(),
 	},
 	{
 		Make:         "Range Rover",
@@ -285,6 +303,7 @@ var CarList = []models.Vehicle{{
 		Miles:        1000,
 		LicensePlate: "",
 		Transmission: "AUTO",
+		ID:           xid.New().String(),
 	},
 	{
 		Make:         "Range Rover",
@@ -299,6 +318,7 @@ var CarList = []models.Vehicle{{
 		Miles:        1000,
 		LicensePlate: "GQP M15",
 		Transmission: "AUTO",
+		ID:           xid.New().String(),
 	},
 	{
 		Make:         "Mercedes Benz",
@@ -313,5 +333,6 @@ var CarList = []models.Vehicle{{
 		Miles:        1000,
 		LicensePlate: "CHA9637",
 		Transmission: "AUTO",
+		ID:           xid.New().String(),
 	},
 }
