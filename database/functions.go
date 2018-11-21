@@ -63,7 +63,7 @@ func EditPhotoURLArrayOnVehicle(vehicleID, photoURL string) error {
 	return nil
 }
 
-func addUserPhotoURL(userID, photoURL string) error {
+func AddUserPhotoURL(userID, photoURL string) error {
 	db := connectToDB()
 	user := &models.User{
 		ID: userID,

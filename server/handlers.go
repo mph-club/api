@@ -168,7 +168,7 @@ func uploadUserPhoto(ctx echo.Context) error {
 		return ctx.JSON(generateJSONResponse(false, http.StatusBadRequest, map[string]interface{}{"aws_error": err.Error()}))
 	}
 
-	err = database.EditPhotoURLArrayOnVehicle(userID, result.Location)
+	err = database.AddUserPhotoURL(userID, result.Location)
 	if err != nil {
 		return ctx.JSON(generateJSONResponse(false, http.StatusBadRequest, map[string]interface{}{"db_error": err.Error()}))
 	}
