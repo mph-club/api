@@ -63,6 +63,27 @@ func EditPhotoURLArrayOnVehicle(vehicleID, photoURL string) error {
 	return nil
 }
 
+func addUserPhotoURL(userID, photoURL string) error {
+	db := connectToDB()
+	user := &models.User{
+		ID: userID,
+	}
+
+	err := db.Select(user)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	_, err = db.Model(user).Column("profile_photo_url").WherePK().Update()
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
+}
+
 func UpsertListing(v models.Vehicle) (string, string, error) {
 	db := connectToDB()
 

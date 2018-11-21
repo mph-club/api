@@ -35,7 +35,8 @@ func CreateAndListen() {
 	// POST
 	v1.POST("/updateUser", updateUser, cognitoAuth)
 	v1.POST("/listCar", upsertListing, cognitoAuth)
-	v1.POST("/uploadPhoto", uploadToS3, cognitoAuth)
+	v1.POST("/uploadCarPhoto", uploadCarPhoto, cognitoAuth)
+	v1.POST("/uploadUserPhoto", uploadUserPhoto, cognitoAuth)
 
 	_api.Start(":8080")
 }
