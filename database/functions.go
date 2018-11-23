@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"log"
 	"mphclub-rest-server/models"
 	"time"
@@ -39,8 +40,12 @@ func UpsertUser(u models.User) error {
 	return nil
 }
 
-func EditPhotoURLArrayOnVehicle(vehicleID, photoURL string) error {
+func EditPhotoURLArrayOnVehicle(vehicleID, filename string) error {
 	db := connectToDB()
+
+	url := fmt.Sprintf("https://mphclub.s3.amazonaws.com/%s/%s", vehicleID, filename)
+	thumbnailURL := fmt.Sprintf("https://mphclub.s3.amazonaws.com/%s/thumb/%s", vehicleID, filename)
+
 	vehicleToAttach := &models.Vehicle{
 		ID: vehicleID,
 	}
@@ -51,10 +56,11 @@ func EditPhotoURLArrayOnVehicle(vehicleID, photoURL string) error {
 		return err
 	}
 
-	vehicleToAttach.Photos = append(vehicleToAttach.Photos, photoURL)
+	vehicleToAttach.Photos = append(vehicleToAttach.Photos, url)
+	vehicleToAttach.Thumbnails = append(vehicleToAttach.Thumbnails, thumbnailURL)
 	vehicleToAttach.UpdatedTime = time.Now()
 
-	_, err = db.Model(vehicleToAttach).Column("photos", "updated_time").WherePK().Update()
+	_, err = db.Model(vehicleToAttach).Column("photos", "updated_time", "thumbnails").WherePK().Update()
 	if err != nil {
 		log.Println(err)
 		return err

@@ -83,16 +83,6 @@ func exploreCars(ctx echo.Context) error {
 }
 
 func uploadCarPhoto(ctx echo.Context) error {
-	sess, err := session.NewSession(&aws.Config{
-		Region:      aws.String(os.Getenv("AWS_REGION")),
-		Credentials: credentials.NewStaticCredentials(os.Getenv("AWS_ACCESS_KEY_ID"), os.Getenv("AWS_SECRET_ACCESS_KEY"), ""),
-	})
-	if err != nil {
-		return ctx.JSON(generateJSONResponse(false, http.StatusServiceUnavailable, map[string]interface{}{"aws_auth_err": err.Error()}))
-	}
-
-	uploader := s3manager.NewUploader(sess)
-
 	vehicleID := ctx.FormValue("vehicle")
 
 	file, err := ctx.FormFile("photo")
@@ -106,21 +96,19 @@ func uploadCarPhoto(ctx echo.Context) error {
 	}
 	defer src.Close()
 
-	filename := file.Filename
-
-	result, err := uploader.Upload(&s3manager.UploadInput{
-		Bucket:      aws.String(os.Getenv("AWS_BUCKET")),
-		Key:         aws.String(vehicleID + "/" + filename),
-		Body:        src,
-		ContentType: aws.String("image/jpeg"),
-		ACL:         aws.String("public-read"),
-	})
-
+	thumbnail, err := thumbnailPhoto(src)
 	if err != nil {
-		return ctx.JSON(generateJSONResponse(false, http.StatusBadRequest, map[string]interface{}{"aws_error": err.Error()}))
+		return ctx.JSON(generateJSONResponse(false, http.StatusInternalServerError, map[string]interface{}{"thumbnail_resize_error": err.Error()}))
 	}
 
-	err = database.EditPhotoURLArrayOnVehicle(vehicleID, result.Location)
+	filename := file.Filename
+
+	err = batchUpload(src, thumbnail, vehicleID, filename)
+	if err != nil {
+		return ctx.JSON(generateJSONResponse(false, http.StatusInternalServerError, map[string]interface{}{"aws_batch_upload_error": err.Error()}))
+	}
+
+	err = database.EditPhotoURLArrayOnVehicle(vehicleID, filename)
 	if err != nil {
 		return ctx.JSON(generateJSONResponse(false, http.StatusBadRequest, map[string]interface{}{"db_error": err.Error()}))
 	}

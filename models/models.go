@@ -67,6 +67,7 @@ type Vehicle struct {
 	Seats        int           `json:"seats"`
 	State        string        `json:"state"`
 	Status       string        `json:"status" sql:"type:status"`
+	Thumbnails   []string      `json:"thumbnails" sql:",array"`
 	Transmission string        `json:"transmission" sql:"type:transmission"`
 	Trim         string        `json:"trim"`
 	UpdatedBy    string        `json:"updated_by"`
