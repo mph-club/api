@@ -1,6 +1,7 @@
 package server
 
 import (
+	"image"
 	"image/jpeg"
 	"mime/multipart"
 	"os"
@@ -12,26 +13,22 @@ import (
 	"github.com/nfnt/resize"
 )
 
-func thumbnailPhoto(src multipart.File) (*os.File, error) {
-	img, err := jpeg.Decode(src)
+func thumbnailPhoto(src multipart.File) (image.Image, error) {
+	if _, err := src.Seek(0, 0); err != nil {
+		return nil, err
+	}
+
+	img, _, err := image.Decode(src)
 	if err != nil {
 		return nil, err
 	}
 
-	thumb := resize.Thumbnail(200, 0, img, resize.NearestNeighbor)
+	t := resize.Thumbnail(200, 0, img, resize.NearestNeighbor)
 
-	out, err := os.Create("thumbs.jpg")
-	if err != nil {
-		return nil, err
-	}
-	defer out.Close()
-
-	jpeg.Encode(out, thumb, nil)
-
-	return out, nil
+	return t, nil
 }
 
-func batchUpload(src multipart.File, thumbnail *os.File, vehicleID, filename string) error {
+func batchUpload(file *multipart.FileHeader, vehicleID, filename string) error {
 	sess, err := session.NewSession(&aws.Config{
 		Region:      aws.String(os.Getenv("AWS_REGION")),
 		Credentials: credentials.NewStaticCredentials(os.Getenv("AWS_ACCESS_KEY_ID"), os.Getenv("AWS_SECRET_ACCESS_KEY"), ""),
@@ -41,6 +38,25 @@ func batchUpload(src multipart.File, thumbnail *os.File, vehicleID, filename str
 	}
 
 	uploader := s3manager.NewUploader(sess)
+
+	src, err := file.Open()
+	if err != nil {
+		return err
+	}
+	defer src.Close()
+
+	thumb, err := thumbnailPhoto(src)
+	if err != nil {
+		return err
+	}
+
+	thumbnail, err := os.Create("thumbs.jpg")
+	if err != nil {
+		return err
+	}
+	defer thumbnail.Close()
+
+	jpeg.Encode(thumbnail, thumb, nil)
 
 	objects := []s3manager.BatchUploadObject{
 		{

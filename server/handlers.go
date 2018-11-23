@@ -96,14 +96,9 @@ func uploadCarPhoto(ctx echo.Context) error {
 	}
 	defer src.Close()
 
-	thumbnail, err := thumbnailPhoto(src)
-	if err != nil {
-		return ctx.JSON(generateJSONResponse(false, http.StatusInternalServerError, map[string]interface{}{"thumbnail_resize_error": err.Error()}))
-	}
-
 	filename := file.Filename
 
-	err = batchUpload(src, thumbnail, vehicleID, filename)
+	err = batchUpload(file, vehicleID, filename)
 	if err != nil {
 		return ctx.JSON(generateJSONResponse(false, http.StatusInternalServerError, map[string]interface{}{"aws_batch_upload_error": err.Error()}))
 	}
