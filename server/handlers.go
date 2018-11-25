@@ -8,13 +8,14 @@ import (
 	"github.com/labstack/echo"
 )
 
+// POST HANDLERS
 func upsertListing(ctx echo.Context) error {
 	var v models.Vehicle
 
 	v.UserID = ctx.Get("sub").(string)
 
 	if err := ctx.Bind(&v); err != nil {
-		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"error": err.Error()}))
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"json_bind_error": err.Error()}))
 	}
 
 	carID, result, err := database.UpsertListing(v)
@@ -24,7 +25,15 @@ func upsertListing(ctx echo.Context) error {
 
 	resultString := fmt.Sprintf("vehicle was successfully %s", result)
 
-	return ctx.JSON(response(true, http.StatusOK, map[string]interface{}{"result": resultString, "id": carID}))
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{
+				"result": resultString,
+				"id": carID,
+			},
+		))
 }
 
 func updateUser(ctx echo.Context) error {
@@ -32,48 +41,21 @@ func updateUser(ctx echo.Context) error {
 	u.ID = ctx.Get("sub").(string)
 
 	if err := ctx.Bind(&u); err != nil {
-		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"error": err.Error()}))
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"json_bind_error": err.Error()}))
 	}
 
 	if err := database.UpsertUser(u); err != nil {
-		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"error": err.Error()}))
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
 	}
 
 	resultString := fmt.Sprintf("user was successfully updated")
-	return ctx.JSON(response(true, http.StatusOK, map[string]interface{}{"result": resultString}))
-}
 
-func getMyCars(ctx echo.Context) error {
-	var u models.User
-	u.ID = ctx.Get("sub").(string)
-
-	list, err := database.GetMyCars(&u)
-
-	if err != nil {
-		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
-	}
-
-	return ctx.JSON(response(true, http.StatusOK, map[string]interface{}{"vehicles": list}))
-}
-
-func getCars(ctx echo.Context) error {
-	list, err := database.GetCars()
-
-	if err != nil {
-		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
-	}
-
-	return ctx.JSON(response(true, http.StatusOK, map[string]interface{}{"vehicles": list}))
-}
-
-func exploreCars(ctx echo.Context) error {
-	list, err := database.GetExplore()
-
-	if err != nil {
-		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
-	}
-
-	return ctx.JSON(response(true, http.StatusOK, map[string]interface{}{"explore": list}))
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{"result": resultString},
+		))
 }
 
 func uploadCarPhoto(ctx echo.Context) error {
@@ -81,20 +63,25 @@ func uploadCarPhoto(ctx echo.Context) error {
 
 	file, err := ctx.FormFile("photo")
 	if err != nil {
-		return ctx.JSON(response(false, http.StatusInternalServerError, map[string]interface{}{"form_file_error": err.Error()}))
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"form_file_error": err.Error()}))
 	}
 
 	if err := batchUploadCarAndThumbPhoto(file, vehicleID, file.Filename); err != nil {
-		return ctx.JSON(response(false, http.StatusInternalServerError, map[string]interface{}{"batch_upload_error": err.Error()}))
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"batch_upload_error": err.Error()}))
 	}
 
 	if err := database.EditPhotoURLArrayOnVehicle(vehicleID, file.Filename); err != nil {
-		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"db_error": err.Error()}))
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
 	}
 
 	resultString := fmt.Sprintf("photo was successfully uploaded to the bucket and attached to %s", vehicleID)
 
-	return ctx.JSON(response(true, http.StatusOK, map[string]interface{}{"result": resultString}))
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{"result": resultString},
+		))
 }
 
 func uploadUserPhoto(ctx echo.Context) error {
@@ -112,10 +99,63 @@ func uploadUserPhoto(ctx echo.Context) error {
 
 	err = database.AddUserPhotoURL(userID, location)
 	if err != nil {
-		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"db_error": err.Error()}))
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
 	}
 
 	resultString := fmt.Sprintf("photo was successfully uploaded to the bucket and attached to %s", userID)
 
-	return ctx.JSON(response(true, http.StatusOK, map[string]interface{}{"result": resultString}))
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{"result": resultString},
+		))
+}
+
+// GET HANDLERS
+func getMyCars(ctx echo.Context) error {
+	var u models.User
+	u.ID = ctx.Get("sub").(string)
+
+	list, err := database.GetMyCars(&u)
+
+	if err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
+	}
+
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{"vehicles": list}))
+}
+
+func getCars(ctx echo.Context) error {
+	list, err := database.GetCars()
+
+	if err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
+	}
+
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{"vehicles": list},
+			))
+}
+
+func exploreCars(ctx echo.Context) error {
+	list, err := database.GetExplore()
+
+	if err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
+	}
+
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{"explore": list},
+		))
 }
