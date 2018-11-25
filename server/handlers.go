@@ -89,21 +89,13 @@ func uploadCarPhoto(ctx echo.Context) error {
 	if err != nil {
 		return ctx.JSON(response(false, http.StatusInternalServerError, map[string]interface{}{"form_file_error": err.Error()}))
 	}
-
-	src, err := file.Open()
-	if err != nil {
-		return ctx.JSON(response(false, http.StatusInternalServerError, map[string]interface{}{"form_file_open_error": err.Error()}))
-	}
-	defer src.Close()
-
 	filename := file.Filename
 
 	if err := batchUpload(file, vehicleID, filename); err != nil {
 		return ctx.JSON(response(false, http.StatusInternalServerError, map[string]interface{}{"batch_upload_error": err.Error()}))
 	}
 
-	err = database.EditPhotoURLArrayOnVehicle(vehicleID, filename)
-	if err != nil {
+	if err := database.EditPhotoURLArrayOnVehicle(vehicleID, filename); err != nil {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"db_error": err.Error()}))
 	}
 
