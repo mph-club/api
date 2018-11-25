@@ -23,7 +23,7 @@ func thumbnailPhoto(src multipart.File) (image.Image, error) {
 		return nil, err
 	}
 
-	t := resize.Thumbnail(200, 0, img, resize.NearestNeighbor)
+	t := resize.Thumbnail(400, 400, img, resize.NearestNeighbor)
 
 	return t, nil
 }
@@ -57,6 +57,14 @@ func batchUpload(file *multipart.FileHeader, vehicleID, filename string) error {
 	defer thumbnail.Close()
 
 	jpeg.Encode(thumbnail, thumb, nil)
+
+	if _, err := src.Seek(0, 0); err != nil {
+		return err
+	}
+
+	if _, err := thumbnail.Seek(0, 0); err != nil {
+		return err
+	}
 
 	objects := []s3manager.BatchUploadObject{
 		{

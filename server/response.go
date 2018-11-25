@@ -10,7 +10,7 @@ type errorResponse struct {
 	Message string                 `json:"message"`
 }
 
-func generateJSONResponse(success bool, statusCode int, responseMap map[string]interface{}) (int, interface{}) {
+func response(success bool, statusCode int, responseMap map[string]interface{}) (int, interface{}) {
 	pass := "success"
 	fail := "fail"
 
