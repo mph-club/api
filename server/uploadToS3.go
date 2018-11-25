@@ -28,7 +28,7 @@ func thumbnailPhoto(src multipart.File) (image.Image, error) {
 	return t, nil
 }
 
-func batchUpload(file *multipart.FileHeader, vehicleID, filename string) error {
+func batchUploadCarAndThumbPhoto(file *multipart.FileHeader, vehicleID, filename string) error {
 	sess, err := session.NewSession(&aws.Config{
 		Region:      aws.String(os.Getenv("AWS_REGION")),
 		Credentials: credentials.NewStaticCredentials(os.Getenv("AWS_ACCESS_KEY_ID"), os.Getenv("AWS_SECRET_ACCESS_KEY"), ""),
@@ -94,4 +94,36 @@ func batchUpload(file *multipart.FileHeader, vehicleID, filename string) error {
 	}
 
 	return nil
+}
+
+func uploadUserPhotoToS3(file *multipart.FileHeader, userID, filename string) (string, error) {
+	sess, err := session.NewSession(&aws.Config{
+		Region:      aws.String(os.Getenv("AWS_REGION")),
+		Credentials: credentials.NewStaticCredentials(os.Getenv("AWS_ACCESS_KEY_ID"), os.Getenv("AWS_SECRET_ACCESS_KEY"), ""),
+	})
+	if err != nil {
+		return "", err
+	}
+
+	uploader := s3manager.NewUploader(sess)
+
+	src, err := file.Open()
+	if err != nil {
+		return "", err
+	}
+	defer src.Close()
+
+	result, err := uploader.Upload(&s3manager.UploadInput{
+		Bucket:      aws.String(os.Getenv("AWS_BUCKET")),
+		Key:         aws.String(userID + "/" + filename),
+		Body:        src,
+		ContentType: aws.String("image/jpeg"),
+		ACL:         aws.String("public-read"),
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	return result.Location, nil
 }

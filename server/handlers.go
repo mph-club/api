@@ -5,12 +5,6 @@ import (
 	"mphclub-rest-server/database"
 	"mphclub-rest-server/models"
 	"net/http"
-	"os"
-
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/labstack/echo"
 )
 
@@ -89,13 +83,12 @@ func uploadCarPhoto(ctx echo.Context) error {
 	if err != nil {
 		return ctx.JSON(response(false, http.StatusInternalServerError, map[string]interface{}{"form_file_error": err.Error()}))
 	}
-	filename := file.Filename
 
-	if err := batchUpload(file, vehicleID, filename); err != nil {
+	if err := batchUploadCarAndThumbPhoto(file, vehicleID, file.Filename); err != nil {
 		return ctx.JSON(response(false, http.StatusInternalServerError, map[string]interface{}{"batch_upload_error": err.Error()}))
 	}
 
-	if err := database.EditPhotoURLArrayOnVehicle(vehicleID, filename); err != nil {
+	if err := database.EditPhotoURLArrayOnVehicle(vehicleID, file.Filename); err != nil {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"db_error": err.Error()}))
 	}
 
@@ -105,44 +98,19 @@ func uploadCarPhoto(ctx echo.Context) error {
 }
 
 func uploadUserPhoto(ctx echo.Context) error {
-	sess, err := session.NewSession(&aws.Config{
-		Region:      aws.String(os.Getenv("AWS_REGION")),
-		Credentials: credentials.NewStaticCredentials(os.Getenv("AWS_ACCESS_KEY_ID"), os.Getenv("AWS_SECRET_ACCESS_KEY"), ""),
-	})
-	if err != nil {
-		return ctx.JSON(response(false, http.StatusServiceUnavailable, map[string]interface{}{"aws_auth_err": err.Error()}))
-	}
-
-	uploader := s3manager.NewUploader(sess)
-
 	userID := ctx.Get("sub").(string)
 
 	file, err := ctx.FormFile("photo")
 	if err != nil {
-		return ctx.JSON(response(false, http.StatusInternalServerError, map[string]interface{}{"form_file_error": err.Error()}))
+		return err
 	}
 
-	src, err := file.Open()
+	location, err := uploadUserPhotoToS3(file, userID, file.Filename)
 	if err != nil {
-		return ctx.JSON(response(false, http.StatusInternalServerError, map[string]interface{}{"form_file_open_error": err.Error()}))
-	}
-	defer src.Close()
-
-	filename := file.Filename
-
-	result, err := uploader.Upload(&s3manager.UploadInput{
-		Bucket:      aws.String(os.Getenv("AWS_BUCKET")),
-		Key:         aws.String(userID + "/" + filename),
-		Body:        src,
-		ContentType: aws.String("image/jpeg"),
-		ACL:         aws.String("public-read"),
-	})
-
-	if err != nil {
-		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"aws_error": err.Error()}))
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"upload_to_s3_error": err.Error()}))
 	}
 
-	err = database.AddUserPhotoURL(userID, result.Location)
+	err = database.AddUserPhotoURL(userID, location)
 	if err != nil {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"db_error": err.Error()}))
 	}
