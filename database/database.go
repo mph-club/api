@@ -55,6 +55,7 @@ func CreateSchema() {
 		&models.User{},
 		&models.UserNote{},
 		&models.VehicleNote{},
+		&models.DriverLicense{},
 		//models go here
 	} {
 		err := db.CreateTable(model, nil)

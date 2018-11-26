@@ -194,6 +194,36 @@ func GetExplore() ([][]models.Vehicle, error) {
 	return explore3, nil
 }
 
+func AddDriverLicense(dl *models.DriverLicense) error {
+	db := connectToDB()
+	if err := db.Insert(dl); err != nil {
+		return err
+	}
+	log.Println(dl)
+
+	if err := db.Select(dl); err != nil {
+		return err
+	}
+	log.Println(dl)
+
+	return nil
+}
+
+func GetDriverLicense(userID string) (models.DriverLicense, error) {
+	db := connectToDB()
+	var u []models.User
+
+	if err := db.Model(&u).
+		Column("user.*", "DriverLicense").
+		Select(); err != nil {
+		return models.DriverLicense{}, err
+	}
+
+	log.Println(u)
+
+	return u[0].DriverLicense, nil
+}
+
 func getTypeVehicleArray(carType string) ([]models.Vehicle, error) {
 	var list []models.Vehicle
 

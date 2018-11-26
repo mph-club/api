@@ -113,7 +113,51 @@ func uploadUserPhoto(ctx echo.Context) error {
 		))
 }
 
+func uploadDriverLicense(ctx echo.Context) error {
+	var dl models.DriverLicense
+
+	if err := ctx.Bind(&dl); err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"json_bind_error": err.Error()}))
+	}
+
+	if err := database.AddDriverLicense(&dl); err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"databse_error": err.Error()}))
+	}
+
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{"result": "drivers license added"},
+		))
+}
+
 // GET HANDLERS
+func getDriverLicense(ctx echo.Context) error {
+	userID := ctx.Get("sub").(string)
+
+	license, err := database.GetDriverLicense(userID)
+	if err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
+	}
+
+	if license.ID == 0 {
+		return ctx.JSON(
+			response(
+				true,
+				http.StatusOK,
+				map[string]interface{}{"license": "empty license"},
+			))
+	}
+
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{"license": license},
+		))
+}
+
 func getMyCars(ctx echo.Context) error {
 	var u models.User
 	u.ID = ctx.Get("sub").(string)

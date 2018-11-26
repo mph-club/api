@@ -16,12 +16,14 @@ type DriverLicense struct {
 }
 
 type User struct {
-	ID              string     `json:"id" sql:",unique"`
-	Email           string     `json:"email"`
-	Phone           string     `json:"phone"`
-	ProfilePhotoURL string     `json:"profile_photo"`
-	Vehicles        []Vehicle  `json:"vehicles" sql:",fk"`
-	UserNotes       []UserNote `json:"notes" sql:",fk"`
+	ID              string        `json:"id" sql:",unique"`
+	Email           string        `json:"email"`
+	Phone           string        `json:"phone"`
+	ProfilePhotoURL string        `json:"profile_photo"`
+	Vehicles        []Vehicle     `json:"vehicles" sql:",fk"`
+	UserNotes       []UserNote    `json:"notes" sql:",fk"`
+	DriverLicense   DriverLicense `json:"driver_license" sql:",fk"`
+	DriverLicenseID int           `json:"dl_id"`
 }
 
 func (target *User) Merge(source User) User {

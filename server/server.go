@@ -13,7 +13,6 @@ func CreateAndListen() {
 	v1.Use(middleware.Logger())
 
 	//  **** PUBLIC ****
-
 	v1.GET("/getCars", getCars)
 
 	v1.GET("/home", func(ctx echo.Context) error {
@@ -27,16 +26,18 @@ func CreateAndListen() {
 	v1.GET("/explore", exploreCars)
 
 	v1.Use(middleware.Static("/swagger"))
-	//  **** PRIVATE ****
 
+	//  **** PRIVATE ****
 	// GET
 	v1.GET("/getMyCars", getMyCars, cognitoAuth)
+	v1.GET("/driverLicense", getDriverLicense, cognitoAuth)
 
 	// POST
 	v1.POST("/updateUser", updateUser, cognitoAuth)
 	v1.POST("/listCar", upsertListing, cognitoAuth)
 	v1.POST("/uploadCarPhoto", uploadCarPhoto, cognitoAuth)
 	v1.POST("/uploadUserPhoto", uploadUserPhoto, cognitoAuth)
+	v1.POST("/driverLicense", uploadDriverLicense, cognitoAuth)
 
 	_api.Start(":8080")
 }
