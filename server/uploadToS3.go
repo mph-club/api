@@ -56,12 +56,11 @@ func batchUploadCarAndThumbPhoto(file *multipart.FileHeader, vehicleID, filename
 	}
 	defer thumbnail.Close()
 
-  jpeg.Encode(thumbnail, thumb, nil)
+	jpeg.Encode(thumbnail, thumb, nil)
 
 	if _, err := src.Seek(0, 0); err != nil {
 		return err
 	}
-
 	if _, err := thumbnail.Seek(0, 0); err != nil {
 		return err
 	}

@@ -5,6 +5,7 @@ import (
 	"mphclub-rest-server/database"
 	"mphclub-rest-server/models"
 	"net/http"
+
 	"github.com/labstack/echo"
 )
 
@@ -31,7 +32,7 @@ func upsertListing(ctx echo.Context) error {
 			http.StatusOK,
 			map[string]interface{}{
 				"result": resultString,
-				"id": carID,
+				"id":     carID,
 			},
 		))
 }
@@ -142,7 +143,7 @@ func getCars(ctx echo.Context) error {
 			true,
 			http.StatusOK,
 			map[string]interface{}{"vehicles": list},
-			))
+		))
 }
 
 func exploreCars(ctx echo.Context) error {
