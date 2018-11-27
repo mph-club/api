@@ -40,6 +40,20 @@ func UpsertUser(u models.User) error {
 	return nil
 }
 
+func GetUser(userID string) (models.User, error) {
+	db := connectToDB()
+
+	user := models.User{
+		ID: userID,
+	}
+
+	if err := db.Select(&user); err != nil {
+		return models.User{}, err
+	}
+
+	return user, nil
+}
+
 func EditPhotoURLArrayOnVehicle(vehicleID, filename string) error {
 	db := connectToDB()
 
@@ -194,17 +208,26 @@ func GetExplore() ([][]models.Vehicle, error) {
 	return explore3, nil
 }
 
-func AddDriverLicense(dl *models.DriverLicense) error {
+func AddDriverLicense(userID string, dl *models.DriverLicense) error {
 	db := connectToDB()
 	if err := db.Insert(dl); err != nil {
 		return err
 	}
-	log.Println(dl)
 
-	if err := db.Select(dl); err != nil {
+	user := models.User{
+		ID: userID,
+		DriverLicenseID: dl.ID,
+	}
+
+	_, err := db.Model(&user).
+	Column("driver_license_id").
+	WherePK().
+	Update()
+
+	if err != nil {
+		log.Println(err)
 		return err
 	}
-	log.Println(dl)
 
 	return nil
 }
@@ -218,8 +241,6 @@ func GetDriverLicense(userID string) (models.DriverLicense, error) {
 		Select(); err != nil {
 		return models.DriverLicense{}, err
 	}
-
-	log.Println(u)
 
 	return u[0].DriverLicense, nil
 }

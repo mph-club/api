@@ -114,13 +114,14 @@ func uploadUserPhoto(ctx echo.Context) error {
 }
 
 func uploadDriverLicense(ctx echo.Context) error {
+	userID := ctx.Get("sub").(string)
 	var dl models.DriverLicense
 
 	if err := ctx.Bind(&dl); err != nil {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"json_bind_error": err.Error()}))
 	}
 
-	if err := database.AddDriverLicense(&dl); err != nil {
+	if err := database.AddDriverLicense(userID, &dl); err != nil {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"databse_error": err.Error()}))
 	}
 
