@@ -95,6 +95,7 @@ func AddUserPhotoURL(userID, photoURL string) error {
 		return err
 	}
 
+	user.ProfilePhotoURL = photoURL
 	_, err = db.Model(user).Column("profile_photo_url").WherePK().Update()
 	if err != nil {
 		log.Println(err)
@@ -125,7 +126,7 @@ func UpsertListing(v models.Vehicle) (string, string, error) {
 		}
 		return v.ID, "updated", nil
 	}
-	
+
 	if v.ViewIndex == 0 {
 		v.ViewIndex = -1
 	}
