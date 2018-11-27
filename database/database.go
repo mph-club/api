@@ -64,7 +64,7 @@ func CreateSchema() {
 		if err != nil {
 			log.Println(err)
 			typeText := "type"
-			containsType :=  strings.Contains(err.Error(), typeText)
+			containsType := strings.Contains(err.Error(), typeText)
 
 			if containsType {
 				createEnums(db)

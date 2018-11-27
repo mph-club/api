@@ -164,7 +164,6 @@ func getMyCars(ctx echo.Context) error {
 	u.ID = ctx.Get("sub").(string)
 
 	list, err := database.GetMyCars(&u)
-
 	if err != nil {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
 	}
@@ -178,7 +177,6 @@ func getMyCars(ctx echo.Context) error {
 
 func getCars(ctx echo.Context) error {
 	list, err := database.GetCars()
-
 	if err != nil {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
 	}
@@ -188,6 +186,22 @@ func getCars(ctx echo.Context) error {
 			true,
 			http.StatusOK,
 			map[string]interface{}{"vehicles": list},
+		))
+}
+
+func getUser(ctx echo.Context) error {
+	userID := ctx.Get("sub").(string)
+
+	user, err := database.GetUser(userID)
+	if err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
+	}
+
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{"user": user},
 		))
 }
 

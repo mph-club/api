@@ -10,15 +10,15 @@ import (
 
 func createEnums(db *pg.DB) {
 	qs := []string{
-    "CREATE TYPE status AS ENUM ('APPROVED', 'DENIED', 'PENDING')",
+		"CREATE TYPE status AS ENUM ('APPROVED', 'DENIED', 'PENDING')",
 		"CREATE TYPE transmission AS ENUM ('AUTO', 'MANUAL')",
 	}
 	for _, q := range qs {
-    	_, err := db.Exec(q)
-    		if err != nil {
-        		log.Println(err)
-    		}
-			}
+		_, err := db.Exec(q)
+		if err != nil {
+			log.Println(err)
+		}
+	}
 	CreateSchema()
 }
 
@@ -51,39 +51,39 @@ func checkForSeed(db *pg.DB) {
 }
 
 var carList = []models.Vehicle{
-{
-	Make:         "Lamborghini",
-	Model:        "Aventador Roadster",
-	Year:         2014,
-	Trim:         "",
-	Color:        "Dark Grey",
-	Doors:        2,
-	Seats:        2,
-	Description:  "lamborghini aventador roadster",
-	VehicleType:  "Sports",
-	Miles:        1000,
-	LicensePlate: "DQQ R63",
-	Transmission: "AUTO",
-	ID:           xid.New().String(),
-	Status: 		  "PENDING",
-},
-{
-	Make:         "Lamborghini",
-	Model:        "Aventador",
-	Year:         2015,
-	Trim:         "",
-	Color:        "White",
-	Doors:        2,
-	Seats:        2,
-	Description:  "white lamborghini aventador",
-	VehicleType:  "Sports",
-	Miles:        1000,
-	LicensePlate: "DQQ T73",
-	Transmission: "AUTO",
-	ID:           xid.New().String(),
-	Status: 		  "PENDING",
-},
-{
+	{
+		Make:         "Lamborghini",
+		Model:        "Aventador Roadster",
+		Year:         2014,
+		Trim:         "",
+		Color:        "Dark Grey",
+		Doors:        2,
+		Seats:        2,
+		Description:  "lamborghini aventador roadster",
+		VehicleType:  "Sports",
+		Miles:        1000,
+		LicensePlate: "DQQ R63",
+		Transmission: "AUTO",
+		ID:           xid.New().String(),
+		Status:       "PENDING",
+	},
+	{
+		Make:         "Lamborghini",
+		Model:        "Aventador",
+		Year:         2015,
+		Trim:         "",
+		Color:        "White",
+		Doors:        2,
+		Seats:        2,
+		Description:  "white lamborghini aventador",
+		VehicleType:  "Sports",
+		Miles:        1000,
+		LicensePlate: "DQQ T73",
+		Transmission: "AUTO",
+		ID:           xid.New().String(),
+		Status:       "PENDING",
+	},
+	{
 		Make:         "Lamborghini",
 		Model:        "Gallardo Spyder",
 		Year:         2016,
@@ -97,9 +97,9 @@ var carList = []models.Vehicle{
 		LicensePlate: "",
 		Transmission: "AUTO",
 		ID:           xid.New().String(),
-		Status: 		  "PENDING",
-},
-{
+		Status:       "PENDING",
+	},
+	{
 		Make:         "Lamborghini",
 		Model:        "Huracan",
 		Year:         2015,
@@ -113,9 +113,9 @@ var carList = []models.Vehicle{
 		LicensePlate: "ECM G46",
 		Transmission: "AUTO",
 		ID:           xid.New().String(),
-		Status: 		  "PENDING",
-},
-{
+		Status:       "PENDING",
+	},
+	{
 		Make:         "Lamborghini",
 		Model:        "Huracan Spyder",
 		Year:         2016,
@@ -129,7 +129,7 @@ var carList = []models.Vehicle{
 		LicensePlate: "KEBY31",
 		Transmission: "AUTO",
 		ID:           xid.New().String(),
-		Status: 		  "PENDING",
+		Status:       "PENDING",
 	},
 	{
 		Make:         "Ferrari",
@@ -145,7 +145,7 @@ var carList = []models.Vehicle{
 		LicensePlate: "DSD F25",
 		Transmission: "AUTO",
 		ID:           xid.New().String(),
-		Status: 		  "PENDING",
+		Status:       "PENDING",
 	},
 	{
 		Make:         "Ferrari",
@@ -161,7 +161,7 @@ var carList = []models.Vehicle{
 		LicensePlate: "",
 		Transmission: "AUTO",
 		ID:           xid.New().String(),
-		Status: 		  "PENDING",
+		Status:       "PENDING",
 	},
 	{
 		Make:         "Ferrari",
@@ -177,7 +177,7 @@ var carList = []models.Vehicle{
 		LicensePlate: "CDZ 574",
 		Transmission: "AUTO",
 		ID:           xid.New().String(),
-		Status: 		  "PENDING",
+		Status:       "PENDING",
 	},
 	{
 		Make:         "Ferrari",
@@ -193,7 +193,7 @@ var carList = []models.Vehicle{
 		LicensePlate: "DQQ W25",
 		Transmission: "AUTO",
 		ID:           xid.New().String(),
-		Status: 		  "PENDING",
+		Status:       "PENDING",
 	},
 	{
 		Make:         "Audi",
@@ -209,7 +209,7 @@ var carList = []models.Vehicle{
 		LicensePlate: "",
 		Transmission: "AUTO",
 		ID:           xid.New().String(),
-		Status: 		  "PENDING",
+		Status:       "PENDING",
 	},
 	{
 		Make:         "BMW",
@@ -225,7 +225,7 @@ var carList = []models.Vehicle{
 		LicensePlate: "EQJ S46",
 		Transmission: "AUTO",
 		ID:           xid.New().String(),
-		Status: 		  "PENDING",
+		Status:       "PENDING",
 	},
 	{
 		Make:         "Bentley",
@@ -241,7 +241,7 @@ var carList = []models.Vehicle{
 		LicensePlate: "",
 		Transmission: "AUTO",
 		ID:           xid.New().String(),
-		Status: 		  "PENDING",
+		Status:       "PENDING",
 	},
 	{
 		Make:         "Rolls Royce",
@@ -257,7 +257,7 @@ var carList = []models.Vehicle{
 		LicensePlate: "",
 		Transmission: "AUTO",
 		ID:           xid.New().String(),
-		Status: 		  "PENDING",
+		Status:       "PENDING",
 	},
 	{
 		Make:         "Rolls Royce",
@@ -273,7 +273,7 @@ var carList = []models.Vehicle{
 		LicensePlate: "CMH Y38",
 		Transmission: "AUTO",
 		ID:           xid.New().String(),
-		Status: 		  "PENDING",
+		Status:       "PENDING",
 	},
 	{
 		Make:         "Rolls Royce",
@@ -289,7 +289,7 @@ var carList = []models.Vehicle{
 		LicensePlate: "",
 		Transmission: "AUTO",
 		ID:           xid.New().String(),
-		Status: 		  "PENDING",
+		Status:       "PENDING",
 	},
 	{
 		Make:         "Rolls Royce",
@@ -305,7 +305,7 @@ var carList = []models.Vehicle{
 		LicensePlate: "",
 		Transmission: "AUTO",
 		ID:           xid.New().String(),
-		Status: 		  "PENDING",
+		Status:       "PENDING",
 	},
 	{
 		Make:         "Rolls Royce",
@@ -321,7 +321,7 @@ var carList = []models.Vehicle{
 		LicensePlate: "",
 		Transmission: "AUTO",
 		ID:           xid.New().String(),
-		Status: 		  "PENDING",
+		Status:       "PENDING",
 	},
 	{
 		Make:         "Range Rover",
@@ -337,7 +337,7 @@ var carList = []models.Vehicle{
 		LicensePlate: "",
 		Transmission: "AUTO",
 		ID:           xid.New().String(),
-		Status: 		  "PENDING",
+		Status:       "PENDING",
 	},
 	{
 		Make:         "Range Rover",
@@ -353,7 +353,7 @@ var carList = []models.Vehicle{
 		LicensePlate: "GQP M15",
 		Transmission: "AUTO",
 		ID:           xid.New().String(),
-		Status: 		  "PENDING",
+		Status:       "PENDING",
 	},
 	{
 		Make:         "Mercedes Benz",
@@ -369,6 +369,6 @@ var carList = []models.Vehicle{
 		LicensePlate: "CHA9637",
 		Transmission: "AUTO",
 		ID:           xid.New().String(),
-		Status: 		  "PENDING",
+		Status:       "PENDING",
 	},
 }

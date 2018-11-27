@@ -125,7 +125,10 @@ func UpsertListing(v models.Vehicle) (string, string, error) {
 		}
 		return v.ID, "updated", nil
 	}
-	v.ViewIndex = -1
+	
+	if v.ViewIndex == 0 {
+		v.ViewIndex = -1
+	}
 	v.ID = xid.New().String()
 	v.CreatedTime = time.Now()
 	v.Status = "PENDING"
@@ -215,14 +218,14 @@ func AddDriverLicense(userID string, dl *models.DriverLicense) error {
 	}
 
 	user := models.User{
-		ID: userID,
+		ID:              userID,
 		DriverLicenseID: dl.ID,
 	}
 
 	_, err := db.Model(&user).
-	Column("driver_license_id").
-	WherePK().
-	Update()
+		Column("driver_license_id").
+		WherePK().
+		Update()
 
 	if err != nil {
 		log.Println(err)
