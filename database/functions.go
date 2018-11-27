@@ -88,7 +88,6 @@ func AddUserPhotoURL(userID, photoURL string) error {
 	user := &models.User{
 		ID: userID,
 	}
-
 	err := db.Select(user)
 	if err != nil {
 		log.Println(err)
