@@ -61,7 +61,7 @@ type Vehicle struct {
 	IsPublished  bool          `json:"is_published"`
 	LicensePlate string        `json:"license_plate"`
 	Make         string        `json:"make"`
-	Miles        int           `json:"miles"`
+	Miles        string        `json:"miles" sql:"type:miles"`
 	Model        string        `json:"model"`
 	Photos       []string      `json:"photos" sql:",array"`
 	Place        string        `json:"place"`
@@ -117,7 +117,7 @@ func (target *Vehicle) Merge(source Vehicle) Vehicle {
 	if target.Make != "" {
 		source.Make = target.Make
 	}
-	if target.Miles != 0 {
+	if target.Miles != "" {
 		source.Miles = target.Miles
 	}
 	if target.Model != "" {
