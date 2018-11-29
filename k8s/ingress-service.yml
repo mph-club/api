@@ -7,17 +7,34 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-    - http:
+    - host: admin.mphclub.biz
+      http:
         paths:
-          - path: /app/
-            backend:
-              serviceName: server-cluster-ip-service
-              servicePort: 8080
-          - path: /cs-portal/
-            backend:
-              serviceName: cs-portal-cluster-ip-service
-              servicePort: 8081
-          - path: /cs-dashboard/
+          - path: /
             backend:
               serviceName: cs-dashboard-cluster-ip-service
               servicePort: 3000
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-api-service
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /api/
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: mphclub.biz
+      http:
+        paths:
+          - path: /api/
+            backend:
+              serviceName: server-cluster-ip-service
+              servicePort: 8080
+    - host: admin.mphclub.biz
+      http:
+        paths:
+          - path: /api/
+            backend:
+              serviceName: cs-portal-cluster-ip-service
+              servicePort: 8081

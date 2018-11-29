@@ -6,6 +6,11 @@ SECRET_NAME=${AWS_REGION}-ecr-registry
 EMAIL=dev@mphclub.com
 
 #
+# Fetch account number
+#
+AWS_ACCOUNT_NUMBER=`aws sts get-caller-identity --output text --query 'Account'`
+
+#
 # Fetch token (which will expire in 12 hours)
 #
 
