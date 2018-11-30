@@ -2,6 +2,7 @@ package seed
 
 import (
 	"log"
+
 	"mphclub-rest-server/models"
 
 	"github.com/go-pg/pg"
