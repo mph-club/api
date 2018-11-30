@@ -1,4 +1,4 @@
-package database
+package seed
 
 import (
 	"log"
@@ -8,50 +8,7 @@ import (
 	"github.com/rs/xid"
 )
 
-func createEnums(db *pg.DB) {
-	qs := []string{
-		"CREATE TYPE status AS ENUM ('APPROVED', 'DENIED', 'PENDING')",
-		"CREATE TYPE transmission AS ENUM ('AUTO', 'MANUAL')",
-		"CREATE TYPE miles AS ENUM ('0-50', '50-100', '100-130', '130+')",
-	}
-	for _, q := range qs {
-		_, err := db.Exec(q)
-		if err != nil {
-			log.Println(err)
-		}
-	}
-	CreateSchema()
-}
-
-func seedDB() {
-	db := connectToDB()
-
-	checkForSeed(db)
-}
-
-func seedVehicles(db *pg.DB) {
-	err := db.Insert(&carList)
-	if err != nil {
-		log.Println(err)
-	}
-}
-
-func checkForSeed(db *pg.DB) {
-	var lambo models.Vehicle
-
-	err := db.
-		Model(&lambo).
-		Where("license_plate = ?", "DQQ R63").
-		Select()
-
-	if err != nil {
-		seedVehicles(db)
-	} else {
-		log.Println("already seeded")
-	}
-}
-
-var carList = []models.Vehicle{
+var vehicles = []models.Vehicle{
 	{
 		Make:         "Lamborghini",
 		Model:        "Aventador Roadster",
@@ -372,4 +329,28 @@ var carList = []models.Vehicle{
 		ID:           xid.New().String(),
 		Status:       "PENDING",
 	},
+}
+
+func seedVehicles(db *pg.DB) {
+	err := db.Insert(&vehicles)
+	if err != nil {
+		log.Println(err)
+	} else {
+		log.Println("vehicles seeded successfully")
+	}
+}
+
+func checkForVehiclesSeed(db *pg.DB) {
+	var lambo models.Vehicle
+
+	err := db.
+		Model(&lambo).
+		Where("license_plate = ?", vehicles[0].LicensePlate).
+		Select()
+
+	if err != nil {
+		seedVehicles(db)
+	} else {
+		log.Println("vehicles already seeded")
+	}
 }
