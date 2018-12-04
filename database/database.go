@@ -113,6 +113,7 @@ func CreateSchema() {
 		&models.UserNote{},
 		&models.VehicleNote{},
 		&models.DriverLicense{},
+		&models.Staff{},
 		//models go here
 	} {
 		name := reflect.TypeOf(model).Elem().Name()

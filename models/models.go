@@ -2,6 +2,32 @@ package models
 
 import "time"
 
+type Staff struct {
+	tableName struct{} `sql:"staff,alias:staff"`
+	Email     string   `json:"email"`
+	Name      string   `json:"name"`
+	ID        string   `json:"id"`
+	Role      string   `json:"role"`
+	Phone     string   `json:"phone"`
+}
+
+func (target *Staff) Merge(source Staff) Staff {
+	if target.Email != "" {
+		source.Email = target.Email
+	}
+	if target.Phone != "" {
+		source.Phone = target.Phone
+	}
+	if target.Name != "" {
+		source.Name = target.Name
+	}
+	if target.Role != "" {
+		source.Role = target.Role
+	}
+
+	return source
+}
+
 type DriverLicense struct {
 	Address    string `json:"address"`
 	City       string `json:"city"`
