@@ -1,4 +1,4 @@
-package tools
+package server
 
 import (
 	"image"
@@ -28,7 +28,7 @@ func thumbnailPhoto(src multipart.File) (image.Image, error) {
 	return t, nil
 }
 
-func BatchUploadCarAndThumbPhoto(src multipart.File, vehicleID, filename string) error {
+func batchUploadCarAndThumbPhoto(file *multipart.FileHeader, vehicleID, filename string) error {
 	sess, err := session.NewSession(&aws.Config{
 		Region:      aws.String(os.Getenv("AWS_REGION")),
 		Credentials: credentials.NewStaticCredentials(os.Getenv("AWS_ACCESS_KEY_ID"), os.Getenv("AWS_SECRET_ACCESS_KEY"), ""),
@@ -38,6 +38,12 @@ func BatchUploadCarAndThumbPhoto(src multipart.File, vehicleID, filename string)
 	}
 
 	uploader := s3manager.NewUploader(sess)
+
+	src, err := file.Open()
+	if err != nil {
+		return err
+	}
+	defer src.Close()
 
 	thumb, err := thumbnailPhoto(src)
 	if err != nil {
@@ -89,7 +95,7 @@ func BatchUploadCarAndThumbPhoto(src multipart.File, vehicleID, filename string)
 	return nil
 }
 
-func UploadUserPhotoToS3(src multipart.File, userID, filename string) (string, error) {
+func uploadUserPhotoToS3(file *multipart.FileHeader, userID, filename string) (string, error) {
 	sess, err := session.NewSession(&aws.Config{
 		Region:      aws.String(os.Getenv("AWS_REGION")),
 		Credentials: credentials.NewStaticCredentials(os.Getenv("AWS_ACCESS_KEY_ID"), os.Getenv("AWS_SECRET_ACCESS_KEY"), ""),
@@ -99,6 +105,12 @@ func UploadUserPhotoToS3(src multipart.File, userID, filename string) (string, e
 	}
 
 	uploader := s3manager.NewUploader(sess)
+
+	src, err := file.Open()
+	if err != nil {
+		return "", err
+	}
+	defer src.Close()
 
 	result, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket:      aws.String(os.Getenv("AWS_BUCKET")),

@@ -2,11 +2,9 @@ package server
 
 import (
 	"fmt"
-	"net/http"
-
 	"mphclub-rest-server/database"
 	"mphclub-rest-server/models"
-	"mphclub-rest-server/tools"
+	"net/http"
 
 	"github.com/labstack/echo"
 )
@@ -69,13 +67,7 @@ func uploadCarPhoto(ctx echo.Context) error {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"form_file_error": err.Error()}))
 	}
 
-	src, err := file.Open()
-	if err != nil {
-		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"form_file_error": err.Error()}))
-	}
-	defer src.Close()
-
-	if err := tools.BatchUploadCarAndThumbPhoto(src, vehicleID, file.Filename); err != nil {
+	if err := batchUploadCarAndThumbPhoto(file, vehicleID, file.Filename); err != nil {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"batch_upload_error": err.Error()}))
 	}
 
@@ -101,13 +93,7 @@ func uploadUserPhoto(ctx echo.Context) error {
 		return err
 	}
 
-	src, err := file.Open()
-	if err != nil {
-		return err
-	}
-	defer src.Close()
-
-	location, err := tools.UploadUserPhotoToS3(src, userID, file.Filename)
+	location, err := uploadUserPhotoToS3(file, userID, file.Filename)
 	if err != nil {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"upload_to_s3_error": err.Error()}))
 	}
