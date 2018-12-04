@@ -22,7 +22,7 @@ func CreateAndListen() {
 	}))
 
 	v1 := _api.Group("api/v1")
-	v1.Use(middleware.Logger())
+	v1.Use(connectLogger())
 
 	//  **** PUBLIC ****
 	v1.GET("/getCars", getCars)
