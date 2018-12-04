@@ -1,6 +1,8 @@
 package server
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -8,6 +10,16 @@ import (
 // CreateAndListen exposes the listen and creation of the api
 func CreateAndListen() {
 	_api := echo.New()
+
+	allowedMethods := append(middleware.DefaultCORSConfig.AllowMethods, http.MethodOptions)
+
+	_api.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     allowedMethods,
+		AllowHeaders:     []string{"Authorization", "Content-Type", "Origin", "User-Agent", "Host"},
+		ExposeHeaders:    []string{"Authorization", "Content-Type", "Origin", "User-Agent", "Host"},
+		AllowCredentials: true,
+	}))
 
 	v1 := _api.Group("api/v1")
 	v1.Use(middleware.Logger())
