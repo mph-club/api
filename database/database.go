@@ -9,7 +9,6 @@ import (
 	"strings"
 	"time"
 
-	"mphclub-rest-server/database/seed"
 	"mphclub-rest-server/models"
 
 	"github.com/go-pg/pg"
@@ -128,6 +127,4 @@ func CreateSchema() {
 			log.Printf("schema \"%v\" created successfully", name)
 		}
 	}
-
-	seed.CheckForSeed(db)
 }
