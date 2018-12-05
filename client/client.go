@@ -20,7 +20,7 @@ func initiateAuthorization() *string {
 	svc := cognitoidentityprovider.New(sess)
 
 	initAuth, err := svc.InitiateAuth(&cognitoidentityprovider.InitiateAuthInput{
-		ClientId: aws.String("61lmh73b4k5fdogsbhebmmld33"),
+		ClientId: aws.String("552iod6onakcmelvbprto0gs52"),
 		AuthFlow: aws.String("USER_PASSWORD_AUTH"),
 		AuthParameters: map[string]*string{
 			"USERNAME": aws.String("oscar@mphclub.com"),
