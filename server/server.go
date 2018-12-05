@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -11,8 +12,17 @@ import (
 func CreateAndListen() {
 	_api := echo.New()
 
-	allowedMethods := append(middleware.DefaultCORSConfig.AllowMethods, http.MethodOptions)
+	// Checking if not in production env
+	// enables Swagger UI
+	if appEnv := os.Getenv("APP_ENV"); appEnv != "production" {
+		_api.Use(middleware.StaticWithConfig(middleware.StaticConfig{
+			Root:  "swagger",
+			Index: "index.html",
+		}))
+	}
 
+	// Support CORS
+	allowedMethods := append(middleware.DefaultCORSConfig.AllowMethods, http.MethodOptions)
 	_api.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     allowedMethods,
@@ -21,7 +31,10 @@ func CreateAndListen() {
 		AllowCredentials: true,
 	}))
 
-	v1 := _api.Group("api/v1")
+	// API v1
+	v1 := _api.Group("/api/v1")
+
+	// Connect logger
 	v1.Use(connectLogger())
 
 	//  **** PUBLIC ****
@@ -36,8 +49,6 @@ func CreateAndListen() {
 	})
 
 	v1.GET("/explore", exploreCars)
-
-	v1.Use(middleware.Static("/swagger"))
 
 	//  **** PRIVATE ****
 	// GET
