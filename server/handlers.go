@@ -39,7 +39,6 @@ func upsertListing(ctx echo.Context) error {
 
 func updateUser(ctx echo.Context) error {
 	var u models.User
-	u.ID = ctx.Get("sub").(string)
 
 	if err := ctx.Bind(&u); err != nil {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"json_bind_error": err.Error()}))

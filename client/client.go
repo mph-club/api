@@ -4,12 +4,15 @@ import (
 	"log"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cognitoidentityprovider"
 )
 
 func main() {
 	initiateAuthorization()
+	//createUserThroughAWS()
+	//confirmSignup("384419")
 }
 
 func initiateAuthorization() *string {
@@ -24,7 +27,7 @@ func initiateAuthorization() *string {
 		AuthFlow: aws.String("USER_PASSWORD_AUTH"),
 		AuthParameters: map[string]*string{
 			"USERNAME": aws.String("oscar@mphclub.com"),
-			"PASSWORD": aws.String("@Test123"),
+			"PASSWORD": aws.String("Hunter2!!"),
 		},
 	})
 
@@ -41,4 +44,59 @@ func initiateAuthorization() *string {
 	}
 
 	return aws.String("attempt to auth failed")
+}
+
+func createUserThroughAWS() {
+	sess := session.Must(session.NewSession(&aws.Config{
+		MaxRetries: aws.Int(3),
+		Region:     aws.String("us-east-1"),
+	}))
+
+	svc := cognitoidentityprovider.New(sess)
+
+	signUpOutput, err := svc.SignUp(&cognitoidentityprovider.SignUpInput{
+		ClientId: aws.String("552iod6onakcmelvbprto0gs52"),
+		Username: aws.String("oscar@mphclub.com"),
+		Password: aws.String("Hunter2!!"),
+		UserAttributes: []*cognitoidentityprovider.AttributeType{
+			&cognitoidentityprovider.AttributeType{
+				Name:  aws.String("email"),
+				Value: aws.String("oscar@mphclub.com"),
+			},
+		},
+	})
+
+	if err != nil {
+		log.Println("fail!")
+
+		if awsErr, ok := err.(awserr.Error); ok {
+			log.Println(awsErr.Code())
+			log.Println(awsErr.Message())
+		}
+	} else {
+		log.Println("success!")
+		log.Println(signUpOutput)
+	}
+}
+
+func confirmSignup(confirmCode string) {
+	sess := session.Must(session.NewSession(&aws.Config{
+		MaxRetries: aws.Int(3),
+		Region:     aws.String("us-east-1"),
+	}))
+
+	svc := cognitoidentityprovider.New(sess)
+
+	confirmUser, err := svc.ConfirmSignUp(&cognitoidentityprovider.ConfirmSignUpInput{
+		ClientId:         aws.String("552iod6onakcmelvbprto0gs52"),
+		Username:         aws.String("oscar@mphclub.com"),
+		ConfirmationCode: aws.String(confirmCode),
+	})
+
+	if err != nil {
+		log.Println(err)
+	} else {
+		log.Println("success!")
+		log.Println(confirmUser)
+	}
 }
