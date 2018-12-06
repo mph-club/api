@@ -16,6 +16,7 @@ type CAPostBody struct {
 }
 
 type CAPostBodyFilters struct {
+	BirthYear int `json:"birth_year"`
 }
 
 var url = "https://mphclub.ngrok.io/api/v1/updateUser"

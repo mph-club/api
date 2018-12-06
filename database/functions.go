@@ -181,8 +181,8 @@ func GetMyCars(u *models.User) ([]models.Vehicle, error) {
 	return users[0].Vehicles, nil
 }
 
-func GetExplore() ([][]models.Vehicle, error) {
-	var explore3 [][]models.Vehicle
+func GetExplore() (map[string]interface{}, error) {
+	vehicleMap := make(map[string]interface{})
 	var vehicle models.Vehicle
 	var carTypes []string
 
@@ -205,10 +205,27 @@ func GetExplore() ([][]models.Vehicle, error) {
 			return nil, err
 		}
 
-		explore3 = append(explore3, list)
+		vehicleMap[carType] = list
 	}
 
-	return explore3, nil
+	return vehicleMap, nil
+}
+
+func getTypeVehicleArray(carType string) ([]models.Vehicle, error) {
+	var list []models.Vehicle
+
+	db := connectToDB()
+
+	if err := db.
+		Model(&list).
+		Column("id", "make", "model", "year", "thumbnails", "vehicle_type").
+		Where("vehicle_type = ?", carType).
+		Limit(3).
+		Select(); err != nil {
+		return nil, err
+	}
+
+	return list, nil
 }
 
 func AddDriverLicense(userID string, dl *models.DriverLicense) error {
@@ -246,20 +263,4 @@ func GetDriverLicense(userID string) (models.DriverLicense, error) {
 	}
 
 	return u[0].DriverLicense, nil
-}
-
-func getTypeVehicleArray(carType string) ([]models.Vehicle, error) {
-	var list []models.Vehicle
-
-	db := connectToDB()
-
-	if err := db.
-		Model(&list).
-		Where("vehicle_type = ?", carType).
-		Limit(3).
-		Select(); err != nil {
-		return nil, err
-	}
-
-	return list, nil
 }

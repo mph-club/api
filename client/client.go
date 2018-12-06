@@ -12,7 +12,9 @@ import (
 func main() {
 	//updateUserAttr(initiateAuthorization())
 	//createUserThroughAWS()
-	verifyPhone(aws.String("173192"), initiateAuthorization())
+	//verifyPhone(aws.String("274172"), initiateAuthorization())
+	//confirmSignup("939242")
+	initiateAuthorization()
 }
 
 func updateUserAttr(token *string) {
@@ -29,6 +31,10 @@ func updateUserAttr(token *string) {
 				Name:  aws.String("phone_number"),
 				Value: aws.String("+13057252991"),
 			},
+			// &cognitoidentityprovider.AttributeType{
+			// 	Name:  aws.String("email"),
+			// 	Value: aws.String("oscar@mphclub.com"),
+			// },
 		},
 	})
 

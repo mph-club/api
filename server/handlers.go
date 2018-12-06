@@ -215,6 +215,6 @@ func exploreCars(ctx echo.Context) error {
 		response(
 			true,
 			http.StatusOK,
-			map[string]interface{}{"explore": list},
+			list,
 		))
 }
