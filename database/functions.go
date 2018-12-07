@@ -159,6 +159,18 @@ func GetCars(queryParams url.Values) (int, []models.Vehicle, error) {
 	return count, vehicleList, nil
 }
 
+func GetCarDetail(v models.Vehicle) (models.Vehicle, error) {
+	db := connectToDB()
+
+	if err := db.Model(&v).
+		WherePK().
+		Select(); err != nil {
+		return models.Vehicle{}, err
+	}
+
+	return v, nil
+}
+
 func GetMyCars(u *models.User) ([]models.Vehicle, error) {
 	db := connectToDB()
 

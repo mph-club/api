@@ -190,6 +190,25 @@ func getCars(ctx echo.Context) error {
 		))
 }
 
+func getCarDetail(ctx echo.Context) error {
+	var v models.Vehicle
+	v.ID = ctx.Param("id")
+
+	detail, err := database.GetCarDetail(v)
+	if err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"db_error": err.Error()}))
+	}
+
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{
+				"Vehicle": detail,
+			},
+		))
+}
+
 func getUser(ctx echo.Context) error {
 	userID := ctx.Get("sub").(string)
 
