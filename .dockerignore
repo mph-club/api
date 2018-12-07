@@ -1,6 +1,6 @@
 /client
 /k8s
-/swagger
+#/swagger
 /vendor
 Makefile
 .gitignore

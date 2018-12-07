@@ -45,6 +45,6 @@ spec:
             - name: AWS_BUCKET
               value: mphclub
             - name: APP_ENV
-              value: production
+              value: develop
       imagePullSecrets:
         - name: awsecr-cred

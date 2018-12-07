@@ -11,15 +11,6 @@ import (
 func CreateAndListen() {
 	_api := echo.New()
 
-	// Checking if not in production env
-	// enables Swagger UI
-	if appEnv := os.Getenv("APP_ENV"); appEnv != "production" {
-		_api.Use(middleware.StaticWithConfig(middleware.StaticConfig{
-			Root:  "swagger",
-			Index: "index.html",
-		}))
-	}
-
 	// Support CORS
 	_api.Use(cors())
 
@@ -41,6 +32,15 @@ func CreateAndListen() {
 	})
 
 	v1.GET("/explore", exploreCars)
+
+	// Checking if not in production env
+	// enables Swagger UI
+	if appEnv := os.Getenv("APP_ENV"); appEnv != "production" {
+		v1.Use(middleware.StaticWithConfig(middleware.StaticConfig{
+			Root:  "swagger",
+			Index: "index.html",
+		}))
+	}
 
 	//  **** PRIVATE ****
 	// GET
