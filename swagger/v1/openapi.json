@@ -52,6 +52,9 @@
       "PostUpdateUser": {
         "$ref": "responses/post-update-user.json"
       },
+      "PostListCar": {
+        "$ref": "responses/post-list-car.json"
+      },
       "DatabaseError": {
         "$ref": "responses/database-error.json"
       },
@@ -60,6 +63,14 @@
       },
       "JSONBindError": {
         "$ref": "responses/json-bind-error.json"
+      }
+    },
+    "requestBodies": {
+      "PostUpdateUser": {
+        "$ref": "request-bodies/post-update-user.json"
+      },
+      "PostListCar": {
+        "$ref": "request-bodies/post-list-car.json"
       }
     },
     "securitySchemes": {
@@ -164,17 +175,35 @@
       "post": {
         "tags": ["Users"],
         "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/User"
-              }
-            }
-          }
+          "$ref": "#/components/requestBodies/PostUpdateUser"
         },
         "responses": {
           "200": {
             "$ref": "#/components/responses/PostUpdateUser"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/listCar": {
+      "post": {
+        "tags": ["Users"],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PostListCar"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PostListCar"
           },
           "400": {
             "$ref": "#/components/responses/DatabaseError"
