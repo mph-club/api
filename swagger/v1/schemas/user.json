@@ -29,41 +29,6 @@
           "type": "string"
         }
       }
-    },
-    "DriverLicense": {
-      "type": "object",
-      "properties": {
-        "address": {
-          "type": "string"
-        },
-        "city": {
-          "type": "string"
-        },
-        "dl_number": {
-          "type": "string"
-        },
-        "birth_date": {
-          "type": "string"
-        },
-        "first_name": {
-          "type": "string"
-        },
-        "height": {
-          "type": "string"
-        },
-        "id": {
-          "type": "integer"
-        },
-        "last_name": {
-          "type": "string"
-        },
-        "middle_name": {
-          "type": "string"
-        },
-        "state": {
-          "type": "string"
-        }
-      }
     }
   },
 
@@ -96,7 +61,7 @@
       }
     },
     "driver_license": {
-      "$ref": "#definitions/DriverLicense"
+      "$ref": "#/components/schemas/DriverLicense"
     },
     "dl_id": {
       "type": "integer"

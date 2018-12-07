@@ -1,0 +1,29 @@
+{
+  "description": "Unauthorized error",
+  "content": {
+    "application/json": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "server_error": {
+                "type": "string",
+                "example": "Unauthorized"
+              },
+              "error_message": {
+                  "type": "string",
+                  "example": "token contains an invalid number of segments"
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": "fail"
+          }
+        }
+      }
+    }
+  }
+}

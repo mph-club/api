@@ -1,0 +1,24 @@
+{
+  "description": "Driver license of current user",
+  "content": {
+    "application/json": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "license": {
+                "$ref": "#/components/schemas/DriverLicense"
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": "success"
+          }
+        }
+      }
+    }
+  }
+}

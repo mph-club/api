@@ -9,6 +9,10 @@
     {
       "name": "Cars",
       "description": "Everything about cars"
+    },
+    {
+      "name": "Users",
+      "description": "All actions users can take"
     }
   ],
   "servers": [
@@ -19,6 +23,9 @@
   ],
   "components": {
     "schemas": {
+      "DriverLicense": {
+        "$ref": "schemas/driver-license.json"
+      },
       "User": {
         "$ref": "schemas/user.json"
       },
@@ -30,11 +37,30 @@
       "GetCars": {
         "$ref": "responses/get-cars.json"
       },
-      "Explore": {
-        "$ref": "responses/explore.json"
+      "GetExplore": {
+        "$ref": "responses/get-explore.json"
+      },
+      "GetMyCars": {
+        "$ref": "responses/get-my-cars.json"
+      },
+      "GetDriverLicense": {
+        "$ref": "responses/get-driver-license.json"
+      },
+      "GetUser": {
+        "$ref": "responses/get-user.json"
       },
       "DatabaseError": {
         "$ref": "responses/database-error.json"
+      },
+      "UnauthorizedError": {
+        "$ref": "responses/unauthorized-error.json"
+      }
+    },
+    "securitySchemes": {
+      "Authorization": {
+        "type": "http",
+        "name": "Authorization",
+        "scheme": "bearer"
       }
     }
   },
@@ -57,12 +83,75 @@
         "tags": ["Cars"],
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Explore"
+            "$ref": "#/components/responses/GetExplore"
           },
           "400": {
             "$ref": "#/components/responses/DatabaseError"
           }
         }
+      }
+    },
+    "/getMyCars": {
+      "get": {
+        "tags": ["Users"],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetMyCars"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/driverLicense": {
+      "get": {
+        "tags": ["Users"],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetDriverLicense"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/user": {
+      "get": {
+        "tags": ["Users"],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetUser"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
       }
     }
   }
