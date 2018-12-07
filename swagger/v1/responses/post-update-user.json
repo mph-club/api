@@ -1,26 +1,22 @@
 {
-  "description": "Unauthorized error",
+  "description": "Successful response",
   "content": {
     "application/json": {
       "schema": {
         "type": "object",
         "properties": {
-          "error": {
+          "data": {
             "type": "object",
             "properties": {
-              "server_error": {
+              "result": {
                 "type": "string",
-                "example": "Unauthorized"
-              },
-              "error_message": {
-                "type": "string",
-                "example": "token contains an invalid number of segments"
+                "example": "user was successfully updated"
               }
             }
           },
           "message": {
             "type": "string",
-            "example": "fail"
+            "example": "success"
           }
         }
       }

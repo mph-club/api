@@ -1,5 +1,5 @@
 {
-  "description": "Unauthorized error",
+  "description": "JSON bind error",
   "content": {
     "application/json": {
       "schema": {
@@ -8,13 +8,8 @@
           "error": {
             "type": "object",
             "properties": {
-              "server_error": {
-                "type": "string",
-                "example": "Unauthorized"
-              },
-              "error_message": {
-                "type": "string",
-                "example": "token contains an invalid number of segments"
+              "json_bind_error": {
+                "type": "string"
               }
             }
           },

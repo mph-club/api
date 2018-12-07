@@ -49,11 +49,17 @@
       "GetUser": {
         "$ref": "responses/get-user.json"
       },
+      "PostUpdateUser": {
+        "$ref": "responses/post-update-user.json"
+      },
       "DatabaseError": {
         "$ref": "responses/database-error.json"
       },
       "UnauthorizedError": {
         "$ref": "responses/unauthorized-error.json"
+      },
+      "JSONBindError": {
+        "$ref": "responses/json-bind-error.json"
       }
     },
     "securitySchemes": {
@@ -139,6 +145,36 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/GetUser"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/updateUser": {
+      "post": {
+        "tags": ["Users"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PostUpdateUser"
           },
           "400": {
             "$ref": "#/components/responses/DatabaseError"
