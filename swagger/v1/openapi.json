@@ -1,0 +1,320 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "MPH Club",
+    "description": "This is the MPH API definition.",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "Cars",
+      "description": "Everything about cars"
+    },
+    {
+      "name": "Users",
+      "description": "All actions users can take"
+    }
+  ],
+  "servers": [
+    {
+      "url": "/api/v1",
+      "description": "Development server"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "DriverLicense": {
+        "$ref": "schemas/driver-license.json"
+      },
+      "User": {
+        "$ref": "schemas/user.json"
+      },
+      "Vehicle": {
+        "$ref": "schemas/vehicle.json"
+      }
+    },
+    "responses": {
+      "GetCars": {
+        "$ref": "responses/gets/get-cars.json"
+      },
+      "GetExplore": {
+        "$ref": "responses/gets/get-explore.json"
+      },
+      "GetMyCars": {
+        "$ref": "responses/gets/get-my-cars.json"
+      },
+      "GetDriverLicense": {
+        "$ref": "responses/gets/get-driver-license.json"
+      },
+      "GetUser": {
+        "$ref": "responses/gets/get-user.json"
+      },
+      "PostUpdateUser": {
+        "$ref": "responses/posts/post-update-user.json"
+      },
+      "PostListCar": {
+        "$ref": "responses/posts/post-list-car.json"
+      },
+      "PostUploadCarPhoto": {
+        "$ref": "responses/posts/post-upload-car-photo.json"
+      },
+      "PostUploadUserPhoto": {
+        "$ref": "responses/posts/post-upload-user-photo.json"
+      },
+      "PostDriverLicense": {
+        "$ref": "responses/posts/post-driver-license.json"
+      },
+      "DatabaseError": {
+        "$ref": "responses/errors/database-error.json"
+      },
+      "UnauthorizedError": {
+        "$ref": "responses/errors/unauthorized-error.json"
+      },
+      "JSONBindError": {
+        "$ref": "responses/errors/json-bind-error.json"
+      },
+      "FormFileError": {
+        "$ref": "responses/errors/form-file-error.json"
+      },
+      "BatchUploadError": {
+        "$ref": "responses/errors/batch-upload-error.json"
+      },
+      "UploadToS3Error": {
+        "$ref": "responses/errors/upload-to-s3-error.json"
+      }
+    },
+    "requestBodies": {
+      "PostUpdateUser": {
+        "$ref": "request-bodies/post-update-user.json"
+      },
+      "PostListCar": {
+        "$ref": "request-bodies/post-list-car.json"
+      },
+      "PostUploadCarPhoto": {
+        "$ref": "request-bodies/post-upload-car-photo.json"
+      },
+      "PostUploadUserPhoto": {
+        "$ref": "request-bodies/post-upload-user-photo.json"
+      },
+      "PostDriverLicense": {
+        "$ref": "request-bodies/post-driver-license.json"
+      }
+    },
+    "securitySchemes": {
+      "Authorization": {
+        "type": "http",
+        "name": "Authorization",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "paths": {
+    "/getCars": {
+      "get": {
+        "tags": ["Cars"],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetCars"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
+          }
+        }
+      }
+    },
+    "/explore": {
+      "get": {
+        "tags": ["Cars"],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetExplore"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
+          }
+        }
+      }
+    },
+    "/getMyCars": {
+      "get": {
+        "tags": ["Users"],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetMyCars"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/driverLicense": {
+      "get": {
+        "tags": ["Users"],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetDriverLicense"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Users"],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PostDriverLicense"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PostDriverLicense"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/user": {
+      "get": {
+        "tags": ["Users"],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetUser"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/updateUser": {
+      "post": {
+        "tags": ["Users"],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PostUpdateUser"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PostUpdateUser"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/listCar": {
+      "post": {
+        "tags": ["Users"],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PostListCar"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PostListCar"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/uploadCarPhoto": {
+      "post": {
+        "tags": ["Users"],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PostUploadCarPhoto"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PostUploadCarPhoto"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/uploadUserPhoto": {
+      "post": {
+        "tags": ["Users"],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PostUploadUserPhoto"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PostUploadUserPhoto"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    }
+  }
+}

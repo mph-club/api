@@ -1,6 +1,7 @@
-/vendor
 /client
 /k8s
+/swagger
+/vendor
 Makefile
 .gitignore
 .DS_Store

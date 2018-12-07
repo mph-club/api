@@ -1,0 +1,24 @@
+{
+  "description": "Database error",
+  "content": {
+    "application/json": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "database_error": {
+                "type": "string"
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": "fail"
+          }
+        }
+      }
+    }
+  }
+}

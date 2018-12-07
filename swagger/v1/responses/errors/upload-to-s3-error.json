@@ -1,0 +1,24 @@
+{
+  "description": "Upload to S3 error",
+  "content": {
+    "application/json": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "upload_to_s3_error": {
+                "type": "string"
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": "fail"
+          }
+        }
+      }
+    }
+  }
+}

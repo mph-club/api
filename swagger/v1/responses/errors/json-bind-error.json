@@ -1,0 +1,24 @@
+{
+  "description": "JSON bind error",
+  "content": {
+    "application/json": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "json_bind_error": {
+                "type": "string"
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": "fail"
+          }
+        }
+      }
+    }
+  }
+}
