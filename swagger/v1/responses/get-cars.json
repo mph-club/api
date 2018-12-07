@@ -1,0 +1,27 @@
+{
+  "description": "List of all cars",
+  "content": {
+    "application/json": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "vehicles": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Vehicle"
+                }
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": "success"
+          }
+        }
+      }
+    }
+  }
+}

@@ -27,54 +27,14 @@
       }
     },
     "responses": {
-      "GetCarsJSONResponse": {
-        "description": "Successful response",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "data": {
-                  "type": "object",
-                  "properties": {
-                    "vehicles": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Vehicle"
-                      }
-                    }
-                  }
-                },
-                "message": {
-                  "type": "string",
-                  "example": "success"
-                }
-              }
-            }
-          }
-        }
+      "GetCars": {
+        "$ref": "responses/get-cars.json"
       },
-      "ErrorResponse": {
-        "description": "Error response",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "message": {
-                  "type": "string",
-                  "example": "fail"
-                }
-              }
-            }
-          }
-        }
+      "Explore": {
+        "$ref": "responses/explore.json"
+      },
+      "DatabaseError": {
+        "$ref": "responses/database-error.json"
       }
     }
   },
@@ -84,10 +44,23 @@
         "tags": ["Cars"],
         "responses": {
           "200": {
-            "$ref": "#/components/responses/GetCarsJSONResponse"
+            "$ref": "#/components/responses/GetCars"
           },
           "400": {
-            "$ref": "#/components/responses/ErrorResponse"
+            "$ref": "#/components/responses/DatabaseError"
+          }
+        }
+      }
+    },
+    "/explore": {
+      "get": {
+        "tags": ["Cars"],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Explore"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
           }
         }
       }
