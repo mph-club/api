@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -72,4 +73,16 @@ func cognitoAuth(next echo.HandlerFunc) echo.HandlerFunc {
 		return ctx.JSON(response(false, http.StatusUnauthorized, map[string]interface{}{"server_error": "Unauthorized", "error_message": err}))
 
 	}
+}
+
+func cors() echo.MiddlewareFunc {
+	allowedMethods := append(middleware.DefaultCORSConfig.AllowMethods, http.MethodOptions)
+
+	return middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     allowedMethods,
+		AllowHeaders:     []string{"Authorization", "Content-Type", "Origin", "User-Agent", "Host"},
+		ExposeHeaders:    []string{"Authorization", "Content-Type", "Origin", "User-Agent", "Host"},
+		AllowCredentials: true,
+	})
 }

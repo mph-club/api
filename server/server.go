@@ -1,7 +1,6 @@
 package server
 
 import (
-	"net/http"
 	"os"
 
 	"github.com/labstack/echo"
@@ -22,14 +21,7 @@ func CreateAndListen() {
 	}
 
 	// Support CORS
-	allowedMethods := append(middleware.DefaultCORSConfig.AllowMethods, http.MethodOptions)
-	_api.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     allowedMethods,
-		AllowHeaders:     []string{"Authorization", "Content-Type", "Origin", "User-Agent", "Host"},
-		ExposeHeaders:    []string{"Authorization", "Content-Type", "Origin", "User-Agent", "Host"},
-		AllowCredentials: true,
-	}))
+	_api.Use(cors())
 
 	// API v1
 	v1 := _api.Group("/api/v1")

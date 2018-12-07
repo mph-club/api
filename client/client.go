@@ -10,9 +10,39 @@ import (
 )
 
 func main() {
-	initiateAuthorization()
+	//updateUserAttr(initiateAuthorization())
 	//createUserThroughAWS()
-	//confirmSignup("384419")
+	//verifyPhone(aws.String("274172"), initiateAuthorization())
+	//confirmSignup("939242")
+	initiateAuthorization()
+}
+
+func updateUserAttr(token *string) {
+	sess := session.Must(session.NewSession(&aws.Config{
+		Region: aws.String("us-east-1"),
+	}))
+
+	svc := cognitoidentityprovider.New(sess)
+
+	update, err := svc.UpdateUserAttributes(&cognitoidentityprovider.UpdateUserAttributesInput{
+		AccessToken: token,
+		UserAttributes: []*cognitoidentityprovider.AttributeType{
+			&cognitoidentityprovider.AttributeType{
+				Name:  aws.String("phone_number"),
+				Value: aws.String("+13057252991"),
+			},
+			// &cognitoidentityprovider.AttributeType{
+			// 	Name:  aws.String("email"),
+			// 	Value: aws.String("oscar@mphclub.com"),
+			// },
+		},
+	})
+
+	if err != nil {
+		log.Println(err)
+	} else {
+		log.Println("success!", update)
+	}
 }
 
 func initiateAuthorization() *string {
@@ -98,5 +128,26 @@ func confirmSignup(confirmCode string) {
 	} else {
 		log.Println("success!")
 		log.Println(confirmUser)
+	}
+}
+
+func verifyPhone(confirmCode, accessToken *string) {
+	sess := session.Must(session.NewSession(&aws.Config{
+		MaxRetries: aws.Int(3),
+		Region:     aws.String("us-east-1"),
+	}))
+
+	svc := cognitoidentityprovider.New(sess)
+
+	confirmPhone, err := svc.VerifyUserAttribute(&cognitoidentityprovider.VerifyUserAttributeInput{
+		AccessToken:   accessToken,
+		Code:          confirmCode,
+		AttributeName: aws.String("phone_number"),
+	})
+
+	if err != nil {
+		log.Println(err)
+	} else {
+		log.Println(confirmPhone)
 	}
 }
