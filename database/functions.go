@@ -159,6 +159,23 @@ func GetCars(queryParams url.Values) (int, []models.Vehicle, error) {
 	return count, vehicleList, nil
 }
 
+func GetCarsByType(queryParams url.Values, paramType string) (int, []models.Vehicle, error) {
+	var vehicleList []models.Vehicle
+
+	db := connectToDB()
+
+	count, err := db.Model(&vehicleList).
+		Where("vehicle_type = ?", paramType).
+		Apply(orm.Pagination(queryParams)).
+		SelectAndCount()
+	if err != nil {
+		log.Println(err)
+		return 0, nil, err
+	}
+
+	return count, vehicleList, nil
+}
+
 func GetCarDetail(v models.Vehicle) (models.Vehicle, error) {
 	db := connectToDB()
 

@@ -209,6 +209,26 @@ func getCarDetail(ctx echo.Context) error {
 		))
 }
 
+func getCarsByType(ctx echo.Context) error {
+	typeParam := ctx.Param("type")
+	urlQuery := ctx.Request().URL.Query()
+
+	count, listByType, err := database.GetCarsByType(urlQuery, typeParam)
+	if err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"db_error": err.Error()}))
+	}
+
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{
+				"Vehicles": listByType,
+				"Count":    count,
+			},
+		))
+}
+
 func getUser(ctx echo.Context) error {
 	userID := ctx.Get("sub").(string)
 
