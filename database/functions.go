@@ -218,7 +218,7 @@ func getTypeVehicleArray(carType string) ([]models.Vehicle, error) {
 
 	if err := db.
 		Model(&list).
-		Column("id", "make", "model", "year", "thumbnails", "vehicle_type").
+		Column("id", "make", "model", "year", "thumbnails", "vehicle_type", "daily_price").
 		Where("vehicle_type = ?", carType).
 		Limit(3).
 		Select(); err != nil {

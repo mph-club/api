@@ -79,6 +79,7 @@ type Vehicle struct {
 	Color        string        `json:"color"`
 	Coordinates  []float64     `json:"coordinates" sql:",array"`
 	CreatedTime  time.Time     `json:"created_time"`
+	DailyPrice   int           `json:"daily_price"`
 	DayMax       int           `json:"day_max"`
 	DayMin       int           `json:"day_min"`
 	Description  string        `json:"description"`
