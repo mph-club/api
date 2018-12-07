@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"mphclub-rest-server/models"
+	"net/url"
 	"time"
 
 	"github.com/go-pg/pg/orm"
@@ -142,18 +143,20 @@ func UpsertListing(v models.Vehicle) (string, string, error) {
 	return v.ID, "created", nil
 }
 
-func GetCars() ([]models.Vehicle, error) {
+func GetCars(queryParams url.Values) (int, []models.Vehicle, error) {
 	var vehicleList []models.Vehicle
 
 	db := connectToDB()
 
-	err := db.Model(&vehicleList).Select()
+	count, err := db.Model(&vehicleList).
+		Apply(orm.Pagination(queryParams)).
+		SelectAndCount()
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return 0, nil, err
 	}
 
-	return vehicleList, nil
+	return count, vehicleList, nil
 }
 
 func GetMyCars(u *models.User) ([]models.Vehicle, error) {

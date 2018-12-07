@@ -21,7 +21,7 @@ func CreateAndListen() {
 	v1.Use(connectLogger())
 
 	//  **** PUBLIC ****
-	v1.GET("/getCars", getCars)
+	v1.GET("/vehicles", getCars)
 
 	v1.GET("/home", func(ctx echo.Context) error {
 		return ctx.String(200, "api home!!!!")
