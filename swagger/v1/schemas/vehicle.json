@@ -1,0 +1,155 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+
+  "definitions": {
+    "VehicleNote": {
+      "type": "object",
+      "properties": {
+        "comment": {
+          "type": "string"
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "created_time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "updated_by": {
+          "type": "string"
+        },
+        "updated_time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "vehicle_id": {
+          "type": "string"
+        }
+      }
+    }
+  },
+
+  "type": "object",
+  "properties": {
+    "address": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "color": {
+      "type": "string"
+    },
+    "coordinates": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "created_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "day_max": {
+      "type": "integer"
+    },
+    "day_min": {
+      "type": "integer"
+    },
+    "description": {
+      "type": "string"
+    },
+    "doors": {
+      "type": "integer"
+    },
+    "id": {
+      "type": "string"
+    },
+    "is_published": {
+      "type": "boolean"
+    },
+    "license_plate": {
+      "type": "string"
+    },
+    "make": {
+      "type": "string"
+    },
+    "miles": {
+      "type": "string",
+      "enum": ["0-50", "50-100", "100-130", "130+"]
+    },
+    "model": {
+      "type": "string"
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "place": {
+      "type": "string"
+    },
+    "premium": {
+      "type": "boolean"
+    },
+    "seats": {
+      "type": "integer"
+    },
+    "state": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["APPROVED", "DENIED", "PENDING"]
+    },
+    "thumbnails": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      }
+    },
+    "transmission": {
+      "type": "string",
+      "enum": ["AUTO", "MANUAL"]
+    },
+    "trim": {
+      "type": "string"
+    },
+    "updated_by": {
+      "type": "string"
+    },
+    "updated_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "user": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "$ref": "#definitions/VehicleNote"
+      }
+    },
+    "vehicle_type": {
+      "type": "string"
+    },
+    "view_index": {
+      "type": "integer"
+    },
+    "vin": {
+      "type": "string"
+    },
+    "year": {
+      "type": "integer"
+    },
+    "zip_code": {
+      "type": "string"
+    }
+  }
+}
