@@ -35,34 +35,52 @@
     },
     "responses": {
       "GetCars": {
-        "$ref": "responses/get-cars.json"
+        "$ref": "responses/gets/get-cars.json"
       },
       "GetExplore": {
-        "$ref": "responses/get-explore.json"
+        "$ref": "responses/gets/get-explore.json"
       },
       "GetMyCars": {
-        "$ref": "responses/get-my-cars.json"
+        "$ref": "responses/gets/get-my-cars.json"
       },
       "GetDriverLicense": {
-        "$ref": "responses/get-driver-license.json"
+        "$ref": "responses/gets/get-driver-license.json"
       },
       "GetUser": {
-        "$ref": "responses/get-user.json"
+        "$ref": "responses/gets/get-user.json"
       },
       "PostUpdateUser": {
-        "$ref": "responses/post-update-user.json"
+        "$ref": "responses/posts/post-update-user.json"
       },
       "PostListCar": {
-        "$ref": "responses/post-list-car.json"
+        "$ref": "responses/posts/post-list-car.json"
+      },
+      "PostUploadCarPhoto": {
+        "$ref": "responses/posts/post-upload-car-photo.json"
+      },
+      "PostUploadUserPhoto": {
+        "$ref": "responses/posts/post-upload-user-photo.json"
+      },
+      "PostDriverLicense": {
+        "$ref": "responses/posts/post-driver-license.json"
       },
       "DatabaseError": {
-        "$ref": "responses/database-error.json"
+        "$ref": "responses/errors/database-error.json"
       },
       "UnauthorizedError": {
-        "$ref": "responses/unauthorized-error.json"
+        "$ref": "responses/errors/unauthorized-error.json"
       },
       "JSONBindError": {
-        "$ref": "responses/json-bind-error.json"
+        "$ref": "responses/errors/json-bind-error.json"
+      },
+      "FormFileError": {
+        "$ref": "responses/errors/form-file-error.json"
+      },
+      "BatchUploadError": {
+        "$ref": "responses/errors/batch-upload-error.json"
+      },
+      "UploadToS3Error": {
+        "$ref": "responses/errors/upload-to-s3-error.json"
       }
     },
     "requestBodies": {
@@ -71,6 +89,15 @@
       },
       "PostListCar": {
         "$ref": "request-bodies/post-list-car.json"
+      },
+      "PostUploadCarPhoto": {
+        "$ref": "request-bodies/post-upload-car-photo.json"
+      },
+      "PostUploadUserPhoto": {
+        "$ref": "request-bodies/post-upload-user-photo.json"
+      },
+      "PostDriverLicense": {
+        "$ref": "request-bodies/post-driver-license.json"
       }
     },
     "securitySchemes": {
@@ -148,6 +175,28 @@
             "Authorization": []
           }
         ]
+      },
+      "post": {
+        "tags": ["Users"],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PostDriverLicense"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PostDriverLicense"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
       }
     },
     "/user": {
@@ -204,6 +253,54 @@
         "responses": {
           "200": {
             "$ref": "#/components/responses/PostListCar"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/uploadCarPhoto": {
+      "post": {
+        "tags": ["Users"],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PostUploadCarPhoto"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PostUploadCarPhoto"
+          },
+          "400": {
+            "$ref": "#/components/responses/DatabaseError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/uploadUserPhoto": {
+      "post": {
+        "tags": ["Users"],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PostUploadUserPhoto"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PostUploadUserPhoto"
           },
           "400": {
             "$ref": "#/components/responses/DatabaseError"

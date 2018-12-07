@@ -1,0 +1,24 @@
+{
+  "description": "Form file error",
+  "content": {
+    "application/json": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "form_file_error": {
+                "type": "string"
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": "fail"
+          }
+        }
+      }
+    }
+  }
+}
