@@ -8,6 +8,7 @@
           "data": {
             "type": "object",
             "additionalProperties": {
+              "example": "carType",
               "type": "array",
               "items": {
                 "$ref": "#/components/schemas/Vehicle"
