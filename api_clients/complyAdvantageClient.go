@@ -1,4 +1,4 @@
-package caClient
+package apiClients
 
 import (
 	"bytes"
