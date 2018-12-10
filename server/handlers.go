@@ -186,7 +186,10 @@ func getCars(ctx echo.Context) error {
 		response(
 			true,
 			http.StatusOK,
-			map[string]interface{}{"vehicles": list, "count": count},
+			map[string]interface{}{
+				"vehicles": list,
+				"count":    count,
+			},
 		))
 }
 
@@ -204,7 +207,7 @@ func getCarDetail(ctx echo.Context) error {
 			true,
 			http.StatusOK,
 			map[string]interface{}{
-				"Vehicle": detail,
+				"vehicle": detail,
 			},
 		))
 }
@@ -223,8 +226,8 @@ func getCarsByType(ctx echo.Context) error {
 			true,
 			http.StatusOK,
 			map[string]interface{}{
-				"Vehicles": listByType,
-				"Count":    count,
+				"vehicles": listByType,
+				"count":    count,
 			},
 		))
 }

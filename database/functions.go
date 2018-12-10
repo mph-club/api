@@ -215,6 +215,7 @@ func GetMyCars(u *models.User) ([]models.Vehicle, error) {
 
 func GetExplore() (map[string]interface{}, error) {
 	vehicleMap := make(map[string]interface{})
+
 	var vehicle models.Vehicle
 	var carTypes []string
 
@@ -231,13 +232,22 @@ func GetExplore() (map[string]interface{}, error) {
 	for _, carType := range carTypes {
 		var list []models.Vehicle
 		var err error
+		exploreMap := make(map[string]interface{})
 
 		list, err = getTypeVehicleArray(carType)
 		if err != nil {
 			return nil, err
 		}
 
-		vehicleMap[carType] = list
+		exploreMap["vehicles"] = list
+
+		if carType == "SUV" {
+			exploreMap["display_name"] = carType + "'s"
+		} else {
+			exploreMap["display_name"] = carType + "s"
+		}
+
+		vehicleMap[carType] = exploreMap
 	}
 
 	return vehicleMap, nil
