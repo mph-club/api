@@ -18,16 +18,10 @@
     "first_name": {
       "type": "string"
     },
-    "height": {
-      "type": "string"
-    },
     "id": {
       "type": "integer"
     },
     "last_name": {
-      "type": "string"
-    },
-    "middle_name": {
       "type": "string"
     },
     "state": {
