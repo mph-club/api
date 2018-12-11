@@ -5,6 +5,7 @@ import (
 	"log"
 	"mphclub-rest-server/models"
 	"net/url"
+	"strings"
 	"time"
 
 	"github.com/go-pg/pg/orm"
@@ -143,13 +144,27 @@ func UpsertListing(v models.Vehicle) (string, string, error) {
 	return v.ID, "created", nil
 }
 
-func GetCars(queryParams url.Values) (int, []models.Vehicle, error) {
+func GetCars(queryParams url.Values, carType string) (int, []models.Vehicle, error) {
 	var vehicleList []models.Vehicle
 
 	db := connectToDB()
 
+	if len(carType) == 0 {
+		count, err := db.Model(&vehicleList).
+			Apply(orm.Pagination(queryParams)).
+			SelectAndCount()
+		if err != nil {
+			log.Println(err)
+			return 0, nil, err
+		}
+
+		return count, vehicleList, nil
+	}
+	carType = strings.ToLower(carType)
+
 	count, err := db.Model(&vehicleList).
 		Apply(orm.Pagination(queryParams)).
+		Where("vehicle_type = ?", carType).
 		SelectAndCount()
 	if err != nil {
 		log.Println(err)
@@ -157,6 +172,7 @@ func GetCars(queryParams url.Values) (int, []models.Vehicle, error) {
 	}
 
 	return count, vehicleList, nil
+
 }
 
 func GetCarsByType(queryParams url.Values, paramType string) (int, []models.Vehicle, error) {
@@ -241,10 +257,17 @@ func GetExplore() (map[string]interface{}, error) {
 
 		exploreMap["vehicles"] = list
 
-		if carType == "SUV" {
-			exploreMap["display_name"] = carType + "'s"
-		} else {
-			exploreMap["display_name"] = carType + "s"
+		if carType == "suv" {
+			displayName := strings.ToUpper(carType) + "'s"
+			exploreMap["display_name"] = displayName
+		}
+		if carType == "sports" {
+			displayName := carType + " cars"
+			displayName = strings.Title(displayName)
+			exploreMap["display_name"] = displayName
+		}
+		if carType == "sedan" {
+			exploreMap["display_name"] = strings.Title(carType) + "s"
 		}
 
 		vehicleMap[carType] = exploreMap

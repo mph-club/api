@@ -176,8 +176,9 @@ func getMyCars(ctx echo.Context) error {
 
 func getCars(ctx echo.Context) error {
 	urlQuery := ctx.Request().URL.Query()
+	carType := ctx.QueryParam("type")
 
-	count, list, err := database.GetCars(urlQuery)
+	count, list, err := database.GetCars(urlQuery, carType)
 	if err != nil {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
 	}
