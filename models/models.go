@@ -71,6 +71,24 @@ type UserNote struct {
 	UserID      string    `json:"user_id" sql:",fk"`
 }
 
+type Reservation struct {
+	VehicleID string    `json:"vehicle_id" sql:",fk"`
+	Vehicle   Vehicle   `json:"vehicle"`
+	ID        int       `json:"id"`
+	RenterID  string    `json:"renter_id"`
+	Renter    User      `json:"renter"`
+	StartTime time.Time `json:"start_time"`
+	EndTime   time.Time `json:"end_time"`
+}
+
+type Reported struct {
+	VehicleReported Vehicle `json:"vehicle_reported" sql:",fk"`
+	VehicleID       string  `json:"vehicle_id"`
+	UserReported    User    `json:"user_reported" sql:",fk"`
+	UserID          string  `json:"user_id"`
+	ID              int     `json:"id"`
+}
+
 type Vehicle struct {
 	Address      string        `json:"address"`
 	City         string        `json:"city"`
