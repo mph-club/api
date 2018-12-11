@@ -19,7 +19,7 @@ type CAPostBodyFilters struct {
 	BirthYear int `json:"birth_year"`
 }
 
-var url = "https://mphclub.ngrok.io/api/v1/updateUser"
+var baseUrl = "https://api.complyadvantage.com/"
 var key = fmt.Sprintf("Token %s", "53NmcJKZfXzyeqis2uH0NyAac5sYLtBo")
 var fuzziness = 0.6
 
@@ -30,7 +30,7 @@ func SearchCAForRecords(userID string) {
 		fmt.Println("error:", err)
 	}
 
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonBody))
+	req, err := http.NewRequest("POST", baseUrl, bytes.NewBuffer(jsonBody))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", key)
 
