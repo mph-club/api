@@ -78,7 +78,7 @@ func createTypes(db *pg.DB) error {
 	types := map[string]string{
 		"status":       "ENUM ('APPROVED', 'DENIED', 'PENDING')",
 		"transmission": "ENUM ('AUTO', 'MANUAL')",
-		"miles":        "ENUM ('0-50', '50-100', '100-130', '130+')",
+		"miles":        "ENUM ('0-20k', '20-40k', '40-60k+')",
 	}
 
 	for name, t := range types {
