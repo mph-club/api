@@ -43,17 +43,18 @@ func UpsertUser(u models.User) error {
 }
 
 func GetUser(userID string) (models.User, error) {
+	var users []models.User
 	db := connectToDB()
 
-	user := models.User{
-		ID: userID,
-	}
-
-	if err := db.Select(&user); err != nil {
+	if err := db.Model(&users).
+		Column("user.*", "DriverLicense").
+		Relation("DriverLicense").
+		Where("\"user\".id = ?", userID).
+		Select(); err != nil {
 		return models.User{}, err
 	}
 
-	return user, nil
+	return users[0], nil
 }
 
 func EditPhotoURLArrayOnVehicle(vehicleID, filename string) error {
@@ -76,7 +77,11 @@ func EditPhotoURLArrayOnVehicle(vehicleID, filename string) error {
 	vehicleToAttach.Thumbnails = append(vehicleToAttach.Thumbnails, thumbnailURL)
 	vehicleToAttach.UpdatedTime = time.Now()
 
-	_, err = db.Model(vehicleToAttach).Column("photos", "updated_time", "thumbnails").WherePK().Update()
+	_, err = db.Model(vehicleToAttach).
+		Column("photos", "updated_time", "thumbnails").
+		WherePK().
+		Update()
+
 	if err != nil {
 		log.Println(err)
 		return err
