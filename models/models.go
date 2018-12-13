@@ -29,14 +29,15 @@ func (target *Staff) Merge(source Staff) Staff {
 }
 
 type DriverLicense struct {
-	Address   string    `json:"address"`
-	City      string    `json:"city"`
-	DLNumber  string    `json:"dl_number"`
-	Birthdate time.Time `json:"birth_date"`
-	FirstName string    `json:"first_name"`
-	ID        int       `json:"id"`
-	LastName  string    `json:"last_name"`
-	State     string    `json:"state"`
+	Address    string    `json:"address"`
+	Birthdate  time.Time `json:"birth_date"`
+	City       string    `json:"city"`
+	DLNumber   string    `json:"dl_number"`
+	FirstName  string    `json:"first_name"`
+	ID         int       `json:"id"`
+	LastName   string    `json:"last_name"`
+	MiddleName string    `json:"middle_name"`
+	State      string    `json:"state"`
 }
 
 type User struct {
