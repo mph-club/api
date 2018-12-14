@@ -25,10 +25,10 @@ docker-push:
 	@docker push 077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:${CURRENT_HEAD}
 
 docker-clean:
-	@docker rmi mphclub_api:${CURRENT_HEAD} \
-	            mphclub_api:latest \
-				077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:${CURRENT_HEAD} \
-				077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:latest
+	@docker rmi -f mphclub_api:${CURRENT_HEAD} \
+	               mphclub_api:latest \
+				   077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:${CURRENT_HEAD} \
+				   077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:latest
 
 docker-deploy:
 	#only have to apply if the configs change
