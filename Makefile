@@ -1,4 +1,4 @@
-export CURRENT_HEAD = $$(git rev-parse HEAD)
+export CURRENT_HEAD = $$(git rev-parse --short HEAD)
 
 run-server:
 	@go run api.go
@@ -25,10 +25,11 @@ docker-push:
 	@docker push 077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:${CURRENT_HEAD}
 
 docker-clean:
-	@docker rmi mphclub_api:${CURRENT_HEAD} \
+	@docker rmi -f mphclub_api:${CURRENT_HEAD} \
 	               mphclub_api:latest \
 				   077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:${CURRENT_HEAD} \
 				   077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:latest
+	@docker image prune -f
 
 docker-deploy:
 	#only have to apply if the configs change
