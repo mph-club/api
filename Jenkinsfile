@@ -28,4 +28,14 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            slackSend color: 'good',
+                      message: "The pipeline ${currentBuild.fullDisplayName} completed successfully."
+        }
+        failure {
+            slackSend color: 'danger',
+                      message: "The pipeline ${currentBuild.fullDisplayName} failed."
+        }
+    }
 }
