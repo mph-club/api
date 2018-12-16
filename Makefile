@@ -13,7 +13,7 @@ new-binary:
 docker-build:
 	#only have to login (the below command) once per 12 hours
 	#@eval `aws ecr get-login --region us-east-1 --no-include-email`
-	@docker build --force-rm
+	@docker build --force-rm \
 	              --tag mphclub_api:${CURRENT_HEAD} \
 	              --file ./docker/mphclub-rest-server/Dockerfile .
 
