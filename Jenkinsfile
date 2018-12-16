@@ -22,20 +22,27 @@ pipeline {
                 sh 'make docker-push'
             }
         }
-        stage('Clean') { 
-            steps { 
-                sh 'make docker-clean'
+        stage('Deploy') {
+            when {
+                branch 'master'
+            }
+            steps {
+                sh 'make docker-deploy'
             }
         }
     }
     post {
+        always {
+            sh 'make docker-clean'
+            deleteDir()
+        }
         success {
             slackSend color: 'good',
                       message: "The pipeline ${currentBuild.fullDisplayName} completed successfully."
         }
         failure {
             slackSend color: 'danger',
-                      message: "The pipeline ${currentBuild.fullDisplayName} failed."
+                      message: "The pipeline ${currentBuild.fullDisplayName} failed. (${currentBuild.absoluteUrl})"
         }
     }
 }
