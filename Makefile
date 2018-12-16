@@ -13,7 +13,9 @@ new-binary:
 docker-build:
 	#only have to login (the below command) once per 12 hours
 	#@eval `aws ecr get-login --region us-east-1 --no-include-email`
-	@docker build -t mphclub_api:${CURRENT_HEAD} -f ./docker/mphclub-rest-server/Dockerfile .
+	@docker build --force-rm
+	              --tag mphclub_api:${CURRENT_HEAD} \
+	              --file ./docker/mphclub-rest-server/Dockerfile .
 
 docker-tag:
 	@docker tag mphclub_api:${CURRENT_HEAD} mphclub_api:latest 
@@ -25,11 +27,12 @@ docker-push:
 	@docker push 077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:${CURRENT_HEAD}
 
 docker-clean:
-	@docker rmi -f mphclub_api:${CURRENT_HEAD} \
-	               mphclub_api:latest \
-				   077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:${CURRENT_HEAD} \
-				   077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:latest
-	@docker image prune -f
+	@docker rmi --force \
+	            mphclub_api:${CURRENT_HEAD} \
+	            mphclub_api:latest \
+				077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:${CURRENT_HEAD} \
+				077003688714.dkr.ecr.us-east-1.amazonaws.com/mphclub_api:latest
+	@docker image prune --force
 
 docker-deploy:
 	#only have to apply if the configs change
