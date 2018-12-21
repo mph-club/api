@@ -10,11 +10,12 @@ import (
 )
 
 func main() {
-	//updateUserAttr(initiateAuthorization())
 	//createUserThroughAWS()
+	//confirmSignup("246251")
+	//updateUserAttr(initiateAuthorization())
 	//verifyPhone(aws.String("274172"), initiateAuthorization())
-	//confirmSignup("939242")
-	initiateAuthorization()
+	//initiateAuthorization()
+	//apiClients.SearchCAForRecords("Robert Mugabe")
 }
 
 func updateUserAttr(token *string) {
@@ -53,7 +54,7 @@ func initiateAuthorization() *string {
 	svc := cognitoidentityprovider.New(sess)
 
 	initAuth, err := svc.InitiateAuth(&cognitoidentityprovider.InitiateAuthInput{
-		ClientId: aws.String("552iod6onakcmelvbprto0gs52"),
+		ClientId: aws.String("2ohk7tpreg6ugquqr92ifpm7t6"),
 		AuthFlow: aws.String("USER_PASSWORD_AUTH"),
 		AuthParameters: map[string]*string{
 			"USERNAME": aws.String("oscar@mphclub.com"),
@@ -85,7 +86,7 @@ func createUserThroughAWS() {
 	svc := cognitoidentityprovider.New(sess)
 
 	signUpOutput, err := svc.SignUp(&cognitoidentityprovider.SignUpInput{
-		ClientId: aws.String("552iod6onakcmelvbprto0gs52"),
+		ClientId: aws.String("2ohk7tpreg6ugquqr92ifpm7t6"),
 		Username: aws.String("oscar@mphclub.com"),
 		Password: aws.String("Hunter2!!"),
 		UserAttributes: []*cognitoidentityprovider.AttributeType{
@@ -118,7 +119,7 @@ func confirmSignup(confirmCode string) {
 	svc := cognitoidentityprovider.New(sess)
 
 	confirmUser, err := svc.ConfirmSignUp(&cognitoidentityprovider.ConfirmSignUpInput{
-		ClientId:         aws.String("552iod6onakcmelvbprto0gs52"),
+		ClientId:         aws.String("2ohk7tpreg6ugquqr92ifpm7t6"),
 		Username:         aws.String("oscar@mphclub.com"),
 		ConfirmationCode: aws.String(confirmCode),
 	})

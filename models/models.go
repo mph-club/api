@@ -72,7 +72,7 @@ type UserNote struct {
 	UserID      string    `json:"user_id" sql:",fk"`
 }
 
-type Reservation struct {
+type Trips struct {
 	VehicleID string    `json:"vehicle_id" sql:",fk"`
 	Vehicle   Vehicle   `json:"vehicle"`
 	ID        int       `json:"id"`
