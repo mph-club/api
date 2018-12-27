@@ -27,10 +27,10 @@ docker-tag:
 
 docker-push:
 	# only have to login (the below command) once per 12 hours
-	@eval `aws ecr get-login --no-include-email`
+	# @eval `aws ecr get-login --no-include-email`
 	@docker push ${REGISTRY_URL}/${IMAGE_NAME}:latest
 	@docker push ${REGISTRY_URL}/${IMAGE_NAME}:${CURRENT_HEAD}
-	@docker logout ${REGISTRY_URL}
+	# @docker logout ${REGISTRY_URL}
 
 docker-clean:
 	@docker rmi --force \
@@ -38,6 +38,7 @@ docker-clean:
 	            ${IMAGE_NAME}:latest \
 				${REGISTRY_URL}/${IMAGE_NAME}:${CURRENT_HEAD} \
 				${REGISTRY_URL}/${IMAGE_NAME}:latest
+	# @docker image prune --force
 
 docker-deploy:
 	#only have to apply if the configs change
