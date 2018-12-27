@@ -38,7 +38,6 @@ docker-clean:
 	            ${IMAGE_NAME}:latest \
 				${REGISTRY_URL}/${IMAGE_NAME}:${CURRENT_HEAD} \
 				${REGISTRY_URL}/${IMAGE_NAME}:latest
-	@docker image prune --force
 
 docker-deploy:
 	#only have to apply if the configs change
