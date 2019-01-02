@@ -8,7 +8,7 @@ pipeline {
         }
         stage('Tag') {
             when {
-                branch 'prod'
+                branch 'develop'
             }
             steps {
                 sh 'make docker-tag'
@@ -16,7 +16,7 @@ pipeline {
         }
         stage('Push') {
             when {
-                branch 'prod'
+                branch 'develop'
             }
             steps {
                 sh 'make docker-push'
@@ -24,7 +24,7 @@ pipeline {
         }
         stage('Deploy') {
             when {
-                branch 'prod'
+                branch 'develop'
             }
             steps {
                 sh 'make docker-deploy'
@@ -45,4 +45,4 @@ pipeline {
                       message: "The pipeline ${currentBuild.fullDisplayName} failed. (${currentBuild.absoluteUrl})"
         }
     }
-} 
+}
