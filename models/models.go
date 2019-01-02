@@ -38,6 +38,7 @@ type DriverLicense struct {
 	LastName   string    `json:"last_name"`
 	MiddleName string    `json:"middle_name"`
 	State      string    `json:"state"`
+	ExpiryDate time.Time `json:"expiry_date"`
 }
 
 type User struct {

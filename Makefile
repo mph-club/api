@@ -4,6 +4,7 @@ ACCOUNT_ID = $$(aws sts get-caller-identity --output text --query 'Account')
 REGISTRY_URL = ${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
 KUBE_DEPLOYMENT = deployments/server-deployment
 KUBE_CONTAINER_NAME = mphclub-api
+STAGE = dev
 
 run-server:
 	@go run api.go
@@ -22,7 +23,7 @@ docker-build:
 
 docker-tag:
 	@docker tag ${IMAGE_NAME}:${CURRENT_HEAD} ${IMAGE_NAME}:latest
-	@docker tag ${IMAGE_NAME}:latest ${REGISTRY_URL}/${IMAGE_NAME}:latest
+	@docker tag ${IMAGE_NAME}:${STAGE} ${REGISTRY_URL}/${IMAGE_NAME}:${STAGE}
 	@docker tag ${IMAGE_NAME}:latest ${REGISTRY_URL}/${IMAGE_NAME}:${CURRENT_HEAD}
 
 docker-push:
