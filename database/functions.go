@@ -157,6 +157,7 @@ func GetCars(queryParams url.Values, carType string) (int, []models.Vehicle, err
 	if len(carType) == 0 {
 		count, err := db.Model(&vehicleList).
 			Apply(orm.Pagination(queryParams)).
+			Where("status = ?", "APPROVED").
 			SelectAndCount()
 		if err != nil {
 			log.Println(err)
@@ -170,6 +171,7 @@ func GetCars(queryParams url.Values, carType string) (int, []models.Vehicle, err
 	count, err := db.Model(&vehicleList).
 		Apply(orm.Pagination(queryParams)).
 		Where("vehicle_type = ?", carType).
+		Where("status = ?", "APPROVED").
 		SelectAndCount()
 	if err != nil {
 		log.Println(err)
@@ -262,17 +264,20 @@ func GetExplore() (map[string]interface{}, error) {
 
 		exploreMap["vehicles"] = list
 
-		if carType == "suv" {
-			displayName := strings.ToUpper(carType) + "'s"
-			exploreMap["display_name"] = displayName
-		}
 		if carType == "sports" {
 			displayName := carType + " cars"
 			displayName = strings.Title(displayName)
 			exploreMap["display_name"] = displayName
+			exploreMap["order"] = 1
 		}
 		if carType == "sedan" {
 			exploreMap["display_name"] = strings.Title(carType) + "s"
+			exploreMap["order"] = 2
+		}
+		if carType == "suv" {
+			displayName := strings.ToUpper(carType) + "'s"
+			exploreMap["display_name"] = displayName
+			exploreMap["order"] = 3
 		}
 
 		vehicleMap[carType] = exploreMap

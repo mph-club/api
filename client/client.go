@@ -11,10 +11,10 @@ import (
 
 func main() {
 	//createUserThroughAWS()
-	//confirmSignup("246251")
+	//confirmSignup("212818")
 	//updateUserAttr(initiateAuthorization())
-	//verifyPhone(aws.String("274172"), initiateAuthorization())
-	//initiateAuthorization()
+	//verifyPhone(aws.String("670061"), initiateAuthorization())
+	initiateAuthorization()
 	//apiClients.SearchCAForRecords("Robert Mugabe")
 }
 
