@@ -3,9 +3,9 @@ package apiClients
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -19,7 +19,7 @@ var url = "https://api.complyadvantage.com/searches"
 var key = fmt.Sprintf("Token %s", "53NmcJKZfXzyeqis2uH0NyAac5sYLtBo")
 var fuzziness = 0.6
 
-func SearchCAForRecords(name string) {
+func SearchCAForRecords(name string) (bool, error) {
 	var postBody CAPostBody
 
 	postBody.SearchTerm = name
@@ -59,12 +59,12 @@ func SearchCAForRecords(name string) {
 		hits := data["hits"].([]interface{})
 
 		if len(hits) > 0 {
-			fmt.Println("we got a hit")
+			return false, nil
 		} else {
-			fmt.Println("person is clean")
+			return true, nil
 		}
 	} else {
-		log.Println("error with search term:", vMap["errors"])
+		return false, errors.New(vMap["errors"].(string))
 	}
 
 }
