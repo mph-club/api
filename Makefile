@@ -46,6 +46,12 @@ docker-deploy:
 	#@kubectl apply -f k8s
 	@kubectl set image ${KUBE_DEPLOYMENT} ${KUBE_CONTAINER_NAME}=${REGISTRY_URL}/${IMAGE_NAME}:${CURRENT_HEAD}
 
+docker-all:
+	@make docker-build
+	@make docker-tag
+	@make docker-push
+	@make docker-deploy
+
 export-current:
 	@echo ${CURRENT_HEAD}
 

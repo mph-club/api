@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"math/big"
 	"net/http"
 	"os"
@@ -54,7 +53,6 @@ func validateToken(tokenStr, region, userPoolID string, jwk map[string]JWKKey) (
 	})
 
 	if err != nil {
-		log.Println(err.Error())
 		return token, err
 	}
 	claims := token.Claims.(jwt.MapClaims)

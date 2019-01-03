@@ -32,9 +32,7 @@ func connectLogger() echo.MiddlewareFunc {
 				id = res.Header().Get(echo.HeaderXRequestID)
 			}
 
-			if value, ok := req.Header["error"]; ok {
-				log.Println(value)
-			}
+			log.Println(res.Header())
 
 			fields := []zapcore.Field{
 				zap.Int("status", res.Status),
