@@ -121,7 +121,7 @@ func uploadDriverLicense(ctx echo.Context) error {
 	}
 
 	if err := database.AddDriverLicense(userID, &dl); err != nil {
-		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"databse_error": err.Error()}))
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
 	}
 
 	return ctx.JSON(

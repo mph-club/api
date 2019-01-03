@@ -29,7 +29,6 @@ func checkToken(tokenString string) (bool, string, string) {
 
 	if err != nil || !token.Valid {
 		errMsg := err.Error()
-		log.Println(err)
 		return false, "", errMsg
 	}
 

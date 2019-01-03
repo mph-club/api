@@ -22,9 +22,6 @@ docker-build:
 	              --file ./docker/mphclub-rest-server/Dockerfile .
 
 docker-tag:
-	@docker tag ${IMAGE_NAME}:${CURRENT_HEAD} ${IMAGE_NAME}:latest
-	@docker tag ${IMAGE_NAME}:latest ${REGISTRY_URL}/${IMAGE_NAME}:latest
-	@docker tag ${IMAGE_NAME}:latest ${REGISTRY_URL}/${IMAGE_NAME}:${CURRENT_HEAD}
 	@docker tag ${IMAGE_NAME}:${CURRENT_HEAD} ${IMAGE_NAME}:${STAGE}
 	@docker tag ${IMAGE_NAME}:${STAGE} ${REGISTRY_URL}/${IMAGE_NAME}:${STAGE}
 	@docker tag ${IMAGE_NAME}:${STAGE} ${REGISTRY_URL}/${IMAGE_NAME}:${CURRENT_HEAD}
@@ -32,7 +29,6 @@ docker-tag:
 docker-push:
 	# only have to login (the below command) once per 12 hours
 	# @eval `aws ecr get-login --no-include-email`
-	@docker push ${REGISTRY_URL}/${IMAGE_NAME}:latest
 	@docker push ${REGISTRY_URL}/${IMAGE_NAME}:${CURRENT_HEAD}
 	@docker push ${REGISTRY_URL}/${IMAGE_NAME}:${STAGE}
 	# @docker logout ${REGISTRY_URL}

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -29,6 +30,10 @@ func connectLogger() echo.MiddlewareFunc {
 			id := req.Header.Get(echo.HeaderXRequestID)
 			if id == "" {
 				id = res.Header().Get(echo.HeaderXRequestID)
+			}
+
+			if value, ok := req.Header["error"]; ok {
+				log.Println(value)
 			}
 
 			fields := []zapcore.Field{
