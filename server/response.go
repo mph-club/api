@@ -1,5 +1,7 @@
 package server
 
+import "log"
+
 type successResponse struct {
 	Data    map[string]interface{} `json:"data"`
 	Message string                 `json:"message"`
@@ -20,6 +22,8 @@ func response(success bool, statusCode int, responseMap map[string]interface{}) 
 			Message: pass,
 		}
 	}
+
+	log.Println(responseMap)
 
 	return statusCode, &errorResponse{
 		Error:   responseMap,
