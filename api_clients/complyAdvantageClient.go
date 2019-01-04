@@ -60,12 +60,12 @@ func SearchCAForRecords(name string) (bool, error) {
 
 		if len(hits) > 0 {
 			return false, nil
-		} else {
-			return true, nil
 		}
-	} else {
-		return false, errors.New(vMap["errors"].(string))
+
+		return true, nil
 	}
+
+	return false, errors.New(vMap["errors"].(string))
 
 }
 
