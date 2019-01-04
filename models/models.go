@@ -42,6 +42,7 @@ type DriverLicense struct {
 }
 
 type User struct {
+	tableName       struct{}      `pg:",discard_unknown_columns"`
 	ID              string        `json:"id" sql:",unique"`
 	Email           string        `json:"email"`
 	Phone           string        `json:"phone"`
@@ -50,7 +51,7 @@ type User struct {
 	UserNotes       []UserNote    `json:"notes" sql:",fk"`
 	DriverLicense   DriverLicense `json:"driver_license" sql:",fk"`
 	DriverLicenseID int           `json:"dl_id"`
-	//OfacCheck       bool          `json:"ofac_check"`
+	OfacCheck       bool          `json:"ofac_check"`
 }
 
 func (target *User) Merge(source User) User {
