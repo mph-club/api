@@ -69,7 +69,6 @@ func EditPhotoURLArrayOnVehicle(vehicleID, filename string) error {
 
 	err := db.Select(vehicleToAttach)
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 
@@ -83,7 +82,6 @@ func EditPhotoURLArrayOnVehicle(vehicleID, filename string) error {
 		Update()
 
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 
@@ -97,14 +95,12 @@ func AddUserPhotoURL(userID, photoURL string) error {
 	}
 	err := db.Select(user)
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 
 	user.ProfilePhotoURL = photoURL
 	_, err = db.Model(user).Column("profile_photo_url").WherePK().Update()
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 
@@ -141,7 +137,6 @@ func UpsertListing(v models.Vehicle) (string, string, error) {
 	v.Status = "PENDING"
 
 	if err := db.Insert(&v); err != nil {
-		log.Println(err)
 		return "", "", err
 	}
 
@@ -160,7 +155,6 @@ func GetCars(queryParams url.Values, carType string) (int, []models.Vehicle, err
 			Where("status = ?", "APPROVED").
 			SelectAndCount()
 		if err != nil {
-			log.Println(err)
 			return 0, nil, err
 		}
 
@@ -174,7 +168,6 @@ func GetCars(queryParams url.Values, carType string) (int, []models.Vehicle, err
 		Where("status = ?", "APPROVED").
 		SelectAndCount()
 	if err != nil {
-		log.Println(err)
 		return 0, nil, err
 	}
 
@@ -192,7 +185,6 @@ func GetCarsByType(queryParams url.Values, paramType string) (int, []models.Vehi
 		Apply(orm.Pagination(queryParams)).
 		SelectAndCount()
 	if err != nil {
-		log.Println(err)
 		return 0, nil, err
 	}
 
@@ -225,7 +217,6 @@ func GetMyCars(u *models.User) ([]models.Vehicle, error) {
 		Select()
 
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 
@@ -320,7 +311,6 @@ func AddDriverLicense(userID string, dl *models.DriverLicense) error {
 		Update()
 
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 
@@ -338,4 +328,24 @@ func GetDriverLicense(userID string) (models.DriverLicense, error) {
 	}
 
 	return u[0].DriverLicense, nil
+}
+
+func EditOfacStatus(userID string, ofacCheck bool) error {
+	user := models.User{
+		ID:        userID,
+		OfacCheck: ofacCheck,
+	}
+
+	db := connectToDB()
+
+	_, err := db.Model(&user).
+		Column("ofac_check").
+		WherePK().
+		Update()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

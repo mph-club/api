@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"mphclub-rest-server/api_clients"
 	"mphclub-rest-server/database"
 	"mphclub-rest-server/models"
 	"net/http"
@@ -121,14 +122,17 @@ func uploadDriverLicense(ctx echo.Context) error {
 	}
 
 	if len(dl.FirstName) > 0 && len(dl.LastName) > 0 {
-		// fullName := fmt.Sprintf("%s %s", dl.FirstName, dl.LastName)
+		fullName := fmt.Sprintf("%s %s", dl.FirstName, dl.LastName)
 
-		// ofacCheck, err := apiClients.SearchCAForRecords(fullName)
-		// if err != nil {
-		// 	return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"api_client_error": err.Error()}))
-		// }
+		ofacCheck, err := apiClients.SearchCAForRecords(fullName)
+		if err != nil {
+			return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"api_client_error": err.Error()}))
+		}
 
 		//edit users ofac status
+		if err := database.EditOfacStatus(userID, ofacCheck); err != nil {
+			return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
+		}
 	}
 
 	if err := database.AddDriverLicense(userID, &dl); err != nil {
