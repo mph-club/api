@@ -42,7 +42,7 @@ type DriverLicense struct {
 }
 
 type User struct {
-	tableName       struct{}      `pg:",discard_unknown_columns"`
+	//tableName       struct{}      `pg:",discard_unknown_columns"`
 	ID              string        `json:"id" sql:",unique"`
 	Email           string        `json:"email"`
 	Phone           string        `json:"phone"`
