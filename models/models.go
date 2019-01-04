@@ -50,7 +50,7 @@ type User struct {
 	UserNotes       []UserNote    `json:"notes" sql:",fk"`
 	DriverLicense   DriverLicense `json:"driver_license" sql:",fk"`
 	DriverLicenseID int           `json:"dl_id"`
-	OfacCheck       bool          `json:"ofac_check"`
+	//OfacCheck       bool          `json:"ofac_check"`
 }
 
 func (target *User) Merge(source User) User {
