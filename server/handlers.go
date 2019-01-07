@@ -14,7 +14,7 @@ import (
 func upsertListing(ctx echo.Context) error {
 	var v models.Vehicle
 
-	v.UserID = ctx.Get("sub").(string)
+	v.OwnerID = ctx.Get("sub").(string)
 
 	if err := ctx.Bind(&v); err != nil {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"json_bind_error": err.Error()}))
