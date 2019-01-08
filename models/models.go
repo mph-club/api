@@ -120,7 +120,7 @@ type Vehicle struct {
 	Trim         string        `json:"trim"`
 	UpdatedBy    string        `json:"updated_by"`
 	UpdatedTime  time.Time     `json:"updated_time"`
-	OwnerID      string        `json:"owner_id" sql:",fk"`
+	UserID       string        `json:"owner_id" sql:",fk"`
 	VehicleNotes []VehicleNote `json:"notes" sql:"-,fk"`
 	VehicleType  string        `json:"vehicle_type"`
 	ViewIndex    int           `json:"view_index"`
@@ -196,8 +196,8 @@ func (target *Vehicle) Merge(source Vehicle) Vehicle {
 	if target.Year != 0 {
 		source.Year = target.Year
 	}
-	if target.OwnerID != "" {
-		source.OwnerID = target.OwnerID
+	if target.UserID != "" {
+		source.UserID = target.UserID
 	}
 	if target.ZipCode != "" {
 		source.ZipCode = target.ZipCode
