@@ -33,6 +33,8 @@ func CreateAndListen() {
 	v1.GET("/vehicles", getCars)
 	v1.GET("/vehicles/:id", getCarDetail)
 
+	v1.GET("/hosts/:id", getHostDetail)
+
 	v1.GET("/home", func(ctx echo.Context) error {
 		return ctx.String(200, "api home!!!!")
 	})

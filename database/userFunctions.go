@@ -3,6 +3,8 @@ package database
 import (
 	"log"
 	"mphclub-rest-server/models"
+
+	"github.com/go-pg/pg/orm"
 )
 
 func UpsertUser(u models.User) error {
@@ -123,4 +125,24 @@ func EditOfacStatus(userID string, ofacCheck bool) error {
 	}
 
 	return nil
+}
+
+func GetHostDetails(host models.User) (models.User, error) {
+	db := connectToDB()
+
+	var users []models.User
+
+	err := db.Model(&users).
+		Column("user.*", "Vehicles").
+		Relation("Vehicles", func(q *orm.Query) (*orm.Query, error) {
+			return q.Order("created_time DESC"), nil
+		}).
+		Where("id = ?", host.ID).
+		Select()
+
+	if err != nil {
+		return models.User{}, err
+	}
+
+	return users[0], nil
 }

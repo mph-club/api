@@ -278,3 +278,20 @@ func exploreCars(ctx echo.Context) error {
 			list,
 		))
 }
+
+func getHostDetail(ctx echo.Context) error {
+	var u models.User
+	u.ID = ctx.Param("id")
+	host, err := database.GetHostDetails(u)
+
+	if err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
+	}
+
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{"host": host},
+		))
+}
