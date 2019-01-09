@@ -295,3 +295,23 @@ func getHostDetail(ctx echo.Context) error {
 			map[string]interface{}{"host": host},
 		))
 }
+
+func makeReservation(ctx echo.Context) error {
+	var trip models.Trips
+
+	if err := ctx.Bind(&trip); err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"json_bind_error": err.Error()}))
+	}
+
+	reservationID, err := database.MakeReservation(trip)
+	if err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
+	}
+
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{"reservation_ID": reservationID},
+		))
+}

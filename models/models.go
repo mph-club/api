@@ -82,6 +82,7 @@ type Trips struct {
 	Renter    User      `json:"renter"`
 	StartTime time.Time `json:"start_time"`
 	EndTime   time.Time `json:"end_time"`
+	Approved  bool      `json:"approved"`
 }
 
 type Reported struct {
