@@ -49,6 +49,7 @@ type User struct {
 	Vehicles        []Vehicle     `json:"vehicles" sql:",fk"`
 	UserNotes       []UserNote    `json:"notes" sql:",fk"`
 	DriverLicense   DriverLicense `json:"driver_license" sql:",fk"`
+	Reservations    []Trips       `json:"reservations" sql:",fk"`
 	DriverLicenseID int           `json:"dl_id"`
 	OfacCheck       bool          `json:"ofac_check"`
 }

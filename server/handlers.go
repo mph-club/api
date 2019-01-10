@@ -297,14 +297,16 @@ func getHostDetail(ctx echo.Context) error {
 }
 
 func makeReservation(ctx echo.Context) error {
+	userID := ctx.Get("sub").(string)
 	var trip models.Trips
 
 	if err := ctx.Bind(&trip); err != nil {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"json_bind_error": err.Error()}))
 	}
 
-	reservationID, err := database.MakeReservation(trip)
-	if err != nil {
+	trip.RenterID = userID
+
+	if err := database.MakeReservation(trip); err != nil {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
 	}
 
@@ -312,6 +314,6 @@ func makeReservation(ctx echo.Context) error {
 		response(
 			true,
 			http.StatusOK,
-			map[string]interface{}{"reservation_ID": reservationID},
+			map[string]interface{}{},
 		))
 }

@@ -230,14 +230,12 @@ func getTypeVehicleArray(carType string) ([]models.Vehicle, error) {
 	return list, nil
 }
 
-func MakeReservation(trip models.Trips) (int, error) {
+func MakeReservation(trip models.Trips) error {
 	db := connectToDB()
 
-	log.Println(trip)
-
 	if err := db.Insert(&trip); err != nil {
-		return 0, err
+		return err
 	}
 
-	return trip.ID, nil
+	return nil
 }
