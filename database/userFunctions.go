@@ -146,3 +146,22 @@ func GetHostDetails(host models.User) (models.User, error) {
 
 	return users[0], nil
 }
+
+func GetMyReservations(renterID string) ([]models.Trip, error) {
+	db := connectToDB()
+
+	var trips []models.Trip
+	err := db.Model(&trips).
+		Where("renter_id = ?", renterID).
+		Column("trip.*", "Vehicles").
+		Relation("Vehicles").
+		Column("trip.*", "Users").
+		Relation("Users").
+		Select()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return trips, nil
+}

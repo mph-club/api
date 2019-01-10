@@ -50,6 +50,7 @@ func CreateAndListen() {
 	v1.GET("/getMyCars", getMyCars, cognitoAuth)
 	v1.GET("/driverLicense", getDriverLicense, cognitoAuth)
 	v1.GET("/user", getUser, cognitoAuth)
+	v1.GET("/reserve", getMyReservations, cognitoAuth)
 
 	// POST
 	v1.POST("/updateUser", updateUser, cognitoAuth)

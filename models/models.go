@@ -49,7 +49,7 @@ type User struct {
 	Vehicles        []Vehicle     `json:"vehicles" sql:",fk"`
 	UserNotes       []UserNote    `json:"notes" sql:",fk"`
 	DriverLicense   DriverLicense `json:"driver_license" sql:",fk"`
-	Reservations    []Trips       `json:"reservations" sql:",fk"`
+	Trips           []Trip        `json:"reservations" sql:",fk"`
 	DriverLicenseID int           `json:"dl_id"`
 	OfacCheck       bool          `json:"ofac_check"`
 }
@@ -75,12 +75,12 @@ type UserNote struct {
 	UserID      string    `json:"user_id" sql:",fk"`
 }
 
-type Trips struct {
-	VehicleID string    `json:"vehicle_id" sql:",fk"`
-	Vehicle   Vehicle   `json:"vehicle"`
+type Trip struct {
+	VehicleID string    `json:"vehicle_id"`
+	Vehicle   Vehicle   `json:"vehicle" sql:",fk"`
 	ID        int       `json:"id"`
 	RenterID  string    `json:"renter_id"`
-	Renter    User      `json:"renter"`
+	User      User      `json:"renter" sql:",fk"`
 	StartTime time.Time `json:"start_time"`
 	EndTime   time.Time `json:"end_time"`
 	Approved  bool      `json:"approved"`
