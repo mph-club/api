@@ -331,5 +331,4 @@ func getMyReservations(ctx echo.Context) error {
 			http.StatusOK,
 			map[string]interface{}{"trips": listOfTrips},
 		))
-
 }

@@ -232,10 +232,15 @@ func getTypeVehicleArray(carType string) ([]models.Vehicle, error) {
 
 func MakeReservation(trip models.Trip) error {
 	db := connectToDB()
-
 	if err := db.Insert(&trip); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func GetUnavailableDates(vehicleID string) ([]time.Time, error) {
+	//db := connectToDB()
+
+	return []time.Time{}, nil
 }
