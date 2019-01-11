@@ -79,7 +79,7 @@ type Trip struct {
 	VehicleID string    `json:"vehicle_id"`
 	Vehicle   Vehicle   `json:"vehicle" sql:",fk"`
 	ID        int       `json:"id"`
-	RenterID  string    `json:"renter_id"`
+	UserID    string    `json:"renter_id"`
 	User      User      `json:"renter" sql:",fk"`
 	StartTime time.Time `json:"start_time"`
 	EndTime   time.Time `json:"end_time"`

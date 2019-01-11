@@ -151,12 +151,13 @@ func GetMyReservations(renterID string) ([]models.Trip, error) {
 	db := connectToDB()
 
 	var trips []models.Trip
+
 	err := db.Model(&trips).
-		Where("renter_id = ?", renterID).
-		Column("trip.*", "Vehicles").
-		Relation("Vehicles").
-		Column("trip.*", "Users").
-		Relation("Users").
+		Column("trip.*", "User").
+		Relation("User").
+		Column("trip.*", "Vehicle").
+		Relation("Vehicle").
+		Where("\"user\".id = ?", renterID).
 		Select()
 
 	if err != nil {

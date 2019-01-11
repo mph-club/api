@@ -304,7 +304,7 @@ func makeReservation(ctx echo.Context) error {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"json_bind_error": err.Error()}))
 	}
 
-	trip.RenterID = userID
+	trip.UserID = userID
 
 	if err := database.MakeReservation(trip); err != nil {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
