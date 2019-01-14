@@ -223,13 +223,14 @@ func getCarDetail(ctx echo.Context) error {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"db_error": err.Error(), "happened_in": "get trips by vehicle"}))
 	}
 
+	detail.UnavailableDates = unavailable
+
 	return ctx.JSON(
 		response(
 			true,
 			http.StatusOK,
 			map[string]interface{}{
-				"vehicle":           detail,
-				"unavailable_dates": unavailable,
+				"vehicle": detail,
 			},
 		))
 }

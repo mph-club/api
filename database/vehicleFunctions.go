@@ -136,6 +136,19 @@ func GetCarDetail(v models.Vehicle) (models.Vehicle, error) {
 		return models.Vehicle{}, err
 	}
 
+	owner, err := GetUser(v.UserID)
+	if err != nil {
+		return v, err
+	}
+
+	v.OwnerDetails = map[string]interface{}{
+		"first_name":        owner.DriverLicense.FirstName,
+		"rating":            5,
+		"response_rate":     90,
+		"response_time":     5,
+		"profile_photo_url": owner.ProfilePhotoURL,
+	}
+
 	return v, nil
 }
 

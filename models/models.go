@@ -95,41 +95,45 @@ type Reported struct {
 }
 
 type Vehicle struct {
-	Address         string        `json:"address"`
-	City            string        `json:"city"`
-	Color           string        `json:"color"`
-	Coordinates     []float64     `json:"coordinates" sql:",array"`
-	CreatedTime     time.Time     `json:"created_time"`
-	DailyPrice      int           `json:"daily_price"`
-	DayMax          int           `json:"day_max"`
-	DayMin          int           `json:"day_min"`
-	Description     string        `json:"description"`
-	Doors           int           `json:"doors"`
-	ID              string        `json:"id"`
-	IsPublished     bool          `json:"is_published"`
-	LicensePlate    string        `json:"license_plate"`
-	Make            string        `json:"make"`
-	Miles           string        `json:"miles" sql:"type:miles"`
-	Model           string        `json:"model"`
-	Photos          []string      `json:"photos" sql:",array"`
-	Place           string        `json:"place"`
-	Premium         bool          `json:"premium"`
-	Seats           int           `json:"seats"`
-	SecurityDeposit int           `json:"security_deposit"`
-	State           string        `json:"state"`
-	Status          string        `json:"status" sql:"type:status"`
-	Thumbnails      []string      `json:"thumbnails" sql:",array"`
-	Transmission    string        `json:"transmission" sql:"type:transmission"`
-	Trim            string        `json:"trim"`
-	UpdatedBy       string        `json:"updated_by"`
-	UpdatedTime     time.Time     `json:"updated_time"`
-	UserID          string        `json:"owner_id" sql:",fk"`
-	VehicleNotes    []VehicleNote `json:"notes" sql:"-,fk"`
-	VehicleType     string        `json:"vehicle_type"`
-	ViewIndex       int           `json:"view_index"`
-	Vin             string        `json:"vin"`
-	Year            int           `json:"year"`
-	ZipCode         string        `json:"zip_code"`
+	Address           string                 `json:"address"`
+	City              string                 `json:"city"`
+	Color             string                 `json:"color"`
+	Coordinates       []float64              `json:"coordinates" sql:",array"`
+	CreatedTime       time.Time              `json:"created_time"`
+	DailyPrice        int                    `json:"daily_price"`
+	DayMax            int                    `json:"day_max"`
+	DayMin            int                    `json:"day_min"`
+	Description       string                 `json:"description"`
+	Doors             int                    `json:"doors"`
+	ID                string                 `json:"id"`
+	IsPublished       bool                   `json:"is_published"`
+	LicensePlate      string                 `json:"license_plate"`
+	Make              string                 `json:"make"`
+	Miles             string                 `json:"miles" sql:"type:miles"`
+	MilesIncluded     int                    `json:"miles_included"`
+	PricePerExtraMile int                    `json:"price_per_extra_mile"`
+	Model             string                 `json:"model"`
+	OwnerDetails      map[string]interface{} `json:"owner_details" sql:"-"`
+	Photos            []string               `json:"photos" sql:",array"`
+	Place             string                 `json:"place"`
+	Premium           bool                   `json:"premium"`
+	Seats             int                    `json:"seats"`
+	SecurityDeposit   int                    `json:"security_deposit"`
+	State             string                 `json:"state"`
+	Status            string                 `json:"status" sql:"type:status"`
+	Thumbnails        []string               `json:"thumbnails" sql:",array"`
+	Transmission      string                 `json:"transmission" sql:"type:transmission"`
+	Trim              string                 `json:"trim"`
+	UnavailableDates  []interface{}          `json:"unavailable_dates" sql:"-"`
+	UpdatedBy         string                 `json:"updated_by"`
+	UpdatedTime       time.Time              `json:"updated_time"`
+	UserID            string                 `json:"owner_id" sql:",fk"`
+	VehicleNotes      []VehicleNote          `json:"notes" sql:"-,fk"`
+	VehicleType       string                 `json:"vehicle_type"`
+	ViewIndex         int                    `json:"view_index"`
+	Vin               string                 `json:"vin"`
+	Year              int                    `json:"year"`
+	ZipCode           string                 `json:"zip_code"`
 }
 
 func (target *Vehicle) Merge(source Vehicle) Vehicle {
