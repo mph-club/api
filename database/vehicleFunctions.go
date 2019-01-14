@@ -239,8 +239,34 @@ func MakeReservation(trip models.Trip) error {
 	return nil
 }
 
-func GetUnavailableDates(vehicleID string) ([]time.Time, error) {
-	//db := connectToDB()
+func GetUnavailableDates(vehicleID string) ([]interface{}, error) {
+	db := connectToDB()
 
-	return []time.Time{}, nil
+	var trips []models.Trip
+	today := time.Now()
+	unavailableDates := []interface{}{}
+
+	if err := db.
+		Model(&trips).
+		Where("vehicle_ID = ?", vehicleID).
+		Order("start_time DESC").
+		Select(); err != nil {
+		return unavailableDates, err
+	}
+
+	for _, trip := range trips {
+		start := trip.StartTime
+		end := trip.EndTime
+
+		if !end.Before(today) {
+			unavailableObject := map[string]interface{}{
+				"start": start,
+				"end":   end,
+			}
+
+			unavailableDates = append(unavailableDates, unavailableObject)
+		}
+	}
+
+	return unavailableDates, nil
 }

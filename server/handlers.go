@@ -215,7 +215,12 @@ func getCarDetail(ctx echo.Context) error {
 
 	detail, err := database.GetCarDetail(v)
 	if err != nil {
-		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"db_error": err.Error()}))
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"db_error": err.Error(), "happened_in": "car detail"}))
+	}
+
+	unavailable, err := database.GetUnavailableDates(v.ID)
+	if err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"db_error": err.Error(), "happened_in": "get trips by vehicle"}))
 	}
 
 	return ctx.JSON(
@@ -223,7 +228,8 @@ func getCarDetail(ctx echo.Context) error {
 			true,
 			http.StatusOK,
 			map[string]interface{}{
-				"vehicle": detail,
+				"vehicle":           detail,
+				"unavailable_dates": unavailable,
 			},
 		))
 }
