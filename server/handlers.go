@@ -299,7 +299,7 @@ func getHostDetail(ctx echo.Context) error {
 		response(
 			true,
 			http.StatusOK,
-			map[string]interface{}{"host": host},
+			map[string]interface{}{"user": host},
 		))
 }
 
