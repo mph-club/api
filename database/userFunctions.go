@@ -137,7 +137,9 @@ func GetHostDetails(host models.User) (models.User, error) {
 		Relation("Vehicles", func(q *orm.Query) (*orm.Query, error) {
 			return q.Order("created_time DESC"), nil
 		}).
-		Where("id = ?", host.ID).
+		Column("user.*", "DriverLicense").
+		Relation("DriverLicense").
+		Where("\"user\".id = ?", host.ID).
 		Select()
 
 	if err != nil {
