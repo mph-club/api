@@ -130,8 +130,12 @@ func GetCarsByType(queryParams url.Values, paramType string) (int, []models.Vehi
 func GetCarDetail(v models.Vehicle) (models.Vehicle, error) {
 	db := connectToDB()
 
-	if err := db.Model(&v).
-		WherePK().
+	var vArray []models.Vehicle
+
+	if err := db.Model(&vArray).
+		Column("vehicle.*", "Features").
+		Relation("Features").
+		Where("id = ?", v.ID).
 		Select(); err != nil {
 		return models.Vehicle{}, err
 	}
