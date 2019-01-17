@@ -105,6 +105,8 @@ type Vehicle struct {
 	DayMin            int                    `json:"day_min"`
 	Description       string                 `json:"description"`
 	Doors             int                    `json:"doors"`
+	FeatureID         int                    `json:"-"`
+	Features          Features               `json:"features" sql:",fk"`
 	ID                string                 `json:"id"`
 	IsPublished       bool                   `json:"is_published"`
 	LicensePlate      string                 `json:"license_plate"`

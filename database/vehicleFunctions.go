@@ -133,8 +133,8 @@ func GetCarDetail(v models.Vehicle) (models.Vehicle, error) {
 	var vArray []models.Vehicle
 
 	if err := db.Model(&vArray).
-		Column("vehicle.*", "Features").
-		Relation("Features").
+		Column("vehicle.*", "Feature").
+		Relation("Feature").
 		Where("id = ?", v.ID).
 		Select(); err != nil {
 		return models.Vehicle{}, err
