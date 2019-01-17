@@ -222,3 +222,13 @@ type VehicleNote struct {
 	UpdatedTime time.Time `json:"updated_time"`
 	VehicleID   string    `json:"vehicle_id" sql:",fk"`
 }
+
+type Features struct {
+	Bluetooth  bool `json:"bluetooth"`
+	SunRoof    bool `json:"sunroof"`
+	AudioInput bool `json:"audio_input"`
+	USBInput   bool `json:"usb_input"`
+	TollPass   bool `json:"toll_pass"`
+	GPS        bool `json:"gps"`
+	ID         int  `json:"id"`
+}
