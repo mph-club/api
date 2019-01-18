@@ -135,10 +135,12 @@ func GetCarDetail(v models.Vehicle) (models.Vehicle, error) {
 	if err := db.Model(&vArray).
 		Column("vehicle.*", "Feature").
 		Relation("Feature").
-		Where("id = ?", v.ID).
+		Where("vehicle.id = ?", v.ID).
 		Select(); err != nil {
 		return models.Vehicle{}, err
 	}
+
+	v = vArray[0]
 
 	owner, err := GetUser(v.UserID)
 	if err != nil {

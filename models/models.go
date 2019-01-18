@@ -106,7 +106,7 @@ type Vehicle struct {
 	Description       string                 `json:"description"`
 	Doors             int                    `json:"doors"`
 	FeatureID         int                    `json:"-"`
-	Features          Features               `json:"features" sql:",fk"`
+	Feature           Features               `json:"features" sql:",fk"`
 	ID                string                 `json:"id"`
 	IsPublished       bool                   `json:"is_published"`
 	LicensePlate      string                 `json:"license_plate"`
@@ -227,7 +227,7 @@ type VehicleNote struct {
 
 type Features struct {
 	Bluetooth  bool `json:"bluetooth"`
-	SunRoof    bool `json:"sunroof"`
+	Sunroof    bool `json:"sunroof"`
 	AudioInput bool `json:"audio_input"`
 	USBInput   bool `json:"usb_input"`
 	TollPass   bool `json:"toll_pass"`
