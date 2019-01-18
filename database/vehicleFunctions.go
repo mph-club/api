@@ -269,6 +269,7 @@ func getTypeVehicleArray(carType string) ([]models.Vehicle, error) {
 		Model(&list).
 		Column("id", "make", "model", "year", "thumbnails", "vehicle_type", "daily_price").
 		Where("vehicle_type = ?", carType).
+		Where("status = ?", "APPROVED").
 		Limit(3).
 		Select(); err != nil {
 		return nil, err
