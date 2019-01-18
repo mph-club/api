@@ -33,6 +33,8 @@ func CreateAndListen() {
 	v1.GET("/vehicles", getCars)
 	v1.GET("/vehicles/:id", getCarDetail)
 
+	v1.GET("/users/:id", getHostDetail)
+
 	v1.GET("/home", func(ctx echo.Context) error {
 		return ctx.String(200, "api home!!!!")
 	})
@@ -47,7 +49,8 @@ func CreateAndListen() {
 	// GET
 	v1.GET("/getMyCars", getMyCars, cognitoAuth)
 	v1.GET("/driverLicense", getDriverLicense, cognitoAuth)
-	v1.GET("/user", getUser, cognitoAuth)
+	v1.GET("/account", getUser, cognitoAuth)
+	v1.GET("/reserve", getMyReservations, cognitoAuth)
 
 	// POST
 	v1.POST("/updateUser", updateUser, cognitoAuth)
@@ -55,6 +58,7 @@ func CreateAndListen() {
 	v1.POST("/uploadCarPhoto", uploadCarPhoto, cognitoAuth)
 	v1.POST("/uploadUserPhoto", uploadUserPhoto, cognitoAuth)
 	v1.POST("/driverLicense", uploadDriverLicense, cognitoAuth)
+	v1.POST("/reserve", makeReservation, cognitoAuth)
 
 	_api.Start(":8080")
 }

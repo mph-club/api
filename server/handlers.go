@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"mphclub-rest-server/api_clients"
 	"mphclub-rest-server/database"
 	"mphclub-rest-server/models"
 	"net/http"
@@ -120,8 +121,22 @@ func uploadDriverLicense(ctx echo.Context) error {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"json_bind_error": err.Error()}))
 	}
 
+	if len(dl.FirstName) > 0 && len(dl.LastName) > 0 {
+		fullName := fmt.Sprintf("%s %s", dl.FirstName, dl.LastName)
+
+		ofacCheck, err := apiClients.SearchCAForRecords(fullName)
+		if err != nil {
+			return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"api_client_error": err.Error()}))
+		}
+
+		//edit users ofac status
+		if err := database.EditOfacStatus(userID, ofacCheck); err != nil {
+			return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
+		}
+	}
+
 	if err := database.AddDriverLicense(userID, &dl); err != nil {
-		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"databse_error": err.Error()}))
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
 	}
 
 	return ctx.JSON(
@@ -200,8 +215,22 @@ func getCarDetail(ctx echo.Context) error {
 
 	detail, err := database.GetCarDetail(v)
 	if err != nil {
-		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"db_error": err.Error()}))
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"db_error": err.Error(), "happened_in": "car detail"}))
 	}
+
+	unavailable, err := database.GetUnavailableDates(v.ID)
+	if err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"db_error": err.Error(), "happened_in": "get trips by vehicle"}))
+	}
+
+	detail.UnavailableDates = unavailable
+
+	alsoMightLike, err := database.YouAlsoMightLike(detail.VehicleType)
+	if err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"db_error": err.Error(), "happened_in": "you also might like"}))
+	}
+
+	detail.YouAlsoMightLike = alsoMightLike
 
 	return ctx.JSON(
 		response(
@@ -261,5 +290,59 @@ func exploreCars(ctx echo.Context) error {
 			true,
 			http.StatusOK,
 			list,
+		))
+}
+
+func getHostDetail(ctx echo.Context) error {
+	var u models.User
+	u.ID = ctx.Param("id")
+	host, err := database.GetHostDetails(u)
+
+	if err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
+	}
+
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{"user": host},
+		))
+}
+
+func makeReservation(ctx echo.Context) error {
+	userID := ctx.Get("sub").(string)
+	var trip models.Trip
+
+	if err := ctx.Bind(&trip); err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"json_bind_error": err.Error()}))
+	}
+
+	trip.UserID = userID
+
+	if err := database.MakeReservation(trip); err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
+	}
+
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{},
+		))
+}
+
+func getMyReservations(ctx echo.Context) error {
+	userID := ctx.Get("sub").(string)
+	listOfTrips, err := database.GetMyReservations(userID)
+	if err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
+	}
+
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{"trips": listOfTrips},
 		))
 }

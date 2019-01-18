@@ -5,11 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"reflect"
 	"strings"
 	"time"
-
-	"mphclub-rest-server/models"
 
 	"github.com/go-pg/pg"
 )
@@ -69,62 +66,5 @@ func connectToDB() *pg.DB {
 		}
 
 		db = pg.Connect(options)
-	}
-}
-
-// createTypes attempts to create
-// all custom-defined types
-func createTypes(db *pg.DB) error {
-	types := map[string]string{
-		"status":       "ENUM ('APPROVED', 'DENIED', 'PENDING')",
-		"transmission": "ENUM ('AUTO', 'MANUAL')",
-		"miles":        "ENUM ('0-20k', '20-40k', '40-60k+')",
-	}
-
-	for name, t := range types {
-		q := fmt.Sprintf("CREATE TYPE %v AS %v", name, t)
-		if _, err := db.Exec(q); err != nil {
-			if strings.Contains(err.Error(), "already exists") {
-				log.Printf("type \"%v\" already exists", name)
-			} else {
-				return err
-			}
-		} else {
-			log.Printf("type \"%v\" created successfully", name)
-		}
-	}
-
-	return nil
-}
-
-// CreateSchema attempts to create
-// all existing schemas
-func CreateSchema() {
-	db := connectToDB()
-
-	if err := createTypes(db); err != nil {
-		log.Panicln(err)
-	}
-
-	for _, model := range []interface{}{
-		&models.Vehicle{},
-		&models.User{},
-		&models.UserNote{},
-		&models.VehicleNote{},
-		&models.DriverLicense{},
-		&models.Staff{},
-		//models go here
-	} {
-		name := reflect.TypeOf(model).Elem().Name()
-
-		if err := db.CreateTable(model, nil); err != nil {
-			if strings.Contains(err.Error(), "already exists") {
-				log.Printf("schema \"%v\" already exists", name)
-			} else {
-				log.Panicln(err)
-			}
-		} else {
-			log.Printf("schema \"%v\" created successfully", name)
-		}
 	}
 }

@@ -3,34 +3,35 @@ package apiClients
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
 type CAPostBody struct {
-	SearchTerm string  `json:"search_term"`
-	Fuzziness  float32 `json:"fuzziness"`
-	ClientRef  string  `json:"client_ref"`
+	SearchTerm    string  `json:"search_term"`
+	Fuzziness     float32 `json:"fuzziness"`
+	SearchProfile string  `json:"search_profile"`
 }
 
-type CAPostBodyFilters struct {
-	BirthYear int `json:"birth_year"`
-}
-
-var baseUrl = "https://api.complyadvantage.com/"
+var url = "https://api.complyadvantage.com/searches"
 var key = fmt.Sprintf("Token %s", "53NmcJKZfXzyeqis2uH0NyAac5sYLtBo")
 var fuzziness = 0.6
 
-//stubbed function for Search
-func SearchCAForRecords(userID string) {
-	jsonBody, err := json.Marshal(CAPostBody{})
+func SearchCAForRecords(name string) (bool, error) {
+	var postBody CAPostBody
+
+	postBody.SearchTerm = name
+	postBody.Fuzziness = 0.6
+	postBody.SearchProfile = "ofac"
+
+	jsonBody, err := json.Marshal(postBody)
 	if err != nil {
 		fmt.Println("error:", err)
 	}
 
-	req, err := http.NewRequest("POST", baseUrl, bytes.NewBuffer(jsonBody))
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonBody))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", key)
 
@@ -41,13 +42,31 @@ func SearchCAForRecords(userID string) {
 	}
 	defer resp.Body.Close()
 
-	fmt.Println("response Status:", resp.Status)
-	fmt.Println("response Headers:", resp.Header)
 	body, _ := ioutil.ReadAll(resp.Body)
 
-	log.Println(body)
+	var parsed interface{}
+
+	err2 := json.Unmarshal(body, &parsed)
+	if err2 != nil {
+		fmt.Println("error:", err2)
+	}
+
+	vMap := parsed.(map[string]interface{})
+
+	if val, ok := vMap["content"]; ok {
+		contentMap := val.(map[string]interface{})
+		data := contentMap["data"].(map[string]interface{})
+		hits := data["hits"].([]interface{})
+
+		if len(hits) > 0 {
+			return false, nil
+		}
+
+		return true, nil
+	}
+
+	return false, errors.New(vMap["errors"].(string))
+
 }
 
-//stubbed function for getting searched users
-
-//webhook stub for updates
+//webhook for updated searches

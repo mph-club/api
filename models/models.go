@@ -38,6 +38,7 @@ type DriverLicense struct {
 	LastName   string    `json:"last_name"`
 	MiddleName string    `json:"middle_name"`
 	State      string    `json:"state"`
+	ExpiryDate time.Time `json:"expiry_date"`
 }
 
 type User struct {
@@ -48,7 +49,9 @@ type User struct {
 	Vehicles        []Vehicle     `json:"vehicles" sql:",fk"`
 	UserNotes       []UserNote    `json:"notes" sql:",fk"`
 	DriverLicense   DriverLicense `json:"driver_license" sql:",fk"`
+	Trips           []Trip        `json:"reservations" sql:",fk"`
 	DriverLicenseID int           `json:"dl_id"`
+	OfacCheck       bool          `json:"ofac_check"`
 }
 
 func (target *User) Merge(source User) User {
@@ -72,14 +75,15 @@ type UserNote struct {
 	UserID      string    `json:"user_id" sql:",fk"`
 }
 
-type Reservation struct {
-	VehicleID string    `json:"vehicle_id" sql:",fk"`
-	Vehicle   Vehicle   `json:"vehicle"`
+type Trip struct {
+	VehicleID string    `json:"vehicle_id"`
+	Vehicle   Vehicle   `json:"vehicle" sql:",fk"`
 	ID        int       `json:"id"`
-	RenterID  string    `json:"renter_id"`
-	Renter    User      `json:"renter"`
+	UserID    string    `json:"renter_id"`
+	User      User      `json:"renter" sql:",fk"`
 	StartTime time.Time `json:"start_time"`
 	EndTime   time.Time `json:"end_time"`
+	Approved  bool      `json:"approved"`
 }
 
 type Reported struct {
@@ -91,40 +95,48 @@ type Reported struct {
 }
 
 type Vehicle struct {
-	Address      string        `json:"address"`
-	City         string        `json:"city"`
-	Color        string        `json:"color"`
-	Coordinates  []float64     `json:"coordinates" sql:",array"`
-	CreatedTime  time.Time     `json:"created_time"`
-	DailyPrice   int           `json:"daily_price"`
-	DayMax       int           `json:"day_max"`
-	DayMin       int           `json:"day_min"`
-	Description  string        `json:"description"`
-	Doors        int           `json:"doors"`
-	ID           string        `json:"id"`
-	IsPublished  bool          `json:"is_published"`
-	LicensePlate string        `json:"license_plate"`
-	Make         string        `json:"make"`
-	Miles        string        `json:"miles" sql:"type:miles"`
-	Model        string        `json:"model"`
-	Photos       []string      `json:"photos" sql:",array"`
-	Place        string        `json:"place"`
-	Premium      bool          `json:"premium"`
-	Seats        int           `json:"seats"`
-	State        string        `json:"state"`
-	Status       string        `json:"status" sql:"type:status"`
-	Thumbnails   []string      `json:"thumbnails" sql:",array"`
-	Transmission string        `json:"transmission" sql:"type:transmission"`
-	Trim         string        `json:"trim"`
-	UpdatedBy    string        `json:"updated_by"`
-	UpdatedTime  time.Time     `json:"updated_time"`
-	UserID       string        `json:"user" sql:",fk"`
-	VehicleNotes []VehicleNote `json:"notes" sql:"-,fk"`
-	VehicleType  string        `json:"vehicle_type"`
-	ViewIndex    int           `json:"view_index"`
-	Vin          string        `json:"vin"`
-	Year         int           `json:"year"`
-	ZipCode      string        `json:"zip_code"`
+	Address           string                 `json:"address"`
+	City              string                 `json:"city"`
+	Color             string                 `json:"color"`
+	Coordinates       []float64              `json:"coordinates" sql:",array"`
+	CreatedTime       time.Time              `json:"created_time"`
+	DailyPrice        int                    `json:"daily_price"`
+	DayMax            int                    `json:"day_max"`
+	DayMin            int                    `json:"day_min"`
+	Description       string                 `json:"description"`
+	Doors             int                    `json:"doors"`
+	FeatureID         int                    `json:"-"`
+	Feature           Features               `json:"features" sql:",fk"`
+	ID                string                 `json:"id"`
+	IsPublished       bool                   `json:"is_published"`
+	LicensePlate      string                 `json:"license_plate"`
+	Make              string                 `json:"make"`
+	Miles             string                 `json:"miles" sql:"type:miles"`
+	MilesIncluded     int                    `json:"miles_included"`
+	PricePerExtraMile int                    `json:"price_per_extra_mile"`
+	Model             string                 `json:"model"`
+	OwnerDetails      map[string]interface{} `json:"owner_details" sql:"-"`
+	Photos            []string               `json:"photos" sql:",array"`
+	Place             string                 `json:"place"`
+	Premium           bool                   `json:"premium"`
+	Seats             int                    `json:"seats"`
+	SecurityDeposit   int                    `json:"security_deposit"`
+	State             string                 `json:"state"`
+	Status            string                 `json:"status" sql:"type:status"`
+	Thumbnails        []string               `json:"thumbnails" sql:",array"`
+	Transmission      string                 `json:"transmission" sql:"type:transmission"`
+	Trim              string                 `json:"trim"`
+	UnavailableDates  []interface{}          `json:"unavailable_dates" sql:"-"`
+	UpdatedBy         string                 `json:"updated_by"`
+	UpdatedTime       time.Time              `json:"updated_time"`
+	UserID            string                 `json:"owner_id" sql:",fk"`
+	VehicleNotes      []VehicleNote          `json:"notes" sql:"-,fk"`
+	VehicleType       string                 `json:"vehicle_type"`
+	ViewIndex         int                    `json:"view_index"`
+	Vin               string                 `json:"vin"`
+	Year              int                    `json:"year"`
+	YouAlsoMightLike  []Vehicle              `json:"also_might_like" sql:"-"`
+	ZipCode           string                 `json:"zip_code"`
 }
 
 func (target *Vehicle) Merge(source Vehicle) Vehicle {
@@ -212,4 +224,15 @@ type VehicleNote struct {
 	UpdatedBy   string    `json:"updated_by"`
 	UpdatedTime time.Time `json:"updated_time"`
 	VehicleID   string    `json:"vehicle_id" sql:",fk"`
+}
+
+type Features struct {
+	Bluetooth  bool   `json:"bluetooth"`
+	Sunroof    bool   `json:"sunroof"`
+	AudioInput bool   `json:"audio_input"`
+	USBInput   bool   `json:"usb_input"`
+	TollPass   bool   `json:"toll_pass"`
+	GPS        bool   `json:"gps"`
+	VehicleID  string `json:"-"`
+	ID         int    `json:"-"`
 }

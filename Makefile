@@ -4,6 +4,7 @@ ACCOUNT_ID = $$(aws sts get-caller-identity --output text --query 'Account')
 REGISTRY_URL = ${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
 KUBE_DEPLOYMENT = deployments/server-deployment
 KUBE_CONTAINER_NAME = mphclub-api
+STAGE = prod
 
 run-server:
 	@go run api.go
@@ -21,15 +22,15 @@ docker-build:
 	              --file ./docker/mphclub-rest-server/Dockerfile .
 
 docker-tag:
-	@docker tag ${IMAGE_NAME}:${CURRENT_HEAD} ${IMAGE_NAME}:latest
-	@docker tag ${IMAGE_NAME}:latest ${REGISTRY_URL}/${IMAGE_NAME}:latest
-	@docker tag ${IMAGE_NAME}:latest ${REGISTRY_URL}/${IMAGE_NAME}:${CURRENT_HEAD}
+	@docker tag ${IMAGE_NAME}:${CURRENT_HEAD} ${IMAGE_NAME}:${STAGE}
+	@docker tag ${IMAGE_NAME}:${STAGE} ${REGISTRY_URL}/${IMAGE_NAME}:${STAGE}
+	@docker tag ${IMAGE_NAME}:${STAGE} ${REGISTRY_URL}/${IMAGE_NAME}:${CURRENT_HEAD}
 
 docker-push:
 	# only have to login (the below command) once per 12 hours
 	# @eval `aws ecr get-login --no-include-email`
-	@docker push ${REGISTRY_URL}/${IMAGE_NAME}:latest
 	@docker push ${REGISTRY_URL}/${IMAGE_NAME}:${CURRENT_HEAD}
+	@docker push ${REGISTRY_URL}/${IMAGE_NAME}:${STAGE}
 	# @docker logout ${REGISTRY_URL}
 
 docker-clean:
@@ -44,6 +45,12 @@ docker-deploy:
 	#only have to apply if the configs change
 	#@kubectl apply -f k8s
 	@kubectl set image ${KUBE_DEPLOYMENT} ${KUBE_CONTAINER_NAME}=${REGISTRY_URL}/${IMAGE_NAME}:${CURRENT_HEAD}
+
+docker-all:
+	@make docker-build
+	@make docker-tag
+	@make docker-push
+	@make docker-deploy
 
 export-current:
 	@echo ${CURRENT_HEAD}

@@ -12,51 +12,6 @@ import (
 	"github.com/rs/xid"
 )
 
-func UpsertUser(u models.User) error {
-	db := connectToDB()
-
-	user := models.User{
-		ID: u.ID,
-	}
-
-	if err := db.Select(&user); err != nil {
-		log.Println(err.Error())
-		log.Println("user does not exist, create")
-
-		user = user.Merge(u)
-	} else {
-		log.Println("user does exist, update")
-
-		u = u.Merge(user)
-
-		if dbErr := db.Update(&u); dbErr != nil {
-			return dbErr
-		}
-		return err
-	}
-
-	if err := db.Insert(&user); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func GetUser(userID string) (models.User, error) {
-	var users []models.User
-	db := connectToDB()
-
-	if err := db.Model(&users).
-		Column("user.*", "DriverLicense").
-		Relation("DriverLicense").
-		Where("\"user\".id = ?", userID).
-		Select(); err != nil {
-		return models.User{}, err
-	}
-
-	return users[0], nil
-}
-
 func EditPhotoURLArrayOnVehicle(vehicleID, filename string) error {
 	db := connectToDB()
 
@@ -69,7 +24,6 @@ func EditPhotoURLArrayOnVehicle(vehicleID, filename string) error {
 
 	err := db.Select(vehicleToAttach)
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 
@@ -83,28 +37,6 @@ func EditPhotoURLArrayOnVehicle(vehicleID, filename string) error {
 		Update()
 
 	if err != nil {
-		log.Println(err)
-		return err
-	}
-
-	return nil
-}
-
-func AddUserPhotoURL(userID, photoURL string) error {
-	db := connectToDB()
-	user := &models.User{
-		ID: userID,
-	}
-	err := db.Select(user)
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-
-	user.ProfilePhotoURL = photoURL
-	_, err = db.Model(user).Column("profile_photo_url").WherePK().Update()
-	if err != nil {
-		log.Println(err)
 		return err
 	}
 
@@ -124,29 +56,65 @@ func UpsertListing(v models.Vehicle) (string, string, error) {
 	} else {
 		log.Println("car does exist, update")
 
+		feature := v.Feature
+
 		v = v.Merge(car)
 		v.UpdatedTime = time.Now()
 
 		if dbErr := db.Update(&v); dbErr != nil {
 			return "", "", dbErr
 		}
+
+		if feature != car.Feature {
+			if err := insertFeatureAndUpdateVehicle(feature, v.ID); err != nil {
+				return "", "", err
+			}
+		}
+
 		return v.ID, "updated", nil
 	}
+
+	v.ID = xid.New().String()
 
 	if v.ViewIndex == 0 {
 		v.ViewIndex = -1
 	}
-	v.ID = xid.New().String()
+
 	v.CreatedTime = time.Now()
 	v.Status = "PENDING"
 
 	if err := db.Insert(&v); err != nil {
-		log.Println(err)
+		return "", "", err
+	}
+
+	if err := insertFeatureAndUpdateVehicle(v.Feature, v.ID); err != nil {
 		return "", "", err
 	}
 
 	log.Println("vehicle created")
 	return v.ID, "created", nil
+}
+
+func insertFeatureAndUpdateVehicle(feature models.Features, vehicleID string) error {
+	feature.VehicleID = vehicleID
+
+	if err := db.Insert(&feature); err != nil {
+		return err
+	}
+
+	var v models.Vehicle
+	v.ID = vehicleID
+	v.FeatureID = feature.ID
+
+	_, err := db.Model(&v).
+		Column("feature_id").
+		Where("id = ?", v.ID).
+		Update()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func GetCars(queryParams url.Values, carType string) (int, []models.Vehicle, error) {
@@ -157,9 +125,9 @@ func GetCars(queryParams url.Values, carType string) (int, []models.Vehicle, err
 	if len(carType) == 0 {
 		count, err := db.Model(&vehicleList).
 			Apply(orm.Pagination(queryParams)).
+			Where("status = ?", "APPROVED").
 			SelectAndCount()
 		if err != nil {
-			log.Println(err)
 			return 0, nil, err
 		}
 
@@ -170,9 +138,9 @@ func GetCars(queryParams url.Values, carType string) (int, []models.Vehicle, err
 	count, err := db.Model(&vehicleList).
 		Apply(orm.Pagination(queryParams)).
 		Where("vehicle_type = ?", carType).
+		Where("status = ?", "APPROVED").
 		SelectAndCount()
 	if err != nil {
-		log.Println(err)
 		return 0, nil, err
 	}
 
@@ -190,7 +158,6 @@ func GetCarsByType(queryParams url.Values, paramType string) (int, []models.Vehi
 		Apply(orm.Pagination(queryParams)).
 		SelectAndCount()
 	if err != nil {
-		log.Println(err)
 		return 0, nil, err
 	}
 
@@ -200,13 +167,41 @@ func GetCarsByType(queryParams url.Values, paramType string) (int, []models.Vehi
 func GetCarDetail(v models.Vehicle) (models.Vehicle, error) {
 	db := connectToDB()
 
-	if err := db.Model(&v).
-		WherePK().
+	var vArray []models.Vehicle
+
+	if err := db.Model(&vArray).
+		Column("vehicle.*", "Feature").
+		Relation("Feature").
+		Where("vehicle.id = ?", v.ID).
 		Select(); err != nil {
 		return models.Vehicle{}, err
 	}
 
+	v = vArray[0]
+
+	owner, err := GetUser(v.UserID)
+	if err != nil {
+		return v, err
+	}
+
+	v.OwnerDetails = map[string]interface{}{
+		"first_name":        owner.DriverLicense.FirstName,
+		"rating":            5,
+		"response_rate":     90,
+		"response_time":     5,
+		"profile_photo_url": owner.ProfilePhotoURL,
+	}
+
 	return v, nil
+}
+
+func YouAlsoMightLike(vehicleType string) ([]models.Vehicle, error) {
+	list, err := getTypeVehicleArray(vehicleType)
+	if err != nil {
+		return []models.Vehicle{}, err
+	}
+
+	return list, nil
 }
 
 func GetMyCars(u *models.User) ([]models.Vehicle, error) {
@@ -223,7 +218,6 @@ func GetMyCars(u *models.User) ([]models.Vehicle, error) {
 		Select()
 
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 
@@ -262,17 +256,20 @@ func GetExplore() (map[string]interface{}, error) {
 
 		exploreMap["vehicles"] = list
 
-		if carType == "suv" {
-			displayName := strings.ToUpper(carType) + "'s"
-			exploreMap["display_name"] = displayName
-		}
 		if carType == "sports" {
 			displayName := carType + " cars"
 			displayName = strings.Title(displayName)
 			exploreMap["display_name"] = displayName
+			exploreMap["order"] = 1
 		}
 		if carType == "sedan" {
 			exploreMap["display_name"] = strings.Title(carType) + "s"
+			exploreMap["order"] = 2
+		}
+		if carType == "suv" {
+			displayName := strings.ToUpper(carType) + "'s"
+			exploreMap["display_name"] = displayName
+			exploreMap["order"] = 3
 		}
 
 		vehicleMap[carType] = exploreMap
@@ -290,6 +287,7 @@ func getTypeVehicleArray(carType string) ([]models.Vehicle, error) {
 		Model(&list).
 		Column("id", "make", "model", "year", "thumbnails", "vehicle_type", "daily_price").
 		Where("vehicle_type = ?", carType).
+		Where("status = ?", "APPROVED").
 		Limit(3).
 		Select(); err != nil {
 		return nil, err
@@ -298,39 +296,43 @@ func getTypeVehicleArray(carType string) ([]models.Vehicle, error) {
 	return list, nil
 }
 
-func AddDriverLicense(userID string, dl *models.DriverLicense) error {
+func MakeReservation(trip models.Trip) error {
 	db := connectToDB()
-	if err := db.Insert(dl); err != nil {
-		return err
-	}
-
-	user := models.User{
-		ID:              userID,
-		DriverLicenseID: dl.ID,
-	}
-
-	_, err := db.Model(&user).
-		Column("driver_license_id").
-		WherePK().
-		Update()
-
-	if err != nil {
-		log.Println(err)
+	if err := db.Insert(&trip); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func GetDriverLicense(userID string) (models.DriverLicense, error) {
+func GetUnavailableDates(vehicleID string) ([]interface{}, error) {
 	db := connectToDB()
-	var u []models.User
 
-	if err := db.Model(&u).
-		Column("user.*", "DriverLicense").
+	var trips []models.Trip
+	today := time.Now()
+	unavailableDates := []interface{}{}
+
+	if err := db.
+		Model(&trips).
+		Where("vehicle_ID = ?", vehicleID).
+		Order("start_time DESC").
 		Select(); err != nil {
-		return models.DriverLicense{}, err
+		return unavailableDates, err
 	}
 
-	return u[0].DriverLicense, nil
+	for _, trip := range trips {
+		start := trip.StartTime
+		end := trip.EndTime
+
+		if !end.Before(today) {
+			unavailableObject := map[string]interface{}{
+				"start": start,
+				"end":   end,
+			}
+
+			unavailableDates = append(unavailableDates, unavailableObject)
+		}
+	}
+
+	return unavailableDates, nil
 }
