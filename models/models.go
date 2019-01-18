@@ -226,11 +226,12 @@ type VehicleNote struct {
 }
 
 type Features struct {
-	Bluetooth  bool `json:"bluetooth"`
-	Sunroof    bool `json:"sunroof"`
-	AudioInput bool `json:"audio_input"`
-	USBInput   bool `json:"usb_input"`
-	TollPass   bool `json:"toll_pass"`
-	GPS        bool `json:"gps"`
-	ID         int  `json:"id"`
+	Bluetooth  bool   `json:"bluetooth"`
+	Sunroof    bool   `json:"sunroof"`
+	AudioInput bool   `json:"audio_input"`
+	USBInput   bool   `json:"usb_input"`
+	TollPass   bool   `json:"toll_pass"`
+	GPS        bool   `json:"gps"`
+	VehicleID  string `json:"-"`
+	ID         int    `json:"-"`
 }

@@ -65,10 +65,12 @@ func UpsertListing(v models.Vehicle) (string, string, error) {
 		return v.ID, "updated", nil
 	}
 
+	v.ID = xid.New().String()
+
 	if v.ViewIndex == 0 {
 		v.ViewIndex = -1
 	}
-	v.ID = xid.New().String()
+
 	v.CreatedTime = time.Now()
 	v.Status = "PENDING"
 
@@ -76,8 +78,34 @@ func UpsertListing(v models.Vehicle) (string, string, error) {
 		return "", "", err
 	}
 
+	if err := insertFeatureAndUpdateVehicle(v.Feature, v.ID); err != nil {
+		return "", "", err
+	}
+
 	log.Println("vehicle created")
 	return v.ID, "created", nil
+}
+
+func insertFeatureAndUpdateVehicle(feature models.Features, vehicleID string) error {
+	feature.VehicleID = vehicleID
+
+	if err := db.Insert(&feature); err != nil {
+		return err
+	}
+
+	var v models.Vehicle
+	v.ID = vehicleID
+	v.FeatureID = feature.ID
+
+	_, err := db.Model(&v).
+		Column("feature_id").
+		Where("id = ?", v.ID).
+		Update()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func GetCars(queryParams url.Values, carType string) (int, []models.Vehicle, error) {
