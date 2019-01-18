@@ -225,6 +225,13 @@ func getCarDetail(ctx echo.Context) error {
 
 	detail.UnavailableDates = unavailable
 
+	alsoMightLike, err := database.YouAlsoMightLike(detail.VehicleType)
+	if err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"db_error": err.Error(), "happened_in": "you also might like"}))
+	}
+
+	detail.YouAlsoMightLike = alsoMightLike
+
 	return ctx.JSON(
 		response(
 			true,

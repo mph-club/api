@@ -135,6 +135,7 @@ type Vehicle struct {
 	ViewIndex         int                    `json:"view_index"`
 	Vin               string                 `json:"vin"`
 	Year              int                    `json:"year"`
+	YouAlsoMightLike  []Vehicle              `json:"also_might_like" sql:"-"`
 	ZipCode           string                 `json:"zip_code"`
 }
 

@@ -195,6 +195,15 @@ func GetCarDetail(v models.Vehicle) (models.Vehicle, error) {
 	return v, nil
 }
 
+func YouAlsoMightLike(vehicleType string) ([]models.Vehicle, error) {
+	list, err := getTypeVehicleArray(vehicleType)
+	if err != nil {
+		return []models.Vehicle{}, err
+	}
+
+	return list, nil
+}
+
 func GetMyCars(u *models.User) ([]models.Vehicle, error) {
 	db := connectToDB()
 
