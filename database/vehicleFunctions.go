@@ -56,12 +56,21 @@ func UpsertListing(v models.Vehicle) (string, string, error) {
 	} else {
 		log.Println("car does exist, update")
 
+		feature := v.Feature
+
 		v = v.Merge(car)
 		v.UpdatedTime = time.Now()
 
 		if dbErr := db.Update(&v); dbErr != nil {
 			return "", "", dbErr
 		}
+
+		if feature != car.Feature {
+			if err := insertFeatureAndUpdateVehicle(feature, v.ID); err != nil {
+				return "", "", err
+			}
+		}
+
 		return v.ID, "updated", nil
 	}
 
