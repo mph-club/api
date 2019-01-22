@@ -13,7 +13,7 @@ import (
 )
 
 func EditPhotoURLArrayOnVehicle(vehicleID, filename string) error {
-	db := connectToDB()
+	db = connectToDB()
 
 	url := fmt.Sprintf("https://mphclub.s3.amazonaws.com/%s/%s", vehicleID, filename)
 	thumbnailURL := fmt.Sprintf("https://mphclub.s3.amazonaws.com/%s/thumb/%s", vehicleID, filename)
@@ -44,7 +44,7 @@ func EditPhotoURLArrayOnVehicle(vehicleID, filename string) error {
 }
 
 func UpsertListing(v models.Vehicle) (string, string, error) {
-	db := connectToDB()
+	db = connectToDB()
 
 	car := models.Vehicle{
 		ID: v.ID,
@@ -120,7 +120,7 @@ func insertFeatureAndUpdateVehicle(feature models.Features, vehicleID string) er
 func GetCars(queryParams url.Values, carType string) (int, []models.Vehicle, error) {
 	var vehicleList []models.Vehicle
 
-	db := connectToDB()
+	db = connectToDB()
 
 	if len(carType) == 0 {
 		count, err := db.Model(&vehicleList).
@@ -151,7 +151,7 @@ func GetCars(queryParams url.Values, carType string) (int, []models.Vehicle, err
 func GetCarsByType(queryParams url.Values, paramType string) (int, []models.Vehicle, error) {
 	var vehicleList []models.Vehicle
 
-	db := connectToDB()
+	db = connectToDB()
 
 	count, err := db.Model(&vehicleList).
 		Where("vehicle_type = ?", paramType).
@@ -165,14 +165,14 @@ func GetCarsByType(queryParams url.Values, paramType string) (int, []models.Vehi
 }
 
 func GetCarDetail(v models.Vehicle) (models.Vehicle, error) {
-	db := connectToDB()
+	db = connectToDB()
 
 	var vArray []models.Vehicle
 
 	if err := db.Model(&vArray).
+		Where("vehicle.id = ?", v.ID).
 		Column("vehicle.*", "Feature").
 		Relation("Feature").
-		Where("vehicle.id = ?", v.ID).
 		Select(); err != nil {
 		return models.Vehicle{}, err
 	}
@@ -205,7 +205,7 @@ func YouAlsoMightLike(vehicleType string) ([]models.Vehicle, error) {
 }
 
 func GetMyCars(u *models.User) ([]models.Vehicle, error) {
-	db := connectToDB()
+	db = connectToDB()
 
 	var users []models.User
 
@@ -234,7 +234,7 @@ func GetExplore() (map[string]interface{}, error) {
 	var vehicle models.Vehicle
 	var carTypes []string
 
-	db := connectToDB()
+	db = connectToDB()
 
 	if err := db.
 		Model(&vehicle).
@@ -281,7 +281,7 @@ func GetExplore() (map[string]interface{}, error) {
 func getTypeVehicleArray(carType string) ([]models.Vehicle, error) {
 	var list []models.Vehicle
 
-	db := connectToDB()
+	db = connectToDB()
 
 	if err := db.
 		Model(&list).
@@ -297,7 +297,8 @@ func getTypeVehicleArray(carType string) ([]models.Vehicle, error) {
 }
 
 func MakeReservation(trip models.Trip) error {
-	db := connectToDB()
+	db = connectToDB()
+
 	if err := db.Insert(&trip); err != nil {
 		return err
 	}
@@ -306,10 +307,11 @@ func MakeReservation(trip models.Trip) error {
 }
 
 func GetUnavailableDates(vehicleID string) ([]interface{}, error) {
-	db := connectToDB()
+	db = connectToDB()
 
 	var trips []models.Trip
 	today := time.Now()
+
 	unavailableDates := []interface{}{}
 
 	if err := db.
@@ -321,8 +323,10 @@ func GetUnavailableDates(vehicleID string) ([]interface{}, error) {
 	}
 
 	for _, trip := range trips {
-		start := trip.StartTime
-		end := trip.EndTime
+		loc, _ := time.LoadLocation("America/New_York")
+
+		start := trip.StartTime.In(loc)
+		end := trip.EndTime.In(loc)
 
 		if !end.Before(today) {
 			unavailableObject := map[string]interface{}{
