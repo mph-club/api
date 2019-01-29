@@ -42,16 +42,19 @@ type DriverLicense struct {
 }
 
 type User struct {
-	ID              string        `json:"id" sql:",unique"`
-	Email           string        `json:"email"`
-	Phone           string        `json:"phone"`
-	ProfilePhotoURL string        `json:"profile_photo"`
-	Vehicles        []Vehicle     `json:"vehicles" sql:",fk"`
-	UserNotes       []UserNote    `json:"notes" sql:",fk"`
-	DriverLicense   DriverLicense `json:"driver_license" sql:",fk"`
-	Trips           []Trip        `json:"reservations" sql:",fk"`
-	DriverLicenseID int           `json:"dl_id"`
-	OfacCheck       bool          `json:"ofac_check"`
+	ID              string                 `json:"id" sql:",unique"`
+	Email           string                 `json:"email"`
+	Phone           string                 `json:"phone"`
+	ProfilePhotoURL string                 `json:"profile_photo"`
+	Vehicles        []Vehicle              `json:"vehicles" sql:",fk"`
+	UserNotes       []UserNote             `json:"notes" sql:",fk"`
+	DriverLicense   DriverLicense          `json:"driver_license" sql:",fk"`
+	Trips           []Trip                 `json:"reservations" sql:",fk"`
+	DriverLicenseID int                    `json:"-"`
+	OfacCheck       bool                   `json:"ofac_check"`
+	InsuranceID     int                    `json:"-"`
+	Insurance       Insurance              `json:"-" sql:",fk"`
+	InsuranceMap    map[string]interface{} `json:"insurance" sql:"-"`
 }
 
 func (target *User) Merge(source User) User {
@@ -76,16 +79,25 @@ type UserNote struct {
 }
 
 type Trip struct {
-	VehicleID string    `json:"vehicle_id"`
-	Vehicle   Vehicle   `json:"vehicle" sql:",fk"`
-	ID        int       `json:"id"`
-	UserID    string    `json:"renter_id"`
-	User      User      `json:"renter" sql:",fk"`
-	StartTime time.Time `json:"start_time"`
-	EndTime   time.Time `json:"end_time"`
-	Approved  bool      `json:"approved"`
+	VehicleID  string    `json:"vehicle_id"`
+	Vehicle    Vehicle   `json:"vehicle" sql:",fk"`
+	ID         int       `json:"id"`
+	UserID     string    `json:"renter_id"`
+	User       User      `json:"renter" sql:",fk"`
+	StartTime  time.Time `json:"start_time"`
+	TotalCost  float64   `json:"total_cost"`
+	TripStatus string    `json:"trip_status"`
+	EndTime    time.Time `json:"end_time"`
+	Approved   bool      `json:"approved"`
 }
 
+type Insurance struct {
+	tableName     struct{} `sql:"insurance,alias:insurance"`
+	UserID        string   `json:"-"`
+	InsuranceName string   `json:"insurance_name"`
+	PolicyNumber  string   `json:"policy_number"`
+	ID            int      `json:"-"`
+}
 type Reported struct {
 	VehicleReported Vehicle `json:"vehicle_reported" sql:",fk"`
 	VehicleID       string  `json:"vehicle_id"`

@@ -5,6 +5,7 @@ import (
 	"mphclub-rest-server/models"
 
 	"github.com/go-pg/pg/orm"
+	"github.com/labstack/echo"
 )
 
 func UpsertUser(u models.User) error {
@@ -42,11 +43,17 @@ func GetUser(userID string) (models.User, error) {
 	db := connectToDB()
 
 	if err := db.Model(&users).
-		Column("user.*", "DriverLicense").
+		Column("user.*").
 		Relation("DriverLicense").
+		Relation("Insurance").
 		Where("\"user\".id = ?", userID).
 		Select(); err != nil {
 		return models.User{}, err
+	}
+
+	users[0].InsuranceMap = echo.Map{
+		"insurance_name": users[0].Insurance.InsuranceName,
+		"policy_number":  users[0].Insurance.PolicyNumber,
 	}
 
 	return users[0], nil
@@ -150,7 +157,7 @@ func GetHostDetails(host models.User) (models.User, error) {
 }
 
 func GetMyReservations(renterID string) ([]models.Trip, error) {
-	db := connectToDB()
+	db = connectToDB()
 
 	var trips []models.Trip
 
@@ -167,4 +174,28 @@ func GetMyReservations(renterID string) ([]models.Trip, error) {
 	}
 
 	return trips, nil
+}
+
+func AddInsurance(userInsurance models.Insurance, userID string) error {
+	db = connectToDB()
+
+	if err := db.Insert(&userInsurance); err != nil {
+		return err
+	}
+
+	user := models.User{
+		ID:          userID,
+		InsuranceID: userInsurance.ID,
+	}
+
+	_, err := db.Model(&user).
+		Column("insurance_id").
+		WherePK().
+		Update()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

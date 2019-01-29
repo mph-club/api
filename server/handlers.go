@@ -346,3 +346,24 @@ func getMyReservations(ctx echo.Context) error {
 			map[string]interface{}{"trips": listOfTrips},
 		))
 }
+
+func addInsurance(ctx echo.Context) error {
+	var insurance models.Insurance
+
+	userID := ctx.Get("sub").(string)
+
+	if err := ctx.Bind(&insurance); err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"bind_error": err.Error()}))
+	}
+
+	if err := database.AddInsurance(insurance, userID); err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
+	}
+
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{},
+		))
+}
