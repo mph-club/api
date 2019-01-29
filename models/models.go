@@ -85,7 +85,7 @@ type Trip struct {
 	UserID     string    `json:"renter_id"`
 	User       User      `json:"renter" sql:",fk"`
 	StartTime  time.Time `json:"start_time"`
-	TotalCost  float64   `json:"total_cost"`
+	TotalPrice float64   `json:"total_price"`
 	TripStatus string    `json:"trip_status"`
 	EndTime    time.Time `json:"end_time"`
 	Approved   bool      `json:"approved"`

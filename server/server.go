@@ -59,6 +59,7 @@ func CreateAndListen() {
 	v1.POST("/uploadUserPhoto", uploadUserPhoto, cognitoAuth)
 	v1.POST("/driverLicense", uploadDriverLicense, cognitoAuth)
 	v1.POST("/reserve", makeReservation, cognitoAuth)
+	v1.POST("/insurance", addInsurance, cognitoAuth)
 
 	_api.Start(":8080")
 }
