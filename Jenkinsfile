@@ -8,7 +8,7 @@ pipeline {
         }
         stage('Tag') {
             when {
-                branch 'develop'
+                branch 'prod'
             }
             steps {
                 sh 'make docker-tag'
@@ -16,12 +16,20 @@ pipeline {
         }
         stage('Push') {
             when {
-                branch 'develop'
+                branch 'prod'
             }
             steps {
                 sh 'make docker-push'
             }
         }
+      stage('Deploy') {
+        when {
+          branch 'prod'
+        }
+        steps {
+          sh 'make docker-deploy'
+        }
+      }
     }
     post {
         always {
