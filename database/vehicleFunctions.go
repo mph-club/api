@@ -293,6 +293,10 @@ func getTypeVehicleArray(carType string) ([]models.Vehicle, error) {
 		return nil, err
 	}
 
+	for _, vehicle := range list {
+		vehicle.Thumbnails = []string{vehicle.Thumbnails[0]}
+	}
+
 	return list, nil
 }
 
