@@ -280,6 +280,7 @@ func GetExplore() (map[string]interface{}, error) {
 
 func getTypeVehicleArray(carType string) ([]models.Vehicle, error) {
 	var list []models.Vehicle
+	var listWithSingleThumb []models.Vehicle
 
 	db = connectToDB()
 
@@ -295,9 +296,10 @@ func getTypeVehicleArray(carType string) ([]models.Vehicle, error) {
 
 	for _, vehicle := range list {
 		vehicle.Thumbnails = []string{vehicle.Thumbnails[0]}
+		listWithSingleThumb = append(listWithSingleThumb, vehicle)
 	}
 
-	return list, nil
+	return listWithSingleThumb, nil
 }
 
 func MakeReservation(trip models.Trip) error {
