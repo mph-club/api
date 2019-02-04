@@ -379,9 +379,9 @@ func addCardInfo(ctx echo.Context) error {
 
 	nameOnCard := cardInfo["name_on_card"].(string)
 	cardNumber := cardInfo["card_number"].(string)
-	cvv := cardInfo["cvv"].(int)
-	month := cardInfo["month"].(int)
-	year := cardInfo["year"].(int)
+	cvv := int(cardInfo["cvv"].(float64))
+	month := int(cardInfo["month"].(float64))
+	year := int(cardInfo["year"].(float64))
 
 	log.Println(nameOnCard, cardNumber, cvv, month, year)
 
