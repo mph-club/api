@@ -56,7 +56,7 @@ func CreateAndListen() {
 	v1.POST("/driverLicense", uploadDriverLicense, cognitoAuth)
 	v1.POST("/reserve", makeReservation, cognitoAuth)
 	v1.POST("/insurance", addInsurance, cognitoAuth)
-	//v1.POST("/cardInfo", addCardInfo, cognitoAuth)
+	v1.POST("/cardInfo", addCardInfo, cognitoAuth)
 
 	_api.Start(":8080")
 }

@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"mphclub-rest-server/api_clients"
 	"mphclub-rest-server/database"
 	"mphclub-rest-server/models"
@@ -370,5 +371,24 @@ func addInsurance(ctx echo.Context) error {
 }
 
 func addCardInfo(ctx echo.Context) error {
-	return nil
+	var cardInfo echo.Map
+
+	if err := ctx.Bind(&cardInfo); err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"bind_error": err.Error()}))
+	}
+
+	nameOnCard := cardInfo["name_on_card"].(string)
+	cardNumber := cardInfo["card_number"].(string)
+	cvv := cardInfo["cvv"].(int)
+	month := cardInfo["month"].(int)
+	year := cardInfo["year"].(int)
+
+	log.Println(nameOnCard, cardNumber, cvv, month, year)
+
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{},
+		))
 }
