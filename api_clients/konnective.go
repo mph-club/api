@@ -25,6 +25,8 @@ func SubmitInfoToKonnektive(order KonnectiveBody) error {
 		os.Getenv("KLOGIN_ID"), os.Getenv("KPASSWORD"), order.FirstName, order.LastName, order.CardNumber, order.CVV, order.Year, order.Month, order.TotalPrice)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte{}))
 
+	log.Println(url)
+
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
