@@ -371,6 +371,8 @@ func addInsurance(ctx echo.Context) error {
 }
 
 func addCardInfo(ctx echo.Context) error {
+	userID := ctx.Get("sub").(string)
+
 	var cardInfo apiClients.KonnectiveBody
 
 	if err := ctx.Bind(&cardInfo); err != nil {
@@ -378,7 +380,7 @@ func addCardInfo(ctx echo.Context) error {
 	}
 	log.Println(cardInfo)
 
-	go apiClients.SubmitInfoToKonnektive(cardInfo)
+	go apiClients.SubmitInfoToKonnektive(cardInfo, userID)
 
 	return ctx.JSON(
 		response(
