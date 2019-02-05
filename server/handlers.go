@@ -371,19 +371,14 @@ func addInsurance(ctx echo.Context) error {
 }
 
 func addCardInfo(ctx echo.Context) error {
-	var cardInfo echo.Map
+	var cardInfo apiClients.KonnectiveBody
 
 	if err := ctx.Bind(&cardInfo); err != nil {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"bind_error": err.Error()}))
 	}
+	log.Println(cardInfo)
 
-	nameOnCard := cardInfo["name_on_card"].(string)
-	cardNumber := cardInfo["card_number"].(string)
-	cvv := int(cardInfo["cvv"].(float64))
-	month := int(cardInfo["month"].(float64))
-	year := int(cardInfo["year"].(float64))
-
-	log.Println(nameOnCard, cardNumber, cvv, month, year)
+	go apiClients.SubmitInfoToKonnektive(cardInfo)
 
 	return ctx.JSON(
 		response(
