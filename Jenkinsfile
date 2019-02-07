@@ -22,6 +22,7 @@ pipeline {
                 sh 'make docker-push'
             }
         }
+
       stage('Deploy') {
         when {
           branch 'prod'

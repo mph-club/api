@@ -32,17 +32,13 @@ func CreateAndListen() {
 	//  **** PUBLIC ****
 	v1.GET("/vehicles", getCars)
 	v1.GET("/vehicles/:id", getCarDetail)
-
 	v1.GET("/users/:id", getHostDetail)
-
 	v1.GET("/home", func(ctx echo.Context) error {
 		return ctx.String(200, "api home!!!!")
 	})
-
 	v1.GET("/service", func(ctx echo.Context) error {
 		return ctx.String(200, "api service!!!!")
 	})
-
 	v1.GET("/explore", exploreCars)
 
 	//  **** PRIVATE ****
@@ -60,6 +56,7 @@ func CreateAndListen() {
 	v1.POST("/driverLicense", uploadDriverLicense, cognitoAuth)
 	v1.POST("/reserve", makeReservation, cognitoAuth)
 	v1.POST("/insurance", addInsurance, cognitoAuth)
+	v1.POST("/cardInfo", addCardInfo, cognitoAuth)
 
 	_api.Start(":8080")
 }

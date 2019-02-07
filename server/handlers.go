@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"mphclub-rest-server/api_clients"
 	"mphclub-rest-server/database"
 	"mphclub-rest-server/models"
@@ -319,6 +320,7 @@ func makeReservation(ctx echo.Context) error {
 	}
 
 	trip.UserID = userID
+	trip.TripStatus = "pending"
 
 	if err := database.MakeReservation(trip); err != nil {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
@@ -359,6 +361,26 @@ func addInsurance(ctx echo.Context) error {
 	if err := database.AddInsurance(insurance, userID); err != nil {
 		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"database_error": err.Error()}))
 	}
+
+	return ctx.JSON(
+		response(
+			true,
+			http.StatusOK,
+			map[string]interface{}{},
+		))
+}
+
+func addCardInfo(ctx echo.Context) error {
+	userID := ctx.Get("sub").(string)
+
+	var cardInfo apiClients.KonnectiveBody
+
+	if err := ctx.Bind(&cardInfo); err != nil {
+		return ctx.JSON(response(false, http.StatusBadRequest, map[string]interface{}{"bind_error": err.Error()}))
+	}
+	log.Println(cardInfo)
+
+	go apiClients.SubmitInfoToKonnektive(cardInfo, userID)
 
 	return ctx.JSON(
 		response(
