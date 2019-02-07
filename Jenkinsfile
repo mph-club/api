@@ -22,14 +22,15 @@ pipeline {
                 sh 'make docker-push'
             }
         }
-        stage('Deploy') {
-            when {
-                branch 'prod'
-            }
-            steps {
-                sh 'make docker-deploy'
-            }
+
+      stage('Deploy') {
+        when {
+          branch 'prod'
         }
+        steps {
+          sh 'make docker-deploy'
+        }
+      }
     }
     post {
         always {
