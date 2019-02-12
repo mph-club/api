@@ -66,7 +66,6 @@ func SearchCAForRecords(name string) (bool, error) {
 	}
 
 	return false, errors.New(vMap["errors"].(string))
-
 }
 
 //webhook for updated searches

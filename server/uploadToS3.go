@@ -23,7 +23,7 @@ func thumbnailPhoto(src multipart.File) (image.Image, error) {
 		return nil, err
 	}
 
-	t := resize.Thumbnail(400, 400, img, resize.NearestNeighbor)
+	t := resize.Thumbnail(664, 322, img, resize.NearestNeighbor)
 
 	return t, nil
 }
