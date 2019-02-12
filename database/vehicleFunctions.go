@@ -283,10 +283,9 @@ func getTypeVehicleArray(carType string) ([]models.Vehicle, error) {
 	var listWithSingleThumb []models.Vehicle
 
 	db = connectToDB()
-
 	if err := db.
 		Model(&list).
-		Column("id", "make", "model", "year", "thumbnails", "vehicle_type", "daily_price").
+		Column("id", "make", "model", "year", "photos", "thumbnails", "vehicle_type", "daily_price").
 		Where("vehicle_type = ?", carType).
 		Where("status = ?", "APPROVED").
 		Limit(3).
