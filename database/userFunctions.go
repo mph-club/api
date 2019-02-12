@@ -162,9 +162,8 @@ func GetMyReservations(renterID string) ([]models.Trip, error) {
 	var trips []models.Trip
 
 	err := db.Model(&trips).
-		Column("trip.*", "User").
+		Column("trip.*").
 		Relation("User").
-		Column("trip.*", "Vehicle").
 		Relation("Vehicle").
 		Where("\"user\".id = ?", renterID).
 		Select()
