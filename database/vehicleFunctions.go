@@ -282,7 +282,6 @@ func getTypeVehicleArray(carType string) ([]models.Vehicle, error) {
 	var list []models.Vehicle
 
 	db = connectToDB()
-
 	if err := db.
 		Model(&list).
 		Column("id", "make", "model", "year", "photos", "thumbnails", "vehicle_type", "daily_price").
