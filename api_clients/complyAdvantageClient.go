@@ -15,7 +15,7 @@ type CAPostBody struct {
 	SearchProfile string  `json:"search_profile"`
 }
 
-var url = "https://api.complyadvantage.com/searches"
+var CAURL = "https://api.complyadvantage.com/searches"
 var key = fmt.Sprintf("Token %s", "53NmcJKZfXzyeqis2uH0NyAac5sYLtBo")
 var fuzziness = 0.6
 
@@ -31,7 +31,7 @@ func SearchCAForRecords(name string) (bool, error) {
 		fmt.Println("error:", err)
 	}
 
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonBody))
+	req, err := http.NewRequest("POST", CAURL, bytes.NewBuffer(jsonBody))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", key)
 
