@@ -4,7 +4,7 @@ ACCOUNT_ID = $$(aws sts get-caller-identity --output text --query 'Account')
 REGISTRY_URL = ${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
 KUBE_DEPLOYMENT = deployments/server-deployment
 KUBE_CONTAINER_NAME = mphclub-api
-STAGE = dev
+STAGE = prod
 
 run-server:
 	@go run api.go
