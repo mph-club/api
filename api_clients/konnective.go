@@ -5,11 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"mphclub-rest-server/database"
 	"net/http"
+	"net/url"
 	"os"
-	"strings"
 )
 
 type KonnectiveBody struct {
@@ -26,13 +25,33 @@ func SubmitInfoToKonnektive(order KonnectiveBody, userID string) error {
 	if err != nil {
 		return err
 	}
-	friendlyAddress := strings.Replace(user.DriverLicense.Address, " ", "+", -1)
+	var konnectiveBaseURL = fmt.Sprintf("https://api.konnektive.com/order/import/?loginId=%s&password=%s&emailAddress=%s&phoneNumber=%s&firstName=%s&lastName=%s&address1=%s&city=%s&country=%s&postalCode=%s&shipAddress1=%s&shipCity=%s&shipPostalCode=%s&shipCountry=%s&state=%s&shipState=%s&paySource=CREDITCARD&cardNumber=%s&cardSecurityCode=%s&cardYear=%s&cardMonth=%s&campaignId=5&product1_id=1&product1_qty=1&product1_price=%s&forceQA=1",
+		os.Getenv("KLOGIN_ID"),
+		os.Getenv("KPASSWORD"),
+		user.Email,
+		user.Phone,
+		user.DriverLicense.FirstName,
+		user.DriverLicense.LastName,
+		user.DriverLicense.Address,
+		user.DriverLicense.City,
+		"US",
+		order.ZipCode,
+		user.DriverLicense.Address,
+		user.DriverLicense.City,
+		order.ZipCode,
+		"US",
+		user.DriverLicense.State,
+		user.DriverLicense.State,
+		order.CardNumber,
+		order.CVV,
+		order.Year,
+		order.Month,
+		order.TotalPrice)
 
-	var url = fmt.Sprintf("https://api.konnektive.com/order/import/?loginId=%s&password=%s&emailAddress=%s&phoneNumber=%s&firstName=%s&lastName=%s&address1=%s&city=%s&country=%s&postalCode=%s&shipAddress1=%s&shipCity=%s&shipPostalCode=%s&shipCountry=%s&state=%s&shipState=%s&paySource=CREDITCARD&cardNumber=%s&cardSecurityCode=%s&cardYear=%s&cardMonth=%s&campaignId=5&product1_id=1&product1_qty=1&product1_price=%s&forceQA=1",
-		os.Getenv("KLOGIN_ID"), os.Getenv("KPASSWORD"), user.Email, user.Phone, user.DriverLicense.FirstName, user.DriverLicense.LastName, friendlyAddress, user.DriverLicense.City, "US", order.ZipCode, friendlyAddress, user.DriverLicense.City, order.ZipCode, "US", user.DriverLicense.State, user.DriverLicense.State, order.CardNumber, order.CVV, order.Year, order.Month, order.TotalPrice)
+	encodedURL := &url.URL{Path: konnectiveBaseURL}
+	encodedURLString := encodedURL.String()
 
-	log.Println(url)
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte{}))
+	req, err := http.NewRequest("POST", encodedURLString, bytes.NewBuffer([]byte{}))
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
