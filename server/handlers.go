@@ -380,7 +380,7 @@ func addCardInfo(ctx echo.Context) error {
 	}
 	log.Println(cardInfo)
 
-	go apiClients.SubmitInfoToKonnektive(cardInfo, userID)
+	apiClients.SubmitInfoToKonnektive(cardInfo, userID)
 
 	return ctx.JSON(
 		response(
