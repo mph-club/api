@@ -126,6 +126,7 @@ func GetCars(queryParams url.Values, carType string) (int, []models.Vehicle, err
 		count, err := db.Model(&vehicleList).
 			Apply(orm.Pagination(queryParams)).
 			Where("status = ?", "APPROVED").
+			Order("daily_price DESC").
 			SelectAndCount()
 		if err != nil {
 			return 0, nil, err
@@ -139,6 +140,7 @@ func GetCars(queryParams url.Values, carType string) (int, []models.Vehicle, err
 		Apply(orm.Pagination(queryParams)).
 		Where("vehicle_type = ?", carType).
 		Where("status = ?", "APPROVED").
+		Order("daily_price DESC").
 		SelectAndCount()
 	if err != nil {
 		return 0, nil, err
