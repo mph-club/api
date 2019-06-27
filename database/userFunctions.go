@@ -60,7 +60,7 @@ func GetUser(userID string) (models.User, error) {
 }
 
 func AddUserPhotoURL(userID, photoURL string) error {
-	db := connectToDB()
+	db = connectToDB()
 	user := &models.User{
 		ID: userID,
 	}
@@ -79,7 +79,7 @@ func AddUserPhotoURL(userID, photoURL string) error {
 }
 
 func AddDriverLicense(userID string, dl *models.DriverLicense) error {
-	db := connectToDB()
+	db = connectToDB()
 	if err := db.Insert(dl); err != nil {
 		return err
 	}
