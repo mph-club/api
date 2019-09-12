@@ -3,9 +3,9 @@ package server
 import (
 	"fmt"
 	"log"
-	"mphclub-rest-server/api_clients"
-	"mphclub-rest-server/database"
-	"mphclub-rest-server/models"
+	apiClients "mphclub/mphclub-rest-server/api_clients"
+	"mphclub/mphclub-rest-server/database"
+	"mphclub/mphclub-rest-server/models"
 	"net/http"
 
 	"github.com/labstack/echo"

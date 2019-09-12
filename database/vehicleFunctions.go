@@ -3,7 +3,7 @@ package database
 import (
 	"fmt"
 	"log"
-	"mphclub-rest-server/models"
+	"mphclub/mphclub-rest-server/models"
 	"net/url"
 	"strings"
 	"time"
@@ -147,7 +147,6 @@ func GetCars(queryParams url.Values, carType string) (int, []models.Vehicle, err
 	}
 
 	return count, vehicleList, nil
-
 }
 
 func GetCarsByType(queryParams url.Values, paramType string) (int, []models.Vehicle, error) {

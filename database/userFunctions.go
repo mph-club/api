@@ -2,7 +2,7 @@ package database
 
 import (
 	"log"
-	"mphclub-rest-server/models"
+	"mphclub/mphclub-rest-server/models"
 
 	"github.com/go-pg/pg/orm"
 	"github.com/labstack/echo"
